@@ -1,44 +1,44 @@
-import mongoose, { Schema } from "mongoose";
+const mongoose = require('mongoose');
 
 const commentSchema = mongoose.Schema(
   {
     blog_id: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       required: true,
-      ref: "blogs",
+      ref: 'blogs',
     },
     blog_author: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       required: true,
-      ref: "blogs",
+      ref: 'blogs',
     },
     comment: {
       type: String,
       required: true,
     },
     children: {
-      type: [Schema.Types.ObjectId],
-      ref: "comments",
+      type: [mongoose.Types.ObjectId],
+      ref: 'comments',
     },
     commented_by: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       require: true,
-      ref: "users",
+      ref: 'users',
     },
     isReply: {
       type: Boolean,
       default: false,
     },
     parent: {
-      type: Schema.Types.ObjectId,
-      ref: "comments",
+      type: mongoose.Types.ObjectId,
+      ref: 'comments',
     },
   },
   {
     timestamps: {
-      createdAt: "commentedAt",
+      createdAt: 'commentedAt',
     },
   }
 );
 
-export default mongoose.model("comments", commentSchema);
+module.exports = mongoose.model('comments', commentSchema);

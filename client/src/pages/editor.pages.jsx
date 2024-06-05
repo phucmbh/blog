@@ -8,7 +8,10 @@ import axios from 'axios';
 
 const blogStructure = {
   title: '',
-  banner: '',
+  banner: {
+    public_id: '',
+    url: '',
+  },
   content: [],
   tags: [],
   des: '',

@@ -1,20 +1,17 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import 'dotenv/config';
-import bcrypt from 'bcrypt';
-import { nanoid } from 'nanoid';
-import jwt from 'jsonwebtoken';
-import cors from 'cors';
-import admin from 'firebase-admin';
-// import serviceAccountKey from './blogging-website-9a298-firebase-adminsdk-jdq5u-1b8894b7e8.json' assert { type: 'json' };
-import { getAuth } from 'firebase-admin/auth';
-import aws from 'aws-sdk';
+const express = require('express');
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const cors = require('cors');
+require('dotenv').config();
+const { v4: uuidv4 } = require('uuid');
+const upload = require('./src/configs/multer.config.js');
+const cloudinary = require('./src/configs/cloudinary.config.js');
 
-//schema below
-import User from './src/model/User.js';
-import Blog from './src/model/Blog.js';
-import Notification from './src/model/Notification.js';
-import Comment from './src/model/Comment.js';
+const User = require('./src/model/User.js');
+const Blog = require('./src/model/Blog.js');
+const Notification = require('./src/model/Notification.js');
+const Comment = require('./src/model/Comment.js');
 
 const server = express();
 let PORT = 3000;
@@ -42,7 +39,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const generateUploadURL = async () => {
   const date = new Date();
-  const imageName = `${nanoid()}-${date.getTime()}.jpeg`;
+  const imageName = `${uuidv4()}-${date.getTime()}.jpeg`;
 
   return await s3.getSignedUrlPromise('putObject', {
     Bucket: 'blogging-website-new',
@@ -91,7 +88,7 @@ const generateUsername = async (email) => {
     'personal_info.username': username,
   }).then((result) => result);
 
-  isUsernameExists ? (username += nanoid().substring(0, 5)) : '';
+  isUsernameExists ? (username += uuidv4().substring(0, 5)) : '';
 
   return username;
 };
@@ -106,13 +103,10 @@ server.get('/get-upload-url', (req, res) => {
     });
 });
 
-server.post('/upload', (req, res) => {
-  generateUploadURL()
-    .then((url) => res.status(200).json({ uploadURL: url }))
-    .catch((err) => {
-      console.log(err.message);
-      return res.status(500).json({ error: err.message });
-    });
+server.post('/upload', upload.single('image'), async (req, res) => {
+  if (!req.file) throw new Error('Missing image');
+  const image = await cloudinary.uploadSingle(req.file);
+  return res.status(200).json(image);
 });
 
 server.post('/signup', (req, res) => {
@@ -548,7 +542,7 @@ server.post('/create-blog', verifyJWT, (req, res) => {
       });
     }
 
-    if (!banner.length) {
+    if (!banner.url?.length) {
       return res.status(403).json({
         error: 'You must provide blog banner to publish the blog',
       });
@@ -574,7 +568,7 @@ server.post('/create-blog', verifyJWT, (req, res) => {
     title
       .replace(/[^a-zA-Z0-9]/g, ' ')
       .replace(/\s+/g, '-')
-      .trim() + nanoid();
+      .trim() + uuidv4();
 
   if (id) {
     Blog.findOneAndUpdate(

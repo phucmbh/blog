@@ -19,16 +19,16 @@ export const uploadImage = async (img) => {
   return imgUrl;
 };
 
-export const uploadImage2 = async (img) => {
+export const uploadImage2 = async (file) => {
   const formData = new FormData();
-  formData.append('image', img)
+  formData.append('image', file);
 
-  const {imgUrl} = await axios({
+  const response = await axios({
     method: 'POST',
-    url: import.meta.env.VITE_SERVER_DOMAIN + '/get-upload-url',
-    headers: { 'Content-Type': 'multipart/form-data' },
+    url: import.meta.env.VITE_SERVER_DOMAIN + '/upload',
+    header: { 'Content-Type': 'multipart/form-data' },
     data: formData,
   });
 
-    return imgUrl;
+  return response.data;
 };

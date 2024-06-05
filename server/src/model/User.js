@@ -1,41 +1,41 @@
-import mongoose, { Schema } from "mongoose";
+const mongoose = require('mongoose');
 
 let profile_imgs_name_list = [
-  "Garfield",
-  "Tinkerbell",
-  "Annie",
-  "Loki",
-  "Cleo",
-  "Angel",
-  "Bob",
-  "Mia",
-  "Coco",
-  "Gracie",
-  "Bear",
-  "Bella",
-  "Abby",
-  "Harley",
-  "Cali",
-  "Leo",
-  "Luna",
-  "Jack",
-  "Felix",
-  "Kiki",
+  'Garfield',
+  'Tinkerbell',
+  'Annie',
+  'Loki',
+  'Cleo',
+  'Angel',
+  'Bob',
+  'Mia',
+  'Coco',
+  'Gracie',
+  'Bear',
+  'Bella',
+  'Abby',
+  'Harley',
+  'Cali',
+  'Leo',
+  'Luna',
+  'Jack',
+  'Felix',
+  'Kiki',
 ];
 let profile_imgs_collections_list = [
-  "notionists-neutral",
-  "adventurer-neutral",
-  "fun-emoji",
+  'notionists-neutral',
+  'adventurer-neutral',
+  'fun-emoji',
 ];
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     personal_info: {
       fullname: {
         type: String,
         lowercase: true,
         required: true,
-        minlength: [3, "fullname must be 3 letters long"],
+        minlength: [3, 'fullname must be 3 letters long'],
       },
       email: {
         type: String,
@@ -46,13 +46,13 @@ const userSchema = mongoose.Schema(
       password: String,
       username: {
         type: String,
-        minlength: [3, "Username must be 3 letters long"],
+        minlength: [3, 'Username must be 3 letters long'],
         unique: true,
       },
       bio: {
         type: String,
-        maxlength: [200, "Bio should not be more than 200"],
-        default: "",
+        maxlength: [200, 'Bio should not be more than 200'],
+        default: '',
       },
       profile_img: {
         type: String,
@@ -72,27 +72,27 @@ const userSchema = mongoose.Schema(
     social_links: {
       youtube: {
         type: String,
-        default: "",
+        default: '',
       },
       instagram: {
         type: String,
-        default: "",
+        default: '',
       },
       facebook: {
         type: String,
-        default: "",
+        default: '',
       },
       twitter: {
         type: String,
-        default: "",
+        default: '',
       },
       github: {
         type: String,
-        default: "",
+        default: '',
       },
       website: {
         type: String,
-        default: "",
+        default: '',
       },
     },
     account_info: {
@@ -110,16 +110,16 @@ const userSchema = mongoose.Schema(
       default: false,
     },
     blogs: {
-      type: [Schema.Types.ObjectId],
-      ref: "blogs",
+      type: [mongoose.Types.ObjectId],
+      ref: 'blogs',
       default: [],
     },
   },
   {
     timestamps: {
-      createdAt: "joinedAt",
+      createdAt: 'joinedAt',
     },
   }
 );
 
-export default mongoose.model("users", userSchema);
+module.exports = mongoose.model('users', userSchema);

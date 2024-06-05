@@ -1,46 +1,47 @@
-import mongoose, { Schema } from "mongoose";
+const mongoose = require('mongoose');
 
-const notificationSchema = mongoose.Schema({
+const notificationSchema = mongoose.Schema(
+  {
     type: {
-        type: String,
-        enum: ["like", "comment", "reply"],
-        required: true
+      type: String,
+      enum: ['like', 'comment', 'reply'],
+      required: true,
     },
     blog: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'blogs'
+      type: mongoose.Types.ObjectId,
+      required: true,
+      ref: 'blogs',
     },
     notification_for: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'users'
+      type: mongoose.Types.ObjectId,
+      required: true,
+      ref: 'users',
     },
     user: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'users'
+      type: mongoose.Types.ObjectId,
+      required: true,
+      ref: 'users',
     },
     comment: {
-        type: Schema.Types.ObjectId,
-        ref: 'comments'
+      type: mongoose.Types.ObjectId,
+      ref: 'comments',
     },
     reply: {
-        type: Schema.Types.ObjectId,
-        ref: 'comments'
-    }, 
-    replied_on_comment:{
-        type: Schema.Types.ObjectId,
-        ref: 'comments'
+      type: mongoose.Types.ObjectId,
+      ref: 'comments',
+    },
+    replied_on_comment: {
+      type: mongoose.Types.ObjectId,
+      ref: 'comments',
     },
     seen: {
-        type: Boolean,
-        default: false
-    }
-},
-{
-    timestamps: true
-}
-)
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-export default mongoose.model("notification", notificationSchema)
+module.exports = mongoose.model('notification', notificationSchema);
