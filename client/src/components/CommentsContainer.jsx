@@ -5,6 +5,7 @@ import axios from 'axios';
 import AnimationWrapper from '../common/page-animation';
 import CommentCard from './CommentCard';
 import NoDataMessage from './NoDataMessage';
+import { apiBlogComment } from '../apis';
 
 export const fetchComments = async ({
   skip = 0,
@@ -14,24 +15,22 @@ export const fetchComments = async ({
 }) => {
   let res;
 
-  await axios
-    .post(import.meta.env.VITE_SERVER_DOMAIN + '/get-blog-comments', {
-      blog_id,
-      skip,
-    })
-    .then(({ data }) => {
-      data.map((comment) => {
-        comment.childrenLevel = 0;
-      });
+  const data = await apiBlogComment({
+    blog_id,
+    skip,
+  });
 
-      setParentCommentCountFun((preVal) => preVal + data.length);
+  data.map((comment) => {
+    comment.childrenLevel = 0;
+  });
 
-      if (comment_array == null) {
-        res = { results: data };
-      } else {
-        res = { results: [...comment_array, ...data] };
-      }
-    });
+  setParentCommentCountFun((preVal) => preVal + data.length);
+
+  if (comment_array == null) {
+    res = { results: data };
+  } else {
+    res = { results: [...comment_array, ...data] };
+  }
 
   return res;
 };

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { UserContext } from '../App';
 import { useContext } from 'react';
 import axios from 'axios';
+import { apiDeleteBlog } from '../apis';
 
 const BlogStats = ({ stats }) => {
   return (
@@ -138,47 +139,36 @@ export const ManageDraftBlogPost = ({ blog }) => {
   );
 };
 
-const deleteBlog = (blog, access_token, target) => {
+const deleteBlog = async (blog, access_token, target) => {
   let { index, blog_id, setStateFunc } = blog;
 
   target.setAttribute('disabled', true);
 
-  axios
-    .post(
-      import.meta.env.VITE_SERVER_DOMAIN + '/delete-blog',
-      {
-        blog_id,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
+  const data = await apiDeleteBlog({
+    blog_id,
+  });
+
+  if (data) {
+    target.removeAttribute('disabled');
+
+    setStateFunc((preVal) => {
+      let { deletedDocCount, totalDocs, results } = preVal;
+
+      results.splice(index, 1);
+
+      if (!deletedDocCount) {
+        deletedDocCount = 0;
       }
-    )
-    .then(({ data }) => {
-      target.removeAttribute('disabled');
 
-      setStateFunc((preVal) => {
-        let { deletedDocCount, totalDocs, results } = preVal;
+      if (!results.length && totalDocs - 1 > 0) {
+        return null;
+      }
 
-        results.splice(index, 1);
-
-        if (!deletedDocCount) {
-          deletedDocCount = 0;
-        }
-
-        if (!results.length && totalDocs - 1 > 0) {
-          return null;
-        }
-
-        return {
-          ...preVal,
-          totalDocs: totalDocs - 1,
-          deletedDocCount: deletedDocCount + 1,
-        };
-      });
-    })
-    .catch((err) => {
-      console.log(err);
+      return {
+        ...preVal,
+        totalDocs: totalDocs - 1,
+        deletedDocCount: deletedDocCount + 1,
+      };
     });
+  }
 };

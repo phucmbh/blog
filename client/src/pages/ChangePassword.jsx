@@ -2,8 +2,8 @@ import { useContext, useRef } from 'react';
 import AnimationWrapper from '../common/page-animation';
 import InputBox from '../components/InputBox';
 import { Toaster, toast } from 'react-hot-toast';
-import axios from 'axios';
 import { UserContext } from '../App';
+import { apiChangePasswordUser } from '../apis';
 
 const ChangePassword = () => {
   let {
@@ -14,7 +14,7 @@ const ChangePassword = () => {
 
   let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let form = new FormData(changePasswordForm.current);
@@ -41,24 +41,18 @@ const ChangePassword = () => {
 
     e.target.setAttribute('disabled', true);
 
-    let loadingToast = toast.loading('Updating...');
+    const loadingToast = toast.loading('Updating...');
+    const response = await apiChangePasswordUser(formData);
 
-    axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + '/change-password', formData, {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      })
-      .then(({ data }) => {
-        toast.dismiss(loadingToast);
-        e.target.removeAttribute('disabled');
-        return toast.success('Password Updated');
-      })
-      .catch(({ response }) => {
-        toast.dismiss(loadingToast);
-        e.target.removeAttribute('disabled');
-        return toast.error(response.data.error);
-      });
+    if (!response.success) {
+      toast.dismiss(loadingToast);
+      e.target.removeAttribute('disabled');
+      return toast.error(response.error);
+    }
+
+    toast.dismiss(loadingToast);
+    e.target.removeAttribute('disabled');
+    return toast.success('Password Updated');
   };
 
   return (

@@ -6,6 +6,7 @@ import Tag from './Tag';
 import axios from 'axios';
 import { UserContext } from '../App';
 import { useNavigate, useParams } from 'react-router-dom';
+import { apiCreateBlog } from '../apis';
 
 const PublishForm = () => {
   let characterLimit = 200;
@@ -67,7 +68,7 @@ const PublishForm = () => {
     }
   };
 
-  const publishBlog = (e) => {
+  const publishBlog = async (e) => {
     if (e.target.className.includes('disable')) {
       return;
     }
@@ -99,33 +100,24 @@ const PublishForm = () => {
       draft: false,
     };
 
-    axios
-      .post(
-        import.meta.env.VITE_SERVER_DOMAIN + '/create-blog',
-        { ...blogObj, id: blog_id },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-      )
-      .then(() => {
-        e.target.classList.remove('disable');
+    const response = await apiCreateBlog({ ...blogObj, id: blog_id });
 
-        toast.dismiss(loadingToast);
-        toast.success('Published');
-        //val=val+1;
+    if (response.success) {
+      e.target.classList.remove('disable');
 
-        setTimeout(() => {
-          navigate('/dashboard/blogs');
-        }, 500);
-      })
-      .catch(({ response }) => {
-        e.target.classList.remove('disable');
-        toast.dismiss(loadingToast);
+      toast.dismiss(loadingToast);
+      toast.success('Published');
+      //val=val+1;
 
-        return toast.error(response.data.error);
-      });
+      setTimeout(() => {
+        navigate('/dashboard/blogs');
+      }, 500);
+    } else {
+      e.target.classList.remove('disable');
+      toast.dismiss(loadingToast);
+
+      return toast.error(response.error);
+    }
   };
 
   return (

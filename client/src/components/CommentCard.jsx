@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import CommentField from './CommentField';
 import { BlogContext } from '../pages/blog.page';
 import axios from 'axios';
+import { apiGetReply } from '../apis';
 
 const CommentCard = ({ index, leftVal, commentData }) => {
   let {
@@ -97,30 +98,30 @@ const CommentCard = ({ index, leftVal, commentData }) => {
     });
   };
 
-  const loadReplies = ({ skip = 0, currentIndex = index }) => {
+  const loadReplies = async ({ skip = 0, currentIndex = index }) => {
     if (commentsArr[currentIndex].children.length) {
       hideReplies();
 
-      axios
-        .post(import.meta.env.VITE_SERVER_DOMAIN + '/get-replies', {
-          _id: commentsArr[currentIndex]._id,
-          skip,
-        })
-        .then(({ data: { replies } }) => {
-          commentsArr[currentIndex].isReplyLoaded = true;
+      const response = await apiGetReply({
+        _id: commentsArr[currentIndex]._id,
+        skip,
+      });
 
-          for (let i = 0; i < replies.length; i++) {
-            replies[i].childrenLevel =
-              commentsArr[currentIndex].childrenLevel + 1;
+      const { replies } = response;
 
-            commentsArr.splice(currentIndex + 1 + i + skip, 0, replies[i]);
-          }
+      if (replies) {
+        commentsArr[currentIndex].isReplyLoaded = true;
 
-          setBlog({ ...blog, comments: { ...comments, results: commentsArr } });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+        for (let i = 0; i < replies.length; i++) {
+          replies[i].childrenLevel =
+            commentsArr[currentIndex].childrenLevel + 1;
+
+          commentsArr.splice(currentIndex + 1 + i + skip, 0, replies[i]);
+        }
+
+        setBlog({ ...blog, comments: { ...comments, results: commentsArr } });
+      }
+
     }
   };
 

@@ -4,7 +4,6 @@ import darkLogo from '../imgs/logo-dark.png';
 import AnimationWrapper from '../common/page-animation';
 import lightBanner from '../imgs/blog banner light.png';
 import darkBanner from '../imgs/blog banner dark.png';
-import { uploadImage, uploadImage2 } from '../common/aws';
 import { useContext, useEffect } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import { EditorContext } from '../pages/editor.pages';
@@ -12,6 +11,7 @@ import EditorJS from '@editorjs/editorjs';
 import { tools } from './tools.component';
 import axios from 'axios';
 import { ThemeContext, UserContext } from '../App';
+import { apiCreateBlog, apiUploadImageBanner } from '../apis';
 
 const BlogEditor = () => {
   let {
@@ -51,7 +51,7 @@ const BlogEditor = () => {
     if (img) {
       let loadingToast = toast.loading('Uploading...');
 
-      const banner = await uploadImage2(img);
+      const banner = await apiUploadImageBanner(img);
       if (banner?.url) {
         toast.dismiss(loadingToast);
         toast.success('Uploaded');
@@ -59,7 +59,7 @@ const BlogEditor = () => {
         setBlog({ ...blog, banner });
       } else {
         toast.dismiss(loadingToast);
-        return toast.error(err);
+        return toast.error('Upload failed');
       }
     }
   };
@@ -125,7 +125,7 @@ const BlogEditor = () => {
     e.target.classList.add('disable');
 
     if (textEditor.isReady) {
-      textEditor.save().then((content) => {
+      textEditor.save().then(async (content) => {
         let blogObj = {
           title,
           banner,
@@ -135,32 +135,25 @@ const BlogEditor = () => {
           draft: true,
         };
 
-        axios
-          .post(
-            import.meta.env.VITE_SERVER_DOMAIN + '/create-blog',
-            { ...blogObj, id: blog_id },
-            {
-              headers: {
-                Authorization: `Bearer ${access_token}`,
-              },
-            }
-          )
-          .then(() => {
-            e.target.classList.remove('disable');
+        const response = await apiCreateBlog();
 
-            toast.dismiss(loadingToast);
-            toast.success('Saved');
+        console.log(response);
 
-            setTimeout(() => {
-              navigate('/dashboard/blogs?tab=draft');
-            }, 500);
-          })
-          .catch(({ response }) => {
-            e.target.classList.remove('disable');
-            toast.dismiss(loadingToast);
+        if (response?.error) {
+          e.target.classList.remove('disable');
+          toast.dismiss(loadingToast);
 
-            return toast.error(response.data.error);
-          });
+          return toast.error(response.error);
+        } else {
+          e.target.classList.remove('disable');
+
+          toast.dismiss(loadingToast);
+          toast.success('Saved');
+
+          setTimeout(() => {
+            navigate('/dashboard/blogs?tab=draft');
+          }, 500);
+        }
       });
     }
   };

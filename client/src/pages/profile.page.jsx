@@ -10,7 +10,7 @@ import InPageNavigation from '../components/InPageNavigation';
 import BlogPostCard from '../components/BlogPostCard';
 import NoDataMessage from '../components/NoDataMessage';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
-import PageNotFound from './404.page';
+import PageNotFound from './PageNotFound';
 
 export const profileDataStructure = {
   personal_info: {
