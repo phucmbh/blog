@@ -6,6 +6,7 @@ import { ThemeContext, UserContext } from '../App';
 import UserNavigationPanel from './UserNavigationPanel';
 import axios from 'axios';
 import { storeInSession } from '../common/session';
+import { apiNewNotification } from '../apis';
 
 const Navbar = () => {
   const [searchBoxVisibility, setSearchBoxVisibility] = useState(false);
@@ -28,18 +29,13 @@ const Navbar = () => {
 
   useEffect(() => {
     if (access_token) {
-      axios
-        .get(import.meta.env.VITE_SERVER_DOMAIN + '/new-notification', {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        })
-        .then(({ data }) => {
-          setUserAuth({ ...userAuth, ...data });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+
+      const fetchNewNotification = async () =>{
+          const response = await apiNewNotification();
+          setUserAuth({ ...userAuth, ...response });
+      }
+
+      fetchNewNotification();
     }
   }, [access_token]);
 

@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+// const aws = require('aws-sdk')
 
 const cors = require('cors');
 require('dotenv').config();
@@ -32,17 +33,17 @@ mongoose.connect(process.env.MONGO_URI, {
 //   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 // });
 
-const generateUploadURL = async () => {
-  const date = new Date();
-  const imageName = `${uuidv4()}-${date.getTime()}.jpeg`;
+// const generateUploadURL = async () => {
+//   const date = new Date();
+//   const imageName = `${uuidv4()}-${date.getTime()}.jpeg`;
 
-  return await s3.getSignedUrlPromise('putObject', {
-    Bucket: 'blogging-website-new',
-    Key: imageName,
-    Expires: 1000,
-    ContentType: 'image/jpeg',
-  });
-};
+//   return await s3.getSignedUrlPromise('putObject', {
+//     Bucket: 'blogging-website-new',
+//     Key: imageName,
+//     Expires: 1000,
+//     ContentType: 'image/jpeg',
+//   });
+// };
 
 
 

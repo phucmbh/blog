@@ -5,6 +5,7 @@ import BlogEditor from '../components/BlogEditor';
 import PublishForm from '../components/PublishForm';
 import Loader from '../components/Loader';
 import axios from 'axios';
+import { apiGetBlog } from '../apis';
 
 const blogStructure = {
   title: '',
@@ -37,20 +38,20 @@ const Editor = () => {
       return setLoading(false);
     }
 
-    axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + '/get-blog', {
+    const fetchGetBlog = async () => {
+      const blog = await apiGetBlog({
         blog_id,
         draft: true,
         mode: 'edit',
-      })
-      .then(({ data: { blog } }) => {
-        setBlog(blog);
-        setLoading(false);
-      })
-      .catch((err) => {
+      });
+      if (!blog) {
         setBlog(null);
         setLoading(false);
-      });
+      }
+      setBlog(blog);
+      setLoading(false);
+    };
+    fetchGetBlog();
   }, []);
 
   return (

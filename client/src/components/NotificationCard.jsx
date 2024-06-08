@@ -4,6 +4,7 @@ import { useContext, useState } from 'react';
 import NotificationCommentField from './NotificationCommentField';
 import { UserContext } from '../App';
 import axios from 'axios';
+import { apiDeleteBlog, apiDeleteComment } from '../apis';
 
 const NotificationCard = ({ data, index, notificationState }) => {
   let [isReplying, setReplying] = useState(false);
@@ -41,37 +42,24 @@ const NotificationCard = ({ data, index, notificationState }) => {
     setReplying((preVal) => !preVal);
   };
 
-  const handleDelete = (comment_id, type, target) => {
+  const handleDelete = async (comment_id, type, target) => {
     target.setAttribute('disabled', true);
 
-    axios
-      .post(
-        import.meta.env.VITE_SERVER_DOMAIN + '/delete-comment',
-        { _id: comment_id },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-      )
-      .then(() => {
-        if (type == 'comment') {
-          results.splice(index, 1);
-        } else {
-          delete results[index].reply;
-        }
+    await apiDeleteComment({ _id: comment_id });
 
-        target.removeAttribute('disabled');
-        setNotifications({
-          ...notifications,
-          results,
-          totalDocs: totalDocs - 1,
-          deleteDocCount: notifications.deleteDocCount + 1,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (type == 'comment') {
+      results.splice(index, 1);
+    } else {
+      delete results[index].reply;
+    }
+
+    target.removeAttribute('disabled');
+    setNotifications({
+      ...notifications,
+      results,
+      totalDocs: totalDocs - 1,
+      deleteDocCount: notifications.deleteDocCount + 1,
+    });
   };
 
   return (

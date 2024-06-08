@@ -7,6 +7,7 @@ import AnimationWrapper from '../common/page-animation';
 import NoDataMessage from '../components/NoDataMessage';
 import NotificationCard from '../components/NotificationCard';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
+import { apiNotification } from '../apis';
 
 const Notifications = () => {
   let {
@@ -20,36 +21,29 @@ const Notifications = () => {
 
   let filters = ['all', 'like', 'comment', 'reply'];
 
-  const fetchNotifications = ({ page, deletedDocCount = 0 }) => {
-    axios
-      .post(
-        import.meta.env.VITE_SERVER_DOMAIN + '/notifications',
-        { page, filter, deletedDocCount },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-      )
-      .then(async ({ data: { notifications: data } }) => {
-        if (new_notification_available) {
-          setUserAuth({ ...userAuth, new_notification_available: false });
-        }
+  const fetchNotifications = async ({ page, deletedDocCount = 0 }) => {
+    const { notifications: data } = await apiNotification({
+      page,
+      filter,
+      deletedDocCount,
+    });
 
-        let formatedData = await filterPaginationData({
-          state: notifications,
-          data,
-          page,
-          countRoute: '/all-notifications-count',
-          data_to_send: { filter },
-          user: access_token,
-        });
+    if (new_notification_available) {
+      setUserAuth({ ...userAuth, new_notification_available: false });
+    }
 
-        setNotifications(formatedData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    let formatedData = await filterPaginationData({
+      state: notifications,
+      data,
+      page,
+      countRoute: '/all-notifications-count',
+      data_to_send: { filter },
+      user: access_token,
+    });
+
+    setNotifications(formatedData);
+
+    
   };
 
   useEffect(() => {

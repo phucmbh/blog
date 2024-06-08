@@ -4,8 +4,7 @@ import { UserContext } from '../App';
 import toast from 'react-hot-toast';
 import CommentField from './CommentField';
 import { BlogContext } from '../pages/blog.page';
-import axios from 'axios';
-import { apiGetReply } from '../apis';
+import { apiDeleteComment, apiGetReply } from '../apis';
 
 const CommentCard = ({ index, leftVal, commentData }) => {
   let {
@@ -121,30 +120,16 @@ const CommentCard = ({ index, leftVal, commentData }) => {
 
         setBlog({ ...blog, comments: { ...comments, results: commentsArr } });
       }
-
     }
   };
 
-  const deleteComment = (e) => {
+  const deleteComment = async (e) => {
     e.target.setAttribute('disabled', true);
 
-    axios
-      .post(
-        import.meta.env.VITE_SERVER_DOMAIN + '/delete-comment',
-        { _id },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-      )
-      .then(() => {
-        e.target.removeAttribute('disabled');
-        removeCommentsCards(index + 1, true);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await apiDeleteComment({ _id });
+
+    e.target.removeAttribute('disabled');
+    removeCommentsCards(index + 1, true);
   };
 
   const hideReplies = () => {

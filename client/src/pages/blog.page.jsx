@@ -10,6 +10,7 @@ import BlogContent from '../components/BlogContent';
 import CommentsContainer, {
   fetchComments,
 } from '../components/CommentsContainer';
+import { apiGetBlog, apiSearchBlogs } from '../apis';
 
 export const blogStructure = {
   title: '',
@@ -42,31 +43,23 @@ const BlogPage = () => {
     publishedAt,
   } = blog;
 
-  const fetchBlog = () => {
-    axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + '/get-blog', { blog_id })
-      .then(async ({ data: { blog } }) => {
-        blog.comments = await fetchComments({
-          blog_id: blog._id,
-          setParentCommentCountFun: setTotalParentCommentsLoaded,
-        });
-        setBlog(blog);
+  const fetchBlog = async () => {
+    const { blog } = await apiGetBlog({ blog_id });
+    if (!blog) return setLoading(false);
+    blog.comments = await fetchComments({
+      blog_id: blog._id,
+      setParentCommentCountFun: setTotalParentCommentsLoaded,
+    });
+    setBlog(blog);
 
-        axios
-          .post(import.meta.env.VITE_SERVER_DOMAIN + '/search-blogs', {
-            tag: blog.tags[0],
-            limit: 6,
-            eliminate_blog: blog_id,
-          })
-          .then(({ data }) => {
-            setSimilarBlogs(data.blogs);
-          });
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+    const { blogs } = await apiSearchBlogs({
+      tag: blog.tags[0],
+      limit: 6,
+      eliminate_blog: blog_id,
+    });
+
+    setSimilarBlogs(blogs);
+    setLoading(false);
   };
 
   useEffect(() => {

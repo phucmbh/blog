@@ -8,6 +8,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import InputBox from '../components/InputBox';
 import { uploadImage } from '../common/aws';
 import { storeInSession } from '../common/session';
+import { apiGetProfile, apiUpdateProfile } from '../apis';
 
 const EditProfile = () => {
   let {
@@ -39,17 +40,15 @@ const EditProfile = () => {
 
   useEffect(() => {
     if (access_token) {
-      axios
-        .post(import.meta.env.VITE_SERVER_DOMAIN + '/get-profile', {
+      const fetchGetProfile = async () => {
+        const profile = await apiGetProfile({
           username: userAuth.username,
-        })
-        .then(({ data }) => {
-          setProfile(data);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
         });
+
+        setProfile(profile);
+        setLoading(false);
+      };
+      fetchGetProfile();
     }
   }, [access_token]);
 
@@ -113,7 +112,7 @@ const EditProfile = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let form = new FormData(editProfileForm.current);
@@ -144,44 +143,27 @@ const EditProfile = () => {
     let loadingToast = toast.loading('Updating...');
     e.target.setAttribute('disabled', true);
 
-    axios
-      .post(
-        import.meta.env.VITE_SERVER_DOMAIN + '/update-profile',
-        {
-          username,
-          bio,
-          social_links: {
-            youtube,
-            facebook,
-            twitter,
-            github,
-            instagram,
-            website,
-          },
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-      )
-      .then(({ data }) => {
-        if (userAuth.username != data.username) {
-          let newUserAuth = { ...userAuth, username: data.username };
+    const response = await apiUpdateProfile();
 
-          storeInSession('user', JSON.stringify(newUserAuth));
-          setUserAuth(newUserAuth);
-        }
+    if (!response.success) {
+      toast.dismiss(loadingToast);
+      e.target.removeAttribute('disabled');
+      toast.error(response.error);
+    }
 
-        toast.dismiss(loadingToast);
-        e.target.removeAttribute('disabled');
-        toast.success('Profile Updated');
-      })
-      .catch(({ response }) => {
-        toast.dismiss(loadingToast);
-        e.target.removeAttribute('disabled');
-        toast.error(response.data.error);
-      });
+    if (userAuth.username != response.username) {
+      let newUserAuth = { ...userAuth, username: response.username };
+
+      storeInSession('user', JSON.stringify(newUserAuth));
+      setUserAuth(newUserAuth);
+    }
+
+    toast.dismiss(loadingToast);
+    e.target.removeAttribute('disabled');
+    toast.success('Profile Updated');
+
+    
+ 
   };
 
   return (

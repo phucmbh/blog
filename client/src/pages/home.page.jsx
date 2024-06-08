@@ -9,6 +9,7 @@ import { activeTabRef } from '../components/InPageNavigation';
 import NoDataMessage from '../components/NoDataMessage';
 import { filterPaginationData } from '../common/filter-pagination-data';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
+import { apiSearchBlogs, apiTrendingBlogs, apiLatestBlogs } from '../apis';
 
 const HomePage = () => {
   let [blogs, setBlog] = useState(null);
@@ -27,55 +28,38 @@ const HomePage = () => {
     'travel',
   ];
 
-  const fetchLatestBlogs = ({ page = 1 }) => {
-    axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + '/latest-blogs', { page })
-      .then(async ({ data }) => {
-        let formatedData = await filterPaginationData({
-          state: blogs,
-          data: data.blogs,
-          page,
-          countRoute: '/all-latest-blogs-count',
-        });
+  const fetchLatestBlogs = async ({ page = 1 }) => {
+    const response = await apiLatestBlogs({ page });
+    let formatedData = await filterPaginationData({
+      state: blogs,
+      data: response.blogs,
+      page,
+      countRoute: '/all-latest-blogs-count',
+    });
 
-        setBlog(formatedData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setBlog(formatedData);
   };
 
-  const fetchBlogsByCategory = ({ page = 1 }) => {
-    axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + '/search-blogs', {
-        tag: pageState,
-        page,
-      })
-      .then(async ({ data }) => {
-        let formatedData = await filterPaginationData({
-          state: blogs,
-          data: data.blogs,
-          page,
-          countRoute: '/search-blogs-count',
-          data_to_send: { tag: pageState },
-        });
+  const fetchBlogsByCategory = async ({ page = 1 }) => {
+    const reponse = apiSearchBlogs({
+      tag: pageState,
+      page,
+    });
 
-        setBlog(formatedData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    let formatedData = await filterPaginationData({
+      state: blogs,
+      data: reponse.blogs,
+      page,
+      countRoute: '/search-blogs-count',
+      data_to_send: { tag: pageState },
+    });
+
+    setBlog(formatedData);
   };
 
-  const fetchTrendingBlogs = () => {
-    axios
-      .get(import.meta.env.VITE_SERVER_DOMAIN + '/trending-blogs')
-      .then(({ data }) => {
-        setTrendingBlog(data.blogs);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const fetchTrendingBlogs = async () => {
+    const { blogs } = await apiTrendingBlogs();
+    setTrendingBlog(blogs);
   };
 
   const loadBlogByCategory = (e) => {

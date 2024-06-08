@@ -9,6 +9,7 @@ import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
 import axios from 'axios';
 import { filterPaginationData } from '../common/filter-pagination-data';
 import UserCard from '../components/UserCard';
+import { apiSearchBlogs, apiSearchUsers } from '../apis';
 
 const SearchPage = () => {
   let { query } = useParams();
@@ -16,35 +17,26 @@ const SearchPage = () => {
   let [blogs, setBlog] = useState(null);
   let [users, setUsers] = useState(null);
 
-  const searchBlogs = ({ page = 1, create_new_arr = false }) => {
-    axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + '/search-blogs', {
-        query,
-        page,
-      })
-      .then(async ({ data }) => {
-        let formatedData = await filterPaginationData({
-          state: blogs,
-          data: data.blogs,
-          page,
-          countRoute: '/search-blogs-count',
-          data_to_send: { query },
-          create_new_arr,
-        });
+  const searchBlogs = async ({ page = 1, create_new_arr = false }) => {
+    const { blogs } = await apiSearchBlogs({
+      query,
+      page,
+    });
+    let formatedData = await filterPaginationData({
+      state: blogs,
+      data: blogs,
+      page,
+      countRoute: '/search-blogs-count',
+      data_to_send: { query },
+      create_new_arr,
+    });
 
-        setBlog(formatedData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setBlog(formatedData);
   };
 
-  const fetchUsers = () => {
-    axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + '/search-users', { query })
-      .then(({ data: { users } }) => {
-        setUsers(users);
-      });
+  const fetchUsers = async () => {
+    const { users } = await apiSearchUsers({ query });
+    setUsers(users);
   };
 
   useEffect(() => {

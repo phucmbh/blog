@@ -25,7 +25,6 @@ export const apiGetBlog = (data) =>
     data,
   });
 
-
 export const apiCreateBlog = (data) =>
   axiosInstance({
     url: '/create-blog',
@@ -40,9 +39,39 @@ export const apiLikeBlog = (data) =>
     data,
   });
 
-export const apiIsLikedByUser = (data) =>
+export const apiSearchBlogs = (data) =>
   axiosInstance({
-    url: '/isliked-by-user',
+    url: '/search-blogs',
     method: 'POST',
+    data,
+  });
+export const apiLatestBlogs = (data) =>
+  axiosInstance({
+    url: '/latest-blogs',
+    method: 'POST',
+    data,
+  });
+export const apiUserWrittenBlogs = (data) =>
+  axiosInstance({
+    url: '/user-written-blogs',
+    method: 'POST',
+    data,
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+export const apiTrendingBlogs = (data) =>
+  axiosInstance({
+    url: '/trending-blogs',
+    method: 'GET',
     data,
   });

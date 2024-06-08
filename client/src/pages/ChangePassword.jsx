@@ -6,9 +6,6 @@ import { UserContext } from '../App';
 import { apiChangePasswordUser } from '../apis';
 
 const ChangePassword = () => {
-  let {
-    userAuth: { access_token },
-  } = useContext(UserContext);
 
   let changePasswordForm = useRef();
 

@@ -32,23 +32,12 @@ const BlogInteraction = () => {
   useEffect(() => {
     if (access_token) {
       //make req to server to get like info
+      const fetchIsLikedByUser = async () => {
+        const { result } = await apiIsLikedByUser({ _id });
+        return setLikedByUser(Boolean(result));
+      };
 
-      axios
-        .post(
-          import.meta.env.VITE_SERVER_DOMAIN + '/isliked-by-user',
-          { _id },
-          {
-            headers: {
-              Authorization: `Bearer ${access_token}`,
-            },
-          }
-        )
-        .then(({ data: { result } }) => {
-          setLikedByUser(Boolean(result));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      fetchIsLikedByUser();
     }
   }, []);
 

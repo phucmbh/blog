@@ -248,13 +248,15 @@ var that = (module.exports = {
       let bioLimit = 150;
 
       if (username.length < 3) {
-        return res
-          .status(403)
-          .json({ error: 'Username should be at least 3 letters long' });
+        return res.status(403).json({
+          success: false,
+          error: 'Username should be at least 3 letters long',
+        });
       }
 
       if (bio.length > bioLimit) {
         return res.status(403).json({
+          success: false,
           error: `Bio  should not be more than ${bioLimit} characters`,
         });
       }
@@ -271,6 +273,7 @@ var that = (module.exports = {
               socialLinksArr[i] != 'website'
             ) {
               return res.status(403).json({
+                success: false,
                 error: `${socialLinksArr[i]} link is invalid. Please enter a valid link`,
               });
             }
@@ -278,6 +281,7 @@ var that = (module.exports = {
         }
       } catch (err) {
         return res.status(500).json({
+          success: false,
           error: 'You must provide full social links with http(s) included',
         });
       }
@@ -292,12 +296,14 @@ var that = (module.exports = {
         runValidators: true,
       });
 
-      return res.status(200).json({ username });
+      return res.status(200).json({ success: true, username });
     } catch (error) {
       if (error.code == 11000) {
-        return res.status(500).json({ error: 'Username is already taken' });
+        return res
+          .status(500)
+          .json({ success: false, error: 'Username is already taken' });
       }
-      return res.status(500).json({ error: error.message });
+      return res.status(500).json({ success: false, error: error.message });
     }
   },
 
