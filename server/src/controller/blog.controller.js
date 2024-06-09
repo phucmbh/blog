@@ -1,5 +1,6 @@
 const Blog = require('../model/Blog');
 const User = require('../model/User');
+const Comment = require('../model/Comment');
 const Notification = require('../model/Notification');
 const { v4: uuidv4 } = require('uuid');
 
@@ -32,7 +33,7 @@ var that = (module.exports = {
         });
       }
 
-      if (!content.blocks.length) {
+      if (!content.length) {
         return res.status(403).json({
           success: false,
           error: 'There must be some blog content to publish the blog',
@@ -161,7 +162,9 @@ var that = (module.exports = {
       ).then((user) => console.log('Blog deleted'));
 
       return res.status(200).json({ status: 'done' });
-    } catch (error) {}
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
   },
 
   latestBlogs: async (req, res) => {

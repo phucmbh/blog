@@ -12,7 +12,6 @@ import NoDataMessage from '../components/NoDataMessage';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
 import PageNotFound from './PageNotFound';
 import { apiGetBlog } from '../apis';
-
 export const profileDataStructure = {
   personal_info: {
     fullname: '',
@@ -47,15 +46,23 @@ const ProfilePage = () => {
     userAuth: { username },
   } = useContext(UserContext);
 
-  const fetchUserProfile = async () => {
-    const user = await apiGetBlog({
-      username: profileId,
-    });
-    if (!user) return setLoading(false);
-    setProfile(user);
-    setProfileLoaded(profileId);
-    getBlogs({ user_id: user._id });
-    setLoading(false);
+  const fetchUserProfile = () => {
+    axios
+      .post(import.meta.env.VITE_SERVER_DOMAIN + '/get-profile', {
+        username: profileId,
+      })
+      .then(({ data: user }) => {
+        if (user != null) {
+          setProfile(user);
+        }
+        setProfileLoaded(profileId);
+        getBlogs({ user_id: user._id });
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
   };
 
   const getBlogs = ({ page = 1, user_id }) => {

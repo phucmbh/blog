@@ -43,8 +43,11 @@ const BlogPage = () => {
     publishedAt,
   } = blog;
 
+
+
   const fetchBlog = async () => {
     const { blog } = await apiGetBlog({ blog_id });
+    console.log(blog)
     if (!blog) return setLoading(false);
     blog.comments = await fetchComments({
       blog_id: blog._id,
@@ -122,13 +125,7 @@ const BlogPage = () => {
             <BlogInteraction />
 
             <div className="my-12 font-gelasio blog-page-content">
-              {content[0].blocks.map((block, i) => {
-                return (
-                  <div key={i} className="my-4 md:my-8">
-                    <BlogContent block={block} />
-                  </div>
-                );
-              })}
+              <div dangerouslySetInnerHTML={{ __html: content }} />
             </div>
 
             <BlogInteraction />

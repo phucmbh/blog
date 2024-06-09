@@ -3,17 +3,17 @@ import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../App';
 import { filterPaginationData } from '../common/filter-pagination-data';
 import { Toaster } from 'react-hot-toast';
-import InPageNavigation from '../components/InPageNavigation';
-import Loader from '../components/Loader';
-import NoDataMessage from '../components/NoDataMessage';
-import AnimationWrapper from '../common/page-animation';
+
 import {
   ManageDraftBlogPost,
   ManagePublishedBlogCard,
 } from '../components/manage-blogcard.component';
-import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
 import { useSearchParams } from 'react-router-dom';
-import { apiUserWrittenBlogs } from '../apis';
+import InPageNavigation from '../components/InPageNavigation';
+import Loader from '../components/Loader';
+import AnimationWrapper from '../common/page-animation';
+import NoDataMessage from '../components/NoDataMessage';
+import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
 
 const ManageBlogs = () => {
   const [blogs, setBlogs] = useState(null);
@@ -26,29 +26,44 @@ const ManageBlogs = () => {
     userAuth: { access_token },
   } = useContext(UserContext);
 
-  const getBlogs = async ({ page, draft, deletedDocCount = 0 }) => {
-    const { blogs } =await apiUserWrittenBlogs({
-      page,
-      draft,
-      query,
-      deletedDocCount,
-    });
+  const getBlogs = ({ page, draft, deletedDocCount = 0 }) => {
+    axios
+      .post(
+        import.meta.env.VITE_SERVER_DOMAIN + '/user-written-blogs',
+        {
+          page,
+          draft,
+          query,
+          deletedDocCount,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      )
+      .then(async ({ data }) => {
+        let formatedData = await filterPaginationData({
+          state: draft ? drafts : blogs,
+          data: data.blogs,
+          page,
+          user: access_token,
+          countRoute: '/user-written-blogs-count',
+          data_to_send: { draft, query },
+        });
 
-    let formatedData = await filterPaginationData({
-      state: draft ? drafts : blogs,
-      data: blogs,
-      page,
-      user: access_token,
-      countRoute: '/user-written-blogs-count',
-      data_to_send: { draft, query },
-    });
-
-    if (draft) {
-      setDrafts(formatedData);
-    } else {
-      setBlogs(formatedData);
-    }
+        if (draft) {
+          setDrafts(formatedData);
+        } else {
+          setBlogs(formatedData);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
+  console.log(blogs);
 
   useEffect(() => {
     if (access_token) {

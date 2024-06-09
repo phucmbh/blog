@@ -4,16 +4,13 @@ import { Navigate, useParams } from 'react-router-dom';
 import BlogEditor from '../components/BlogEditor';
 import PublishForm from '../components/PublishForm';
 import Loader from '../components/Loader';
-import axios from 'axios';
 import { apiGetBlog } from '../apis';
+import axios from 'axios';
 
 const blogStructure = {
   title: '',
-  banner: {
-    public_id: '',
-    url: '',
-  },
-  content: [],
+  banner: '',
+  content: '',
   tags: [],
   des: '',
   author: { personal_info: {} },
@@ -38,20 +35,21 @@ const Editor = () => {
       return setLoading(false);
     }
 
-    const fetchGetBlog = async () => {
-      const blog = await apiGetBlog({
+    axios
+      .post(import.meta.env.VITE_SERVER_DOMAIN + '/get-blog', {
         blog_id,
         draft: true,
         mode: 'edit',
-      });
-      if (!blog) {
+      })
+      .then(({ data: { blog } }) => {
+        setBlog(blog);
+        setLoading(false);
+      })
+      .catch((err) => {
         setBlog(null);
         setLoading(false);
-      }
-      setBlog(blog);
-      setLoading(false);
-    };
-    fetchGetBlog();
+      });
+    console.log(blog);
   }, []);
 
   return (

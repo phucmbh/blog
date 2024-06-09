@@ -9,7 +9,6 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const user = JSON.parse(sessionStorage.getItem('user'));
     config.headers.authorization = `Bearer ${user?.access_token}`;
-    console.log(user?.access_token);
     return config;
   },
   (error) => {

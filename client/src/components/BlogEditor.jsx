@@ -7,11 +7,9 @@ import darkBanner from '../imgs/blog banner dark.png';
 import { useContext, useEffect } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import { EditorContext } from '../pages/editor.pages';
-import EditorJS from '@editorjs/editorjs';
-import { tools } from './tools.component';
-import axios from 'axios';
-import { ThemeContext, UserContext } from '../App';
+import { ThemeContext } from '../App';
 import { apiCreateBlog, apiUploadImageBanner } from '../apis';
+import TinyEditor from './TinyEditor';
 
 const BlogEditor = () => {
   let {
@@ -23,27 +21,14 @@ const BlogEditor = () => {
     setEditorState,
   } = useContext(EditorContext);
 
-  let {
-    userAuth: { access_token },
-  } = useContext(UserContext);
+  console.log(blog);
+
   let { theme } = useContext(ThemeContext);
   let { blog_id } = useParams();
 
   let navigate = useNavigate();
 
   //useEffect
-  useEffect(() => {
-    if (!textEditor.isReady) {
-      setTextEditor(
-        new EditorJS({
-          holder: 'textEditor',
-          data: Array.isArray(content) ? content[0] : content,
-          tools: tools,
-          placeholder: "Let's write an awesome story",
-        })
-      );
-    }
-  }, []);
 
   const handleBannerUpload = async (e) => {
     let img = e.target.files[0];
@@ -94,24 +79,11 @@ const BlogEditor = () => {
       return toast.error('Write blog title to publish it');
     }
 
-    if (textEditor.isReady) {
-      textEditor
-        .save()
-        .then((data) => {
-          if (data.blocks.length) {
-            setBlog({ ...blog, content: data });
-            setEditorState('publish');
-          } else {
-            return toast.error('Write something in your blog to publish it');
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    if (blog.content) setEditorState('publish');
+    else toast.error('Write something in your blog to publish it');
   };
 
-  const handleSaveDraft = (e) => {
+  const handleSaveDraft = async (e) => {
     if (e.target.className.includes('disable')) {
       return;
     }
@@ -124,37 +96,33 @@ const BlogEditor = () => {
 
     e.target.classList.add('disable');
 
-    if (textEditor.isReady) {
-      textEditor.save().then(async (content) => {
-        let blogObj = {
-          title,
-          banner,
-          des,
-          content,
-          tags,
-          draft: true,
-        };
+    let blogObj = {
+      title,
+      banner,
+      des,
+      content,
+      tags,
+      draft: true,
+    };
 
-        const response = await apiCreateBlog();
+    const response = await apiCreateBlog({ ...blogObj, id: blog_id });
 
-        console.log(response);
+    console.log(response);
 
-        if (response?.error) {
-          e.target.classList.remove('disable');
-          toast.dismiss(loadingToast);
+    if (response?.error) {
+      e.target.classList.remove('disable');
+      toast.dismiss(loadingToast);
 
-          return toast.error(response.error);
-        } else {
-          e.target.classList.remove('disable');
+      return toast.error(response.error);
+    } else {
+      e.target.classList.remove('disable');
 
-          toast.dismiss(loadingToast);
-          toast.success('Saved');
+      toast.dismiss(loadingToast);
+      toast.success('Saved');
 
-          setTimeout(() => {
-            navigate('/dashboard/blogs?tab=draft');
-          }, 500);
-        }
-      });
+      setTimeout(() => {
+        navigate('/dashboard/blogs?tab=draft');
+      }, 500);
     }
   };
 
@@ -168,7 +136,7 @@ const BlogEditor = () => {
           />
         </Link>
         <p className="max-md:hidden text-black blog-title line-clamp-1 w-full">
-          {title.length ? title : 'New Blog'}
+          {title?.length ? title : 'New Blog'}
         </p>
 
         <div className="flex gap-4 ml-auto">
@@ -206,8 +174,7 @@ const BlogEditor = () => {
             ></textarea>
 
             <hr className="w-full opacity-10 my-5" />
-
-            <div id="textEditor" className="font-gelasio"></div>
+            <TinyEditor blog={blog} setBlog={setBlog} />
           </div>
         </section>
       </AnimationWrapper>
