@@ -6,7 +6,6 @@ import Loader from '../components/Loader';
 import { getDay } from '../common/date';
 import BlogInteraction from '../components/BlogInteraction';
 import BlogPostCard from '../components/BlogPostCard';
-import BlogContent from '../components/BlogContent';
 import DOMPurify from 'dompurify';
 import CommentsContainer, {
   fetchComments,
@@ -103,7 +102,7 @@ const BlogPage = () => {
           <CommentsContainer />
 
           <div className="max-w-[900px] center py-10 max-lg:px-[5vw]">
-            <img src={banner?.url} className="aspect-video" />
+            <img src={banner?.url} className="aspect-video rounded-lg" />
 
             <div className="mt-12">
               <h2>{title}</h2>
@@ -128,7 +127,7 @@ const BlogPage = () => {
 
             <BlogInteraction />
 
-            <div className="my-12 font-gelasio blog-page-content">
+            <div className="blog-content">
               <div
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(content),

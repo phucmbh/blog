@@ -1,0 +1,36 @@
+pre .hljs {
+  @apply rounded-lg leading-3 mt-5 mb-5;
+}
+
+.blog-content {
+  @apply my-12 font-inter;
+}
+
+.blog-content * {
+  @apply text-xl leading-10 md:text-2xl;
+}
+
+.blog-content code {
+  @apply text-base leading-6;
+}
+.blog-content span {
+  @apply text-base leading-6;
+}
+
+.blog-content h1 {
+  @apply text-4xl;
+}
+.blog-content h2 {
+  @apply text-3xl;
+}
+.blog-content h3 {
+  @apply text-2xl;
+}
+
+.blog-content img {
+  @apply rounded-md;
+}
+
+.blog-content a {
+  @apply text-sky-500 hover:opacity-50;
+}

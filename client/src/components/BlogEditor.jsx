@@ -16,8 +16,6 @@ const BlogEditor = () => {
     blog,
     blog: { title, banner, content, tags, des },
     setBlog,
-    textEditor,
-    setTextEditor,
     setEditorState,
   } = useContext(EditorContext);
 
