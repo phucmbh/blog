@@ -4,15 +4,15 @@ import darkLogo from '../imgs/logo-dark.png';
 import AnimationWrapper from '../common/page-animation';
 import lightBanner from '../imgs/blog banner light.png';
 import darkBanner from '../imgs/blog banner dark.png';
-import { useContext, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import { EditorContext } from '../pages/editor.pages';
 import { ThemeContext } from '../App';
 import { apiCreateBlog, apiUploadImageBanner } from '../apis';
-import TinyEditor from './TinyEditor';
+import TextEditor from './TextEditor';
 
 const BlogEditor = () => {
-  let {
+  const {
     blog,
     blog: { title, banner, content, tags, des },
     setBlog,
@@ -21,20 +21,20 @@ const BlogEditor = () => {
     setEditorState,
   } = useContext(EditorContext);
 
-  console.log(blog);
+  const { theme } = useContext(ThemeContext);
+  const { blog_id } = useParams();
 
-  let { theme } = useContext(ThemeContext);
-  let { blog_id } = useParams();
+  const navigate = useNavigate();
 
-  let navigate = useNavigate();
+  const [editorContent, setEditorContent] = useState('');
 
   //useEffect
 
   const handleBannerUpload = async (e) => {
-    let img = e.target.files[0];
+    const img = e.target.files[0];
 
     if (img) {
-      let loadingToast = toast.loading('Uploading...');
+      const loadingToast = toast.loading('Uploading...');
 
       const banner = await apiUploadImageBanner(img);
       if (banner?.url) {
@@ -71,6 +71,7 @@ const BlogEditor = () => {
   };
 
   const handlePublishEvent = () => {
+    setBlog({ ...blog, content: editorContent });
     if (!banner?.url.length) {
       return toast.error('Upload a blog banner to publish it');
     }
@@ -84,6 +85,8 @@ const BlogEditor = () => {
   };
 
   const handleSaveDraft = async (e) => {
+    setBlog({ ...blog, content: editorContent });
+
     if (e.target.className.includes('disable')) {
       return;
     }
@@ -132,7 +135,7 @@ const BlogEditor = () => {
         <Link to="/" className="flex-none h-8">
           <img
             src={theme == 'light' ? darkLogo : lightLogo}
-            className="w-full mt-1"
+            className="w-full h-full mt-1"
           />
         </Link>
         <p className="max-md:hidden text-black blog-title line-clamp-1 w-full">
@@ -154,7 +157,11 @@ const BlogEditor = () => {
           <div className="mx-auto max-w-[900px] w-full">
             <div className="relative aspect-video hover:opacity-80 bg-white border-4 border-grey">
               <label htmlFor="uploadBanner">
-                <img src={banner?.url} className="z-20" onError={handleError} />
+                <img
+                  src={banner?.url}
+                  className="z-20 h-full w-full"
+                  onError={handleError}
+                />
                 <input
                   id="uploadBanner"
                   type="file"
@@ -174,7 +181,7 @@ const BlogEditor = () => {
             ></textarea>
 
             <hr className="w-full opacity-10 my-5" />
-            <TinyEditor blog={blog} setBlog={setBlog} />
+            <TextEditor blog={blog} setEditorContent={setEditorContent} />
           </div>
         </section>
       </AnimationWrapper>

@@ -7,15 +7,18 @@ import { getDay } from '../common/date';
 import BlogInteraction from '../components/BlogInteraction';
 import BlogPostCard from '../components/BlogPostCard';
 import BlogContent from '../components/BlogContent';
+import DOMPurify from 'dompurify';
 import CommentsContainer, {
   fetchComments,
 } from '../components/CommentsContainer';
 import { apiGetBlog, apiSearchBlogs } from '../apis';
 
+import hljs from 'highlight.js';
+import 'highlight.js/styles/atom-one-dark.css';
 export const blogStructure = {
   title: '',
   des: '',
-  content: [],
+  content: '',
   author: { personal_info: {} },
   banner: '',
   publishedAt: '',
@@ -33,6 +36,10 @@ const BlogPage = () => {
   const [commentsWrapper, setCommentsWrapper] = useState(false);
   const [totalParentCommentsLoaded, setTotalParentCommentsLoaded] = useState(0);
 
+  useEffect(() => {
+    hljs.highlightAll();
+  });
+  console.log('blog page render');
   let {
     title,
     content,
@@ -43,11 +50,8 @@ const BlogPage = () => {
     publishedAt,
   } = blog;
 
-
-
   const fetchBlog = async () => {
     const { blog } = await apiGetBlog({ blog_id });
-    console.log(blog)
     if (!blog) return setLoading(false);
     blog.comments = await fetchComments({
       blog_id: blog._id,
@@ -125,7 +129,11 @@ const BlogPage = () => {
             <BlogInteraction />
 
             <div className="my-12 font-gelasio blog-page-content">
-              <div dangerouslySetInnerHTML={{ __html: content }} />
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(content),
+                }}
+              />
             </div>
 
             <BlogInteraction />

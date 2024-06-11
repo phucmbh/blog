@@ -49,7 +49,6 @@ const Editor = () => {
         setBlog(null);
         setLoading(false);
       });
-    console.log(blog);
   }, []);
 
   return (

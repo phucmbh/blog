@@ -14,7 +14,6 @@ import ChangePassword from './pages/ChangePassword';
 import EditProfile from './pages/edit-profile.page';
 import Notifications from './pages/notifications.page';
 import ManageBlogs from './pages/manage-blogs.page';
-import { initHightlightJS } from './utils/config/highlightjs.config';
 
 export const UserContext = createContext({});
 
@@ -31,7 +30,6 @@ const App = () => {
   );
 
   useEffect(() => {
-    initHightlightJS();
     let userInSession = lookInSession('user');
     let themeInSession = lookInSession('theme');
 

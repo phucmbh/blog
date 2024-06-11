@@ -29,11 +29,10 @@ const Navbar = () => {
 
   useEffect(() => {
     if (access_token) {
-
-      const fetchNewNotification = async () =>{
-          const response = await apiNewNotification();
-          setUserAuth({ ...userAuth, ...response });
-      }
+      const fetchNewNotification = async () => {
+        const response = await apiNewNotification();
+        setUserAuth({ ...userAuth, ...response });
+      };
 
       fetchNewNotification();
     }
@@ -73,7 +72,7 @@ const Navbar = () => {
         <Link to="/" className="flex-none h-8">
           <img
             src={theme == 'light' ? darkLogo : lightLogo}
-            className="w-full mt-1"
+            className="w-full h-full mt-1"
           />
         </Link>
 
