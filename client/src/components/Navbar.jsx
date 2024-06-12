@@ -1,10 +1,9 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import darkLogo from '../imgs/logo-dark.png';
-import lightLogo from '../imgs/logo-light.png';
+import darkLogo from '../assets/images/logo-dark.png';
+import lightLogo from '../assets/images/logo-light.png';
 import { useContext, useEffect, useState } from 'react';
 import { ThemeContext, UserContext } from '../App';
 import UserNavigationPanel from './UserNavigationPanel';
-import axios from 'axios';
 import { storeInSession } from '../common/session';
 import { apiNewNotification } from '../apis';
 

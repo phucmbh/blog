@@ -38,7 +38,6 @@ const BlogPage = () => {
   useEffect(() => {
     hljs.highlightAll();
   });
-  console.log('blog page render');
   let {
     title,
     content,
@@ -105,7 +104,7 @@ const BlogPage = () => {
             <img src={banner?.url} className="aspect-video rounded-lg" />
 
             <div className="mt-12">
-              <h2>{title}</h2>
+              <h1 className="text-[28px] font-medium">{title}</h1>
 
               <div className="flex max-sm:flex-col justify-between my-8">
                 <div className="flex gap-5 items-start">

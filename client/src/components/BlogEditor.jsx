@@ -1,9 +1,9 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import lightLogo from '../imgs/logo-light.png';
-import darkLogo from '../imgs/logo-dark.png';
+import lightLogo from '../assets/images/logo-light.png';
+import darkLogo from '../assets/images/logo-dark.png';
 import AnimationWrapper from '../common/page-animation';
-import lightBanner from '../imgs/blog banner light.png';
-import darkBanner from '../imgs/blog banner dark.png';
+import lightBanner from '../assets/images/blog banner light.png';
+import darkBanner from '../assets/images/blog banner dark.png';
 import { useContext, useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import { EditorContext } from '../pages/editor.pages';
@@ -108,7 +108,6 @@ const BlogEditor = () => {
 
     const response = await apiCreateBlog({ ...blogObj, id: blog_id });
 
-    console.log(response);
 
     if (response?.error) {
       e.target.classList.remove('disable');

@@ -12,7 +12,7 @@ const TextEditor = ({ blog, setEditorContent }) => {
   return (
     <>
       <Editor
-        apiKey="bl3d2e9j390ydevofzx409cjzgprr5hdsntkl8sqrb3cjoeq"
+        tinymceScriptSrc="/tinymce/tinymce.min.js"
         initialValue={blog.content}
         init={{
           height: 800,
@@ -24,6 +24,8 @@ const TextEditor = ({ blog, setEditorContent }) => {
           toolbar: tinyToolbar,
           content_style: tinyContentStyle,
           branding: false,
+          promotion: false,
+          license_key: 'gpl',
           images_upload_url: IMAGES_UPLOAD_URL,
           file_picker_types: 'image',
           images_upload_handler: handleImagesUpload,

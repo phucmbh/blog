@@ -1,5 +1,5 @@
 pre .hljs {
-  @apply rounded-lg leading-3 mt-5 mb-5;
+  @apply rounded-lg leading-3 mt-5 mb-5 font-medium;
 }
 
 .blog-content {
@@ -7,24 +7,24 @@ pre .hljs {
 }
 
 .blog-content * {
-  @apply text-xl leading-10 md:text-2xl;
+  @apply text-xl leading-10 md:text-[20px];
 }
 
-.blog-content code {
+.blog-content pre code {
   @apply text-base leading-6;
 }
-.blog-content span {
+.blog-content pre span {
   @apply text-base leading-6;
 }
 
 .blog-content h1 {
-  @apply text-4xl;
+  @apply text-[28px];
 }
 .blog-content h2 {
-  @apply text-3xl;
+  @apply text-[24px];
 }
 .blog-content h3 {
-  @apply text-2xl;
+  @apply text-[20px];
 }
 
 .blog-content img {

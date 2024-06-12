@@ -1,13 +1,13 @@
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import "./index.css"
+
 import UserAuthForm from './pages/userAuthForm.page';
 import { createContext, useEffect, useState } from 'react';
 import { lookInSession } from './common/session';
 import Editor from './pages/editor.pages';
 import HomePage from './pages/home.page';
 import SearchPage from './pages/search.page';
-import PageNotFound from './pages/PageNotFound';
+import PageNotFound from './pages/PageNotFound';  
 import ProfilePage from './pages/profile.page';
 import BlogPage from './pages/blog.page';
 import SideNav from './components/SideNav';

@@ -63,8 +63,6 @@ const ManageBlogs = () => {
       });
   };
 
-  console.log(blogs);
-
   useEffect(() => {
     if (access_token) {
       if (blogs == null) {
