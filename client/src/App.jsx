@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import "./index.css"
 import UserAuthForm from './pages/userAuthForm.page';
 import { createContext, useEffect, useState } from 'react';
 import { lookInSession } from './common/session';

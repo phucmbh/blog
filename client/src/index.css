@@ -36,8 +36,6 @@
     @apply object-cover;
   }
 
-  
-
   .navbar {
     @apply z-10 sticky top-0 flex items-center gap-12 w-full px-[5vw] py-5 h-[80px] border-b border-grey bg-white;
   }
@@ -90,8 +88,6 @@
   .sidebar-link.active {
     @apply text-black border-r-2 border-black pl-6 bg-grey/50 -ml-6 md:rounded-tl-lg md:rounded-bl-lg max-md:border-none;
   }
-
-
 
   .tag {
     @apply p-3 bg-grey rounded-full px-6 capitalize;
