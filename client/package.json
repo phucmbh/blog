@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://phucmbh.github.io/mern-blog/",
+  "homepage": "https://phucmbh.github.io/mern-blog",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
