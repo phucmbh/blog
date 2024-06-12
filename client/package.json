@@ -1,7 +1,7 @@
 {
-  "name": "medium-clone",
+  "name": "mern-blog",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "homepage": "https://phucmbh.github.io/mern-blog",
   "scripts": {
