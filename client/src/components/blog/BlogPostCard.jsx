@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { getDay } from '../common/date';
+import { getDay } from '../../common/date';
 import { FaRegHeart } from 'react-icons/fa';
 
 const BlogPostCard = ({ content, author }) => {

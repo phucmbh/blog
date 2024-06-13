@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { UserContext } from '../App';
 import axios from 'axios';
-import { profileDataStructure } from './profile.page';
+import { profileDataStructure } from './ProfilePage';
 import AnimationWrapper from '../common/page-animation';
 import Loader from '../components/Loader';
 import { Toaster, toast } from 'react-hot-toast';

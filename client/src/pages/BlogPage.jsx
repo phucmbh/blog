@@ -4,12 +4,12 @@ import { Link, useParams } from 'react-router-dom';
 import AnimationWrapper from '../common/page-animation';
 import Loader from '../components/Loader';
 import { getDay } from '../common/date';
-import BlogInteraction from '../components/BlogInteraction';
-import BlogPostCard from '../components/BlogPostCard';
+import BlogInteraction from '../components/blog/BlogInteraction';
+import BlogPostCard from '../components/blog/BlogPostCard';
 import DOMPurify from 'dompurify';
 import CommentsContainer, {
   fetchComments,
-} from '../components/CommentsContainer';
+} from '../components/comment/CommentsContainer';
 import { apiGetBlog, apiSearchBlogs } from '../apis';
 
 import hljs from 'highlight.js';
@@ -37,7 +37,7 @@ const BlogPage = () => {
 
   useEffect(() => {
     hljs.highlightAll();
-  });
+  }, []);
   let {
     title,
     content,

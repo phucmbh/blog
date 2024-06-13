@@ -1,12 +1,11 @@
 import { Toaster, toast } from 'react-hot-toast';
-import AnimationWrapper from '../common/page-animation';
+import AnimationWrapper from '../../common/page-animation';
 import { useContext } from 'react';
-import { EditorContext } from '../pages/editor.pages';
+import { EditorContext } from '../../pages/EditorPage';
 import Tag from './Tag';
-import axios from 'axios';
-import { UserContext } from '../App';
+import { UserContext } from '../../App';
 import { useNavigate, useParams } from 'react-router-dom';
-import { apiCreateBlog } from '../apis';
+import { apiCreateBlog } from '../../apis';
 import { RxCross1 } from 'react-icons/rx';
 
 const PublishForm = () => {
@@ -69,7 +68,7 @@ const PublishForm = () => {
     }
   };
 
-  const publishBlog = async (e) => {
+  const handlePublishBlog = async (e) => {
     if (e.target.className.includes('disable')) {
       return;
     }
@@ -130,7 +129,7 @@ const PublishForm = () => {
           className="w-12 h-12 absolute right-[5vw] z-10 top-[5%] lg:top-[10%]"
           onClick={handleCloseEvent}
         >
-          <RxCross1/>
+          <RxCross1 />
         </button>
 
         <div className="max-w-[550px] center">
@@ -196,7 +195,7 @@ const PublishForm = () => {
             {tagLimit - tags.length} Tags left
           </p>
 
-          <button className="btn-dark px-8" onClick={publishBlog}>
+          <button className="btn-dark px-8" onClick={handlePublishBlog}>
             Publish
           </button>
         </div>

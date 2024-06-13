@@ -5,7 +5,7 @@ import { filterPaginationData } from '../common/filter-pagination-data';
 import Loader from '../components/Loader';
 import AnimationWrapper from '../common/page-animation';
 import NoDataMessage from '../components/NoDataMessage';
-import NotificationCard from '../components/NotificationCard';
+import NotificationCard from '../components/notification/NotificationCard';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
 import { apiNotification } from '../apis';
 
@@ -42,8 +42,6 @@ const Notifications = () => {
     });
 
     setNotifications(formatedData);
-
-    
   };
 
   useEffect(() => {

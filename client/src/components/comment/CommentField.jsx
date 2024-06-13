@@ -1,9 +1,8 @@
 import { useContext, useState } from 'react';
-import { UserContext } from '../App';
+import { UserContext } from '../../App';
 import toast, { Toaster } from 'react-hot-toast';
-import axios from 'axios';
-import { BlogContext } from '../pages/blog.page';
-import { apiAddComment } from '../apis';
+import { BlogContext } from '../../pages/BlogPage';
+import { apiAddComment } from '../../apis';
 
 const CommentField = ({
   action,

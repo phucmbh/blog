@@ -1,12 +1,11 @@
 import { useContext } from 'react';
-import { BlogContext } from '../pages/blog.page';
+import { BlogContext } from '../../pages/BlogPage';
 import CommentField from './CommentField';
-import axios from 'axios';
-import AnimationWrapper from '../common/page-animation';
+import AnimationWrapper from '../../common/page-animation';
 import CommentCard from './CommentCard';
-import NoDataMessage from './NoDataMessage';
-import { apiBlogComment } from '../apis';
-import icons from '../utils/icons.util';
+import NoDataMessage from '../NoDataMessage';
+import { apiBlogComment } from '../../apis';
+import icons from '../../utils/icons.util';
 
 const { RxCross1 } = icons;
 

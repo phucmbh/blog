@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { getFullDay } from '../common/date';
+import { getFullDay } from '../../common/date';
 import {
   FaFacebook,
   FaGithub,

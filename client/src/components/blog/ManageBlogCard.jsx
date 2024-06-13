@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import { getDay } from '../common/date';
+import { getDay } from '../../common/date';
 import { useState } from 'react';
-import { UserContext } from '../App';
+import { UserContext } from '../../App';
 import { useContext } from 'react';
 import axios from 'axios';
-import { apiDeleteBlog } from '../apis';
+import { apiDeleteBlog } from '../../apis';
 
 const BlogStats = ({ stats }) => {
   return (

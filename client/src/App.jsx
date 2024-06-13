@@ -1,20 +1,20 @@
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 
-import UserAuthForm from './pages/userAuthForm.page';
+import UserAuthForm from './pages/UserAuthPage';
 import { createContext, useEffect, useState } from 'react';
 import { lookInSession } from './common/session';
-import Editor from './pages/editor.pages';
-import HomePage from './pages/home.page';
-import SearchPage from './pages/search.page';
-import PageNotFound from './pages/PageNotFound';  
-import ProfilePage from './pages/profile.page';
-import BlogPage from './pages/blog.page';
+import Editor from './pages/EditorPage';
+import HomePage from './pages/HomePage';
+import SearchPage from './pages/SearchPage';
+import PageNotFound from './pages/PageNotFound';
+import ProfilePage from './pages/ProfilePage';
+import BlogPage from './pages/BlogPage';
 import SideNav from './components/SideNav';
 import ChangePassword from './pages/ChangePassword';
-import EditProfile from './pages/edit-profile.page';
-import Notifications from './pages/notifications.page';
-import ManageBlogs from './pages/manage-blogs.page';
+import EditProfile from './pages/EditProfile';
+import Notifications from './pages/Notifications';
+import ManageBlogs from './pages/ManageBlogs';
 
 export const UserContext = createContext({});
 

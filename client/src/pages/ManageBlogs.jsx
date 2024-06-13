@@ -7,7 +7,7 @@ import { Toaster } from 'react-hot-toast';
 import {
   ManageDraftBlogPost,
   ManagePublishedBlogCard,
-} from '../components/manage-blogcard.component';
+} from '../components/blog/ManageBlogCard';
 import { useSearchParams } from 'react-router-dom';
 import InPageNavigation from '../components/InPageNavigation';
 import Loader from '../components/Loader';

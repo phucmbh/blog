@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
-import { UserContext } from '../App';
+import { UserContext } from '../../App';
 import axios from 'axios';
-import { apiAddComment } from '../apis';
+import { apiAddComment } from '../../apis';
 
 const NotificationCommentField = ({
   _id,
@@ -42,7 +42,6 @@ const NotificationCommentField = ({
 
     results[index].reply = { comment, _id: data._id };
     setNotifications({ ...notifications, results });
-
   };
 
   return (

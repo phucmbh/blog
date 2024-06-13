@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import AnimationWrapper from '../common/page-animation';
+import AnimationWrapper from '../../common/page-animation';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../App';
-import { removeFromSession } from '../common/session';
+import { UserContext } from '../../App';
+import { removeFromSession } from '../../common/session';
 import { TfiWrite } from 'react-icons/tfi';
 
 const UserNavigationPanel = () => {

@@ -6,7 +6,7 @@ import {
   tinyContentStyle,
   tinyPlugins,
   tinyToolbar,
-} from '../utils';
+} from '../../utils';
 
 const TextEditor = ({ blog, setEditorContent }) => {
   return (

@@ -9,7 +9,7 @@ import { storeInSession } from '../common/session';
 import { UserContext } from '../App';
 import { authWithGoogle } from '../common/firebase';
 
-const UserAuthForm = ({ type }) => {
+const UserAuthPage = ({ type }) => {
   let {
     userAuth: { access_token },
     setUserAuth,
@@ -163,4 +163,4 @@ const UserAuthForm = ({ type }) => {
   );
 };
 
-export default UserAuthForm;
+export default UserAuthPage;

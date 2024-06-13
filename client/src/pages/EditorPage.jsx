@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { UserContext } from '../App';
 import { Navigate, useParams } from 'react-router-dom';
-import BlogEditor from '../components/BlogEditor';
-import PublishForm from '../components/PublishForm';
+import BlogEditor from '../components/blog/BlogEditor';
+import PublishForm from '../components/blog/PublishForm';
 import Loader from '../components/Loader';
 import { apiGetBlog } from '../apis';
 import axios from 'axios';
@@ -18,7 +18,7 @@ const blogStructure = {
 
 export const EditorContext = createContext({});
 
-const Editor = () => {
+const EditorPage = () => {
   let { blog_id } = useParams();
 
   const [blog, setBlog] = useState(blogStructure);
@@ -75,4 +75,4 @@ const Editor = () => {
   );
 };
 
-export default Editor;
+export default EditorPage;

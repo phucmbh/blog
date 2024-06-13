@@ -3,7 +3,7 @@ import darkLogo from '../assets/images/logo-dark.png';
 import lightLogo from '../assets/images/logo-light.png';
 import { useContext, useEffect, useState } from 'react';
 import { ThemeContext, UserContext } from '../App';
-import UserNavigationPanel from './UserNavigationPanel';
+import UserNavigationPanel from './user/UserNavigationPanel';
 import { storeInSession } from '../common/session';
 import { apiNewNotification } from '../apis';
 import icons from '../utils/icons.util';
@@ -109,7 +109,7 @@ const Navbar = () => {
             className="md:hidden bg-grey w-12 h-12 rounded-full flex items-center justify-center"
             onClick={() => setSearchBoxVisibility((currentVal) => !currentVal)}
           >
-            <CiSearch/>
+            <CiSearch />
           </button>
 
           <Link to="/editor" className="hidden md:flex  gap-2 link">
