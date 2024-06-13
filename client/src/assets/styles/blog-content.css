@@ -1,4 +1,4 @@
-pre .hljs {
+/* pre .hljs {
   @apply rounded-lg leading-3 mt-5 mb-5 font-medium;
 }
 
@@ -18,13 +18,13 @@ pre .hljs {
 }
 
 .blog-content h1 {
-  @apply text-[28px];
+  @apply text-[28px] font-semibold;
 }
 .blog-content h2 {
-  @apply text-[24px];
+  @apply text-[24px] font-semibold;
 }
 .blog-content h3 {
-  @apply text-[20px];
+  @apply text-[20px] font-semibold;
 }
 
 .blog-content img {
@@ -33,4 +33,4 @@ pre .hljs {
 
 .blog-content a {
   @apply text-sky-500 hover:opacity-50;
-}
+} */

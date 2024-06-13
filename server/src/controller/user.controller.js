@@ -243,7 +243,7 @@ var that = (module.exports = {
 
   updateProfile: async (req, res) => {
     try {
-      let { username, bio, social_links } = req.body;
+      let { username, bio, ...social_links } = req.body;
 
       let bioLimit = 150;
 
@@ -257,7 +257,7 @@ var that = (module.exports = {
       if (bio.length > bioLimit) {
         return res.status(403).json({
           success: false,
-          error: `Bio  should not be more than ${bioLimit} characters`,
+          error: `Bio should not be more than ${bioLimit} characters`,
         });
       }
 
@@ -291,6 +291,7 @@ var that = (module.exports = {
         'personal_info.bio': bio,
         social_links,
       };
+      console.log(updateObj);
 
       await User.findOneAndUpdate({ _id: req.user }, updateObj, {
         runValidators: true,

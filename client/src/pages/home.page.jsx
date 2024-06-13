@@ -10,6 +10,7 @@ import NoDataMessage from '../components/NoDataMessage';
 import { filterPaginationData } from '../common/filter-pagination-data';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
 import { apiSearchBlogs, apiTrendingBlogs, apiLatestBlogs } from '../apis';
+import { IoTrendingUpOutline } from 'react-icons/io5';
 
 const HomePage = () => {
   let [blogs, setBlog] = useState(null);
@@ -172,9 +173,10 @@ const HomePage = () => {
             </div>
 
             <div>
-              <h1 className="font-medium text-xl mb-8">
-                Trending <i className="fi fi-rr-arrow-trend-up"></i>
-              </h1>
+              <div className="flex items-center gap-2 font-medium text-xl mb-8">
+                <h1>Trending</h1>
+                <IoTrendingUpOutline />
+              </div>
 
               {trendingBlogs == null ? (
                 <Loader />

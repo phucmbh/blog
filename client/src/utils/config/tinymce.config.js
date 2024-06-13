@@ -19,7 +19,7 @@ export const tinyPlugins = [
 export const tinyToolbar =
   'undo redo |link codesample image| formatselect | blocks |' +
   'bold italic backcolor | alignleft aligncenter ' +
-  'alignright alignjustify | bullist numlist outdent indent | ';
+  'alignright alignjustify | bullist numlist advlist outdent indent | ';
 
 export const tinyCodesample = [
   { text: 'HTML', value: 'html' },

@@ -6,7 +6,17 @@ import { ThemeContext, UserContext } from '../App';
 import UserNavigationPanel from './UserNavigationPanel';
 import { storeInSession } from '../common/session';
 import { apiNewNotification } from '../apis';
-
+import icons from '../utils/icons.util';
+const {
+  CiSearch,
+  CiHeart,
+  CiLock,
+  IoNotificationsOutline,
+  TfiWrite,
+  FaRegUser,
+  MdOutlineLightMode,
+  MdOutlineDarkMode,
+} = icons;
 const Navbar = () => {
   const [searchBoxVisibility, setSearchBoxVisibility] = useState(false);
   const [userNavPanel, setUserNavPanel] = useState(false);
@@ -77,7 +87,7 @@ const Navbar = () => {
 
         <div
           className={
-            'absolute bg-white w-full left-0 top-full mt-0.5 border-b border-grey py-4 px-[5vw] md:border-0 md:block md:relative md:inset-0 md:p-0 md:w-auto md:show ' +
+            'flex flex-row absolute bg-white w-full left-0 top-full mt-0.5 border-b border-grey py-4 px-[5vw] md:border-0 md:block md:relative md:inset-0 md:p-0 md:w-auto md:show ' +
             (searchBoxVisibility ? 'show' : 'hide')
           }
         >
@@ -88,7 +98,10 @@ const Navbar = () => {
             onKeyDown={handleSearch}
           />
 
-          <i className="fi fi-rr-search absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl text-dark-grey"></i>
+          <CiSearch
+            className="absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl text-dark-grey"
+            size={20}
+          />
         </div>
 
         <div className="flex items-center gap-3 md:gap-6 ml-auto">
@@ -96,32 +109,31 @@ const Navbar = () => {
             className="md:hidden bg-grey w-12 h-12 rounded-full flex items-center justify-center"
             onClick={() => setSearchBoxVisibility((currentVal) => !currentVal)}
           >
-            <i className="fi fi-rr-search text-xl"></i>
+            <CiSearch/>
           </button>
 
-          <Link to="/editor" className="hidden md:flex gap-2 link">
-            <i className="fi fi-rr-file-edit"></i>
+          <Link to="/editor" className="hidden md:flex  gap-2 link">
+            <TfiWrite size={20} />
             <p>Write</p>
           </Link>
 
           <button
-            className="w-12 h-12 rounded-full bg-grey relative hover:bg-black/10"
+            className="flex justify-center items-center text-2xl w-12 h-12 rounded-full bg-grey hover:bg-black/10"
             onClick={changeTheme}
           >
-            <i
-              className={
-                'fi fi-rr-' +
-                (theme == 'light' ? 'moon-stars' : 'sun') +
-                ' text-2xl block mt-1'
-              }
-            ></i>
+            {theme == 'light' ? (
+              <MdOutlineLightMode size={25} />
+            ) : (
+              <MdOutlineDarkMode size={25} />
+            )}
           </button>
 
           {access_token ? (
             <>
               <Link to="/dashboard/notifications">
-                <button className="w-12 h-12 rounded-full bg-grey relative hover:bg-black/10">
-                  <i className="fi fi-rr-bell text-2xl block mt-2"></i>
+                <button className="flex justify-center items-center w-12 h-12 rounded-full bg-grey  hover:bg-black/10">
+                  <IoNotificationsOutline size={20} />
+
                   {new_notification_available ? (
                     <span className="bg-red w-3 h-3 rounded-full absolute z-10 top-2 right-2"></span>
                   ) : (

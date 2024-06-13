@@ -6,6 +6,9 @@ import AnimationWrapper from '../common/page-animation';
 import CommentCard from './CommentCard';
 import NoDataMessage from './NoDataMessage';
 import { apiBlogComment } from '../apis';
+import icons from '../utils/icons.util';
+
+const { RxCross1 } = icons;
 
 export const fetchComments = async ({
   skip = 0,
@@ -80,7 +83,7 @@ const CommentsContainer = () => {
           onClick={() => setCommentsWrapper((preVal) => !preVal)}
           className="absolute top-0 right-0 flex justify-center items-center w-12 h-12 rounded-full bg-grey"
         >
-          <i className="fi fi-br-cross text-2xl mt-1"></i>
+          <RxCross1 />
         </button>
       </div>
 

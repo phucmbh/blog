@@ -7,6 +7,7 @@ import axios from 'axios';
 import { UserContext } from '../App';
 import { useNavigate, useParams } from 'react-router-dom';
 import { apiCreateBlog } from '../apis';
+import { RxCross1 } from 'react-icons/rx';
 
 const PublishForm = () => {
   let characterLimit = 200;
@@ -129,14 +130,14 @@ const PublishForm = () => {
           className="w-12 h-12 absolute right-[5vw] z-10 top-[5%] lg:top-[10%]"
           onClick={handleCloseEvent}
         >
-          <i className="fi fi-br-cross"></i>
+          <RxCross1/>
         </button>
 
         <div className="max-w-[550px] center">
           <p className="text-dark-grey mb-1">Preview</p>
 
           <div className="w-full aspect-video rounded-lg overflow-hidden bg-grey mt-4">
-            <img src={banner} />
+            <img src={banner?.url} />
           </div>
 
           <h1 className="text-4xl font-medium mt-2 leading-tight line-clamp-2">

@@ -5,6 +5,8 @@ import toast from 'react-hot-toast';
 import CommentField from './CommentField';
 import { BlogContext } from '../pages/blog.page';
 import { apiDeleteComment, apiGetReply } from '../apis';
+import icons from '../utils/icons.util';
+const { LuTrash2, FaRegCommentDots } = icons;
 
 const CommentCard = ({ index, leftVal, commentData }) => {
   let {
@@ -195,14 +197,15 @@ const CommentCard = ({ index, leftVal, commentData }) => {
               className="text-dark-grey p-2 px-3 hover:bg-grey/30 rounded-md flex items-center gap-2"
               onClick={hideReplies}
             >
-              <i className="fi fi-rs-comment-dots"></i>Hide Reply
+              <FaRegCommentDots />
+              Hide Reply
             </button>
           ) : (
             <button
               className="text-dark-grey p-2 px-3 hover:bg-grey/30 rounded-md flex items-center gap-2"
               onClick={loadReplies}
             >
-              <i className="fi fi-rs-comment-dots"></i>
+              <FaRegCommentDots />
               {children.length} Reply
             </button>
           )}
@@ -216,7 +219,7 @@ const CommentCard = ({ index, leftVal, commentData }) => {
               className="p-2 px-3 rounded-md border border-grey ml-auto  hover:bg-red/30 hover:text-red flex items-center"
               onClick={deleteComment}
             >
-              <i className="fi fi-rr-trash pointer-events-none"></i>
+              <LuTrash2 />
             </button>
           ) : (
             ''

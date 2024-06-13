@@ -143,12 +143,12 @@ const EditProfile = () => {
     let loadingToast = toast.loading('Updating...');
     e.target.setAttribute('disabled', true);
 
-    const response = await apiUpdateProfile();
+    const response = await apiUpdateProfile(formData);
 
     if (!response.success) {
       toast.dismiss(loadingToast);
       e.target.removeAttribute('disabled');
-      toast.error(response.error);
+      return toast.error(response.error);
     }
 
     if (userAuth.username != response.username) {
@@ -161,9 +161,6 @@ const EditProfile = () => {
     toast.dismiss(loadingToast);
     e.target.removeAttribute('disabled');
     toast.success('Profile Updated');
-
-    
- 
   };
 
   return (

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { getDay } from '../common/date';
+import { FaRegHeart } from 'react-icons/fa';
 
 const BlogPostCard = ({ content, author }) => {
   let {
@@ -35,11 +36,12 @@ const BlogPostCard = ({ content, author }) => {
         </p>
 
         <div className="flex gap-4 mt-7">
-          <span className="btn-light py-1 px-4">{tags[0]}</span>
-          <span className="ml-3 flex items-center gap-2 text-dark-grey">
-            <i className="fi fi-rr-heart text-xl"></i>
-            {total_likes}
+          <span className=" flex items-center justify-center gap-2 text-dark-grey text-xl">
+            <FaRegHeart />
+
+            <p>{total_likes}</p>
           </span>
+          <span className="btn-light py-1 px-4">{tags[0]}</span>
         </div>
       </div>
 

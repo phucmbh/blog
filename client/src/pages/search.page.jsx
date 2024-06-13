@@ -6,10 +6,11 @@ import AnimationWrapper from '../common/page-animation';
 import BlogPostCard from '../components/BlogPostCard';
 import NoDataMessage from '../components/NoDataMessage';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
-import axios from 'axios';
 import { filterPaginationData } from '../common/filter-pagination-data';
 import UserCard from '../components/UserCard';
 import { apiSearchBlogs, apiSearchUsers } from '../apis';
+import icons from '../utils/icons.util';
+const { FaRegUser } = icons;
 
 const SearchPage = () => {
   let { query } = useParams();
@@ -109,7 +110,7 @@ const SearchPage = () => {
 
       <div className="min-w-[40%] lg:min-w-[350px] max-w-min border-l border-grey pl-8 pt-3 max-md:hidden">
         <h1 className="font-medium text-xl mb-8">
-          User related to search <i className="fi fi-rr-user mt-1"></i>
+          User related to search <FaRegUser />
         </h1>
 
         <UserCardWrapper />

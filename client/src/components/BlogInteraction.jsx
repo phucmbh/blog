@@ -3,8 +3,9 @@ import { BlogContext } from '../pages/blog.page';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../App';
 import { Toaster, toast } from 'react-hot-toast';
-import axios from 'axios';
 import { apiIsLikedByUser, apiLikeBlog } from '../apis';
+import icons from '../utils/icons.util';
+const { FaHeart, FaRegCommentDots, FaRegHeart, FaTwitter } = icons;
 
 const BlogInteraction = () => {
   let {
@@ -71,11 +72,7 @@ const BlogInteraction = () => {
               (islikedByUser ? 'bg-red/20 text-red' : 'bg-grey/80')
             }
           >
-            <i
-              className={
-                'fi ' + (islikedByUser ? 'fi-sr-heart' : 'fi-rr-heart')
-              }
-            ></i>
+            {islikedByUser ? <FaHeart /> : <FaRegHeart />}
           </button>
           <p className="text-xl text-dark-grey">{total_likes}</p>
 
@@ -83,7 +80,7 @@ const BlogInteraction = () => {
             onClick={() => setCommentsWrapper((preVal) => !preVal)}
             className="w-10 h-10 rounded-full flex items-center justify-center bg-grey/80"
           >
-            <i className="fi fi-rr-comment-dots"></i>
+            <FaRegCommentDots />
           </button>
           <p className="text-xl text-dark-grey">{total_comments}</p>
         </div>
@@ -103,7 +100,7 @@ const BlogInteraction = () => {
           <Link
             to={`https://twitter.com/intent/tweet?text=Read ${title}&url=${location.href}`}
           >
-            <i className="fi fi-brands-twitter text-xl hover:text-twitter"></i>
+            <FaTwitter />
           </Link>
         </div>
       </div>

@@ -14,6 +14,7 @@ import Loader from '../components/Loader';
 import AnimationWrapper from '../common/page-animation';
 import NoDataMessage from '../components/NoDataMessage';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
+import { CiSearch } from 'react-icons/ci';
 
 const ManageBlogs = () => {
   const [blogs, setBlogs] = useState(null);
@@ -108,7 +109,7 @@ const ManageBlogs = () => {
           onKeyDown={handleSearch}
         />
 
-        <i className="fi fi-rr-search absolute right-[10%] max-[530px]:right-[12%] max-[445px]:right-[15%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl text-dark-grey"></i>
+        <CiSearch className="absolute right-[10%] max-[530px]:right-[12%] max-[445px]:right-[15%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl text-dark-grey" />
       </div>
 
       <InPageNavigation
