@@ -1,6 +1,4 @@
 import { CiSearch, CiHeart, CiLock } from 'react-icons/ci';
-import { IoNotificationsOutline } from 'react-icons/io5';
-import { TfiWrite } from 'react-icons/tfi';
 import {
   FaBars,
   FaFacebook,
@@ -21,10 +19,11 @@ import {
   MdOutlineDarkMode,
   MdEmail,
   MdKey,
+  MdNotificationsNone,
+  MdMode,
 } from 'react-icons/md';
 import { RxCross1 } from 'react-icons/rx';
 import { IoDocumentTextOutline } from 'react-icons/io5';
-import { IoMdNotificationsOutline } from 'react-icons/io';
 import { LuTrash2 } from 'react-icons/lu';
 
 export const Icon = (name) => {
@@ -48,9 +47,8 @@ const icons = {
   CiSearch,
   CiHeart,
   CiLock,
-  IoNotificationsOutline,
-  IoMdNotificationsOutline,
-  TfiWrite,
+  MdNotificationsNone,
+  MdMode,
   FaRegUser,
   MdOutlineLightMode,
   MdOutlineDarkMode,

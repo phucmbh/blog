@@ -165,7 +165,7 @@ const HomePage = () => {
                       }
                       key={i}
                     >
-                      {category}
+                      #{category}
                     </button>
                   );
                 })}

@@ -79,9 +79,11 @@ const BlogEditor = () => {
     if (!title.length) {
       return toast.error('Write blog title to publish it');
     }
+    console.log(blog.content);
 
-    if (blog.content) setEditorState('publish');
-    else toast.error('Write something in your blog to publish it');
+    if (!blog.content.length)
+      return toast.error('Write something in your blog to publish it');
+    setEditorState('publish');
   };
 
   const handleSaveDraft = async (e) => {

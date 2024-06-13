@@ -3,7 +3,7 @@ import AnimationWrapper from '../../common/page-animation';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../App';
 import { removeFromSession } from '../../common/session';
-import { TfiWrite } from 'react-icons/tfi';
+import { MdMode } from 'react-icons/md';
 
 const UserNavigationPanel = () => {
   const {
@@ -23,7 +23,7 @@ const UserNavigationPanel = () => {
     >
       <div className="bg-white absolute right-0 border-grey w-60 duration-200">
         <Link to="/editor" className="flex gap-2 link md:hidden pl-8 py-4">
-          <TfiWrite />
+          <MdMode/>
           <p>Write</p>
         </Link>
 

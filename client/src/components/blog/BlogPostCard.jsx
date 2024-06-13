@@ -37,7 +37,7 @@ const BlogPostCard = ({ content, author }) => {
 
         <div className="flex gap-4 mt-7">
           <span className=" flex items-center justify-center gap-2 text-dark-grey text-xl">
-            <FaRegHeart />
+            <FaRegHeart size={20} />
 
             <p>{total_likes}</p>
           </span>
@@ -48,7 +48,7 @@ const BlogPostCard = ({ content, author }) => {
       <div className="h-28 aspect-square bg-grey">
         <img
           src={banner?.url}
-          className="w-full h-full aspect-square object-cover"
+          className="w-full h-full aspect-square object-cover rounded"
         />
       </div>
     </Link>

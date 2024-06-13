@@ -35,20 +35,23 @@ const EditorPage = () => {
       return setLoading(false);
     }
 
-    axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + '/get-blog', {
+    const fetchBlog = async () => {
+      const response = await apiGetBlog({
         blog_id,
         draft: true,
         mode: 'edit',
-      })
-      .then(({ data: { blog } }) => {
-        setBlog(blog);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setBlog(null);
-        setLoading(false);
       });
+
+      if (!response.success) {
+        setBlog(null);
+        return setLoading(false);
+      }
+
+      setBlog(response.blog);
+      setLoading(false);
+    };
+
+    fetchBlog();
   }, []);
 
   return (

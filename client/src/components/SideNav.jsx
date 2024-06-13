@@ -1,11 +1,15 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { NavLink, Navigate, Outlet } from 'react-router-dom';
 import { UserContext } from '../App';
-import icons from '../utils/icons.util';
 import { MdLockOutline } from 'react-icons/md';
-import { TfiWrite } from 'react-icons/tfi';
-const { IoDocumentTextOutline, IoMdNotificationsOutline, FaRegUser, FaBars } =
-  icons;
+import icons from '../utils/icons.util';
+const {
+  IoDocumentTextOutline,
+  MdNotificationsNone,
+  FaRegUser,
+  FaBars,
+  MdMode,
+} = icons;
 
 const SideNav = () => {
   let {
@@ -92,7 +96,7 @@ const SideNav = () => {
               className="sidebar-link"
             >
               <div className="relative">
-                <IoMdNotificationsOutline size={18} />
+                <MdNotificationsNone size={18} />
                 {new_notification_available ? (
                   <span className="bg-red w-2 h-2 rounded-full absolute z-10 top-0 right-0"></span>
                 ) : (
@@ -107,7 +111,7 @@ const SideNav = () => {
               onClick={(e) => setPageState(e.target.innerText)}
               className="sidebar-link"
             >
-              <TfiWrite />
+              <MdMode size={18} />
               Write
             </NavLink>
 

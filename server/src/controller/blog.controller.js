@@ -133,9 +133,9 @@ var that = (module.exports = {
           .json({ error: 'You can not access draft blogs' });
       }
 
-      return res.status(200).json({ blog });
+      return res.status(200).json({ blog, success: true });
     } catch (error) {
-      return res.status(500).json({ error: error.message });
+      return res.status(500).json({ error: error.message, success: false });
     }
   },
 

@@ -8,19 +8,11 @@
 
 @layer components {
   * {
-    @apply m-0 p-0 box-border text-base outline-purple/30 duration-100;
-  }
-
-  html {
-    @apply overflow-x-hidden;
+    @apply m-0 p-0 box-border outline-purple/30 duration-100;
   }
 
   body {
-    @apply font-inter font-normal text-black bg-white;
-  }
-
-  i {
-    @apply mt-0.5;
+    @apply font-inter text-black bg-white;
   }
 
   section {
@@ -69,7 +61,7 @@
   }
 
   .link {
-    @apply text-dark-grey hover:text-black hover:bg-grey p-3 px-4 block opacity-75;
+    @apply text-dark-grey hover:text-black hover:bg-grey hover:rounded-xl p-3 px-4 block opacity-75;
   }
 
   .hide {
@@ -89,7 +81,7 @@
   }
 
   .tag {
-    @apply p-3 bg-grey rounded-full px-6 capitalize;
+    @apply py-1 px-3   rounded-md hover:bg-grey hover:font-medium;
   }
 
   .blog-title {

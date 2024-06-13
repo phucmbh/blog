@@ -1,27 +1,28 @@
-/* pre .hljs {
-  @apply rounded-lg leading-3 mt-5 mb-5 font-medium;
+@layer base {
+  ul,
+  ol {
+    list-style: revert;
+    margin-left: 50px;
+  }
 }
 
 .blog-content {
-  @apply my-12 font-inter;
+  @apply leading-8 text-[18px];
 }
 
-.blog-content * {
-  @apply text-xl leading-10 md:text-[20px];
+.blog-content code {
+  @apply bg-zinc-400/40 px-[3px]  rounded;
 }
 
-.blog-content pre code {
-  @apply text-base leading-6;
-}
-.blog-content pre span {
-  @apply text-base leading-6;
+pre .hljs {
+  @apply rounded-lg mt-5 mb-5 font-medium text-xl bg-[#282c34];
 }
 
 .blog-content h1 {
-  @apply text-[28px] font-semibold;
+  @apply leading-10 text-[28px] font-semibold;
 }
 .blog-content h2 {
-  @apply text-[24px] font-semibold;
+  @apply leading-10 text-[24px] font-semibold;
 }
 .blog-content h3 {
   @apply text-[20px] font-semibold;
@@ -32,5 +33,5 @@
 }
 
 .blog-content a {
-  @apply text-sky-500 hover:opacity-50;
-} */
+  @apply text-blue-600 dark:text-blue-500 hover:underline;
+}

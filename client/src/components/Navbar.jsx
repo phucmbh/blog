@@ -9,13 +9,10 @@ import { apiNewNotification } from '../apis';
 import icons from '../utils/icons.util';
 const {
   CiSearch,
-  CiHeart,
-  CiLock,
-  IoNotificationsOutline,
-  TfiWrite,
-  FaRegUser,
+  MdNotificationsNone,
   MdOutlineLightMode,
   MdOutlineDarkMode,
+  MdMode,
 } = icons;
 const Navbar = () => {
   const [searchBoxVisibility, setSearchBoxVisibility] = useState(false);
@@ -112,8 +109,11 @@ const Navbar = () => {
             <CiSearch />
           </button>
 
-          <Link to="/editor" className="hidden md:flex  gap-2 link">
-            <TfiWrite size={20} />
+          <Link
+            to="/editor"
+            className="hidden md:flex  gap-2 px-3 py-2 rounded text-gray-200 bg-gray-500 hover:bg-gray-700"
+          >
+            <MdMode size={20} />
             <p>Write</p>
           </Link>
 
@@ -122,9 +122,9 @@ const Navbar = () => {
             onClick={changeTheme}
           >
             {theme == 'light' ? (
-              <MdOutlineLightMode size={25} />
+              <MdOutlineLightMode size={20} />
             ) : (
-              <MdOutlineDarkMode size={25} />
+              <MdOutlineDarkMode size={20} />
             )}
           </button>
 
@@ -132,7 +132,7 @@ const Navbar = () => {
             <>
               <Link to="/dashboard/notifications">
                 <button className="flex justify-center items-center w-12 h-12 rounded-full bg-grey  hover:bg-black/10">
-                  <IoNotificationsOutline size={20} />
+                  <MdNotificationsNone size={20} />
 
                   {new_notification_available ? (
                     <span className="bg-red w-3 h-3 rounded-full absolute z-10 top-2 right-2"></span>
