@@ -1,6 +1,8 @@
 export const tinyPlugins = [
   'advlist',
   'autolink',
+  'accordion',
+  'autoresize',
   'lists',
   'link',
   'image',
@@ -19,7 +21,7 @@ export const tinyPlugins = [
 export const tinyToolbar =
   'undo redo |link codesample image| formatselect | blocks |' +
   'bold italic backcolor | alignleft aligncenter ' +
-  'alignright alignjustify | bullist numlist advlist outdent indent | ';
+  'alignright alignjustify | bullist numlist advlist outdent indent accordion restoredraft| ';
 
 export const tinyCodesample = [
   { text: 'HTML', value: 'html' },
@@ -34,7 +36,6 @@ export const tinyContentStyle =
 
 const CLOUD_NAME = 'nonenone25251325zz';
 const UNSIGNED_UPLOAD_PRESET = 'adz8s31b';
-
 
 export const IMAGES_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 

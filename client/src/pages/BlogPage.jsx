@@ -14,6 +14,7 @@ import { apiGetBlog, apiSearchBlogs } from '../apis';
 
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
+
 export const blogStructure = {
   title: '',
   des: '',

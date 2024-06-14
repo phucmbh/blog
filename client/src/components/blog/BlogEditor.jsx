@@ -72,7 +72,7 @@ const BlogEditor = () => {
 
   const handlePublishEvent = () => {
     setBlog({ ...blog, content: editorContent });
-    if (!banner?.url.length) {
+    if (!banner?.url?.length) {
       return toast.error('Upload a blog banner to publish it');
     }
 
@@ -181,7 +181,11 @@ const BlogEditor = () => {
             ></textarea>
 
             <hr className="w-full opacity-10 my-5" />
-            <TextEditor blog={blog} setEditorContent={setEditorContent} />
+            <TextEditor
+              blog={blog}
+              editorContent={editorContent}
+              setEditorContent={setEditorContent}
+            />
           </div>
         </section>
       </AnimationWrapper>

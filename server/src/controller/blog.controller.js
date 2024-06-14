@@ -107,6 +107,28 @@ var that = (module.exports = {
     }
   },
 
+  autoSaveContent: async (req, res) => {
+    const authorId = req.user;
+
+    const { content, id: blog_id } = req.body;
+
+    if (blog_id) {
+      const blog = await Blog.findOneAndUpdate(
+        { blog_id },
+        { content },
+        { new: true }
+      );
+
+      if (!blog)
+        return res
+          .status(500)
+          .json({ success: false, error: 'Update blog failed' });
+
+      return res.status(200).json({ success: true, content: blog.content });
+    } else {
+    }
+  },
+
   getBlog: async (req, res) => {
     try {
       let { blog_id, draft, mode } = req.body;

@@ -4,6 +4,7 @@ const ctrls = require('../controller/blog.controller');
 const { verifyJWT } = require('../middleware/verifyJWT');
 
 router.post('/create-blog', verifyJWT, ctrls.createBlog);
+router.post('/autosave', verifyJWT, ctrls.autoSaveContent);
 router.post('/delete-blog', verifyJWT, ctrls.deleteBlog);
 router.post('/like-blog', verifyJWT, ctrls.likeBlog);
 router.post('/user-written-blogs', verifyJWT, ctrls.userWrittenBlogs);

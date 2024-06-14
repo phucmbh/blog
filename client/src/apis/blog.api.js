@@ -31,6 +31,12 @@ export const apiCreateBlog = (data) =>
     method: 'POST',
     data,
   });
+export const apiAutoSaveContent = (data) =>
+  axiosInstance({
+    url: '/autosave',
+    method: 'POST',
+    data,
+  });
 
 export const apiLikeBlog = (data) =>
   axiosInstance({
