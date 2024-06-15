@@ -7,7 +7,7 @@ import {
   tinyPlugins,
   tinyToolbar,
 } from '../../utils';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { apiAutoSaveContent } from '../../apis';
@@ -17,11 +17,11 @@ const TextEditor = ({ blog, setEditorContent }) => {
   const { blog_id } = useParams();
   const [newContent, setNewContent] = useState(blog?.content);
   const [currentContent, setCurrentContent] = useState(blog?.content);
-
+  const ONE_MINUTE = 60* 1000;
   if (blog_id) {
     useInterval(() => {
       if (currentContent !== newContent) return fectAutosave();
-    }, 30000);
+    }, ONE_MINUTE);
   }
 
   const fectAutosave = async () => {
@@ -58,9 +58,9 @@ const TextEditor = ({ blog, setEditorContent }) => {
           file_picker_types: 'image',
           images_upload_handler: handleImagesUpload,
         }}
-        onEditorChange={(newContent, editor) => {
-          setNewContent(newContent);
-          setEditorContent(newContent);
+        onEditorChange={(content, editor) => {
+          setNewContent(content);
+          setEditorContent(content);
         }}
       />
     </div>
