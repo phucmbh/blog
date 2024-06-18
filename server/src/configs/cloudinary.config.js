@@ -1,5 +1,4 @@
 const fs = require('fs');
-const sharp = require('sharp');
 const cloudinary = require('cloudinary').v2;
 
 const { CLOUDINARY_NAME, CLOUDINARY_KEY, CLOUDINARY_SECRET } = process.env;
@@ -12,10 +11,6 @@ cloudinary.config({
 
 var self = (module.exports = {
   uploadSingle: (file) => {
-    // const originalname = file.filename.split('.')[0];
-    // const newfile = file.destination + originalname + '.avif';
-    // const data = await sharp(file.path).avif({ quality: 80 }).toFile(newfile);
-  
 
     return new Promise((resolve) => {
       cloudinary.uploader
