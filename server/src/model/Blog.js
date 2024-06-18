@@ -33,6 +33,11 @@ const blogSchema = mongoose.Schema(
       type: [String],
       // required: true
     },
+    images: [{
+        id: String,
+        url: String,
+    }]
+    ,
     author: {
       type: mongoose.Types.ObjectId,
       required: true,

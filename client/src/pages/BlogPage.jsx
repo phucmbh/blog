@@ -130,7 +130,7 @@ const BlogPage = () => {
             <div className="blog-content">
               <div
                 dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(content),
+                  __html: content,
                 }}
               />
             </div>

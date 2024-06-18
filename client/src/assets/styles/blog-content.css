@@ -36,9 +36,14 @@ pre .hljs {
   @apply pl-5 space-y-3  list-decimal marker:text-blue-600;
 }
 
-.blog-content table,
-tr,
-th,
-td {
-  @apply border border-gray-300;
+.blog-content tr {
+  @apply border-b dark:bg-gray-800 dark:border-gray-700;
+}
+
+.blog-content td {
+  @apply border px-[10px] py-0;
+}
+
+.blog-content iframe {
+  @apply w-full h-[50vh];
 }

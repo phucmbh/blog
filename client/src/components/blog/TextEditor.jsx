@@ -6,6 +6,7 @@ import {
   tinyContentStyle,
   tinyPlugins,
   tinyToolbar,
+  configIframe,
 } from '../../utils';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -17,11 +18,12 @@ const TextEditor = ({ blog, setEditorContent }) => {
   const { blog_id } = useParams();
   const [newContent, setNewContent] = useState(blog?.content);
   const [currentContent, setCurrentContent] = useState(blog?.content);
-  const ONE_MINUTE = 60* 1000;
+  const TWO_MINUTES = 2 * 60 * 1000;
   if (blog_id) {
     useInterval(() => {
       if (currentContent !== newContent) return fectAutosave();
-    }, ONE_MINUTE);
+      console.log(currentContent);
+    }, TWO_MINUTES);
   }
 
   const fectAutosave = async () => {
@@ -30,8 +32,7 @@ const TextEditor = ({ blog, setEditorContent }) => {
       content: newContent,
     });
     if (response.success) {
-      setCurrentContent(response.content);
-      return toast.success('Autosave');
+      return setCurrentContent(response.content);
     }
     return toast.error('Autosave failed');
   };
@@ -45,7 +46,7 @@ const TextEditor = ({ blog, setEditorContent }) => {
           menubar: true,
           min_height: 500,
           toolbar_sticky: true,
-
+          license_key: 'gpl',
           plugins: tinyPlugins,
           codesample_languages: tinyCodesample,
           toolbar: tinyToolbar,
@@ -53,9 +54,10 @@ const TextEditor = ({ blog, setEditorContent }) => {
           branding: false,
           promotion: false,
           details_serialized_state: 'collapsed',
-          license_key: 'gpl',
           images_upload_url: IMAGES_UPLOAD_URL,
           file_picker_types: 'image',
+          automatic_uploads: true,
+          editimage_cors_hosts: ['http://localhost:5173/'],
           images_upload_handler: handleImagesUpload,
         }}
         onEditorChange={(content, editor) => {

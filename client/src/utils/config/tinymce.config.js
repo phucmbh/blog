@@ -2,42 +2,58 @@ export const tinyPlugins = [
   'advlist',
   'autolink',
   'accordion',
+  'advcode',
+  'advtable',
+  'anchor',
   'autoresize',
   'lists',
   'link',
   'image',
+  'editimage',
+  'insertdatetime',
   'charmap',
+  'searchreplace',
   'preview',
-  'anchor',
   'visualblocks',
   'code',
   'fullscreen',
   'media',
+  'emoticons',
   'table',
   'code',
   'codesample',
+  'powerpaste',
+  'pageembed',
 ];
 
 export const tinyToolbar =
-  'undo redo |link codesample image| formatselect | blocks |' +
-  'bold italic backcolor | alignleft aligncenter ' +
-  'alignright alignjustify | bullist numlist advlist outdent indent accordion restoredraft| ';
+  'undo redo | insert | styles | link image codesample insertfile | alignleft aligncenter alignright alignjustify | bullist numlist advlist outdent indent accordion';
 
 export const tinyCodesample = [
+  { text: 'Java', value: 'java' },
   { text: 'HTML', value: 'html' },
   { text: 'CSS', value: 'css' },
   { text: 'JavaScript', value: 'javascript' },
-  { text: 'Java', value: 'java' },
-  { text: 'JSON', value: 'json' },
+  { text: 'SQL', value: 'sql' },
 ];
 
 export const tinyContentStyle =
-  'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }';
+  'body { font-family:Inter,Arial,sans-serif; font-size:18px }';
 
 const CLOUD_NAME = 'nonenone25251325zz';
 const UNSIGNED_UPLOAD_PRESET = 'adz8s31b';
 
 export const IMAGES_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+
+export const configIframe = (editor) => {
+  editor.on('PreInit', function () {
+    editor.parser.addNodeFilter('iframe', function (nodes) {
+      nodes.forEach(function (node) {
+        node.attr('sandbox', 'allow-scripts allow-same-origin');
+      });
+    });
+  });
+};
 
 export const handleImagesUpload = (blobInfo, progress, failure) => {
   return new Promise((resolve, reject) => {
