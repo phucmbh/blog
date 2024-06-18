@@ -1,3 +1,5 @@
+const fs = require('fs');
+const sharp = require('sharp');
 const cloudinary = require('cloudinary').v2;
 
 const { CLOUDINARY_NAME, CLOUDINARY_KEY, CLOUDINARY_SECRET } = process.env;
@@ -10,6 +12,11 @@ cloudinary.config({
 
 var self = (module.exports = {
   uploadSingle: (file) => {
+    // const originalname = file.filename.split('.')[0];
+    // const newfile = file.destination + originalname + '.avif';
+    // const data = await sharp(file.path).avif({ quality: 80 }).toFile(newfile);
+  
+
     return new Promise((resolve) => {
       cloudinary.uploader
         .upload(file.path, {
@@ -17,24 +24,20 @@ var self = (module.exports = {
           use_filename: true,
         })
         .then((result) => {
-          console.log(result);
-          if (result) {
-            const fs = require('fs');
-            fs.unlinkSync(file.path);
-            resolve({
-              url: result.secure_url,
-              public_id: result.public_id,
-              // thumb1: self.reSizeImage(result.public_id, 200, 200),
-              // main: self.reSizeImage(result.public_id, 500, 500),
-              // thumb2: self.reSizeImage(result.public_id, 300, 300),
-            });
-          }
+          fs.unlinkSync(file.path);
+          resolve({
+            url: result.secure_url,
+            public_id: result.public_id,
+            // thumb1: self.reSizeImage(result.public_id, 200, 200),
+            // main: self.reSizeImage(result.public_id, 500, 500),
+            // thumb2: self.reSizeImage(result.public_id, 300, 300),
+          });
         });
     });
   },
 
-  uploadMultiple: (files) => {
-    return Promise.all(files.map((file) => self.uploadSingle(file)));
+  uploadMultiple: async (files) => {
+    return await Promise.all(files.map((file) => self.uploadSingle(file)));
   },
 
   reSizeImage: (id, h, w) => {

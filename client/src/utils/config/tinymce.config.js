@@ -45,15 +45,6 @@ const UNSIGNED_UPLOAD_PRESET = 'adz8s31b';
 
 export const IMAGES_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
-export const configIframe = (editor) => {
-  editor.on('PreInit', function () {
-    editor.parser.addNodeFilter('iframe', function (nodes) {
-      nodes.forEach(function (node) {
-        node.attr('sandbox', 'allow-scripts allow-same-origin');
-      });
-    });
-  });
-};
 
 export const handleImagesUpload = (blobInfo, progress, failure) => {
   return new Promise((resolve, reject) => {

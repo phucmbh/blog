@@ -6,7 +6,6 @@ import {
   tinyContentStyle,
   tinyPlugins,
   tinyToolbar,
-  configIframe,
 } from '../../utils';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -53,11 +52,11 @@ const TextEditor = ({ blog, setEditorContent }) => {
           content_style: tinyContentStyle,
           branding: false,
           promotion: false,
+          link_default_target: '_blank',
           details_serialized_state: 'collapsed',
           images_upload_url: IMAGES_UPLOAD_URL,
           file_picker_types: 'image',
           automatic_uploads: true,
-          editimage_cors_hosts: ['http://localhost:5173/'],
           images_upload_handler: handleImagesUpload,
         }}
         onEditorChange={(content, editor) => {
