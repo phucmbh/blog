@@ -1,6 +1,8 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import darkLogo from '../assets/images/logo-dark.png';
 import lightLogo from '../assets/images/logo-light.png';
+import darkLogoMobile from '../assets/images/logo-dark-mobile.png';
+import lightLogoMobile from '../assets/images/logo-light-mobile.png';
 import { useContext, useEffect, useState } from 'react';
 import { ThemeContext, UserContext } from '../App';
 import UserNavigationPanel from './user/UserNavigationPanel';
@@ -75,9 +77,15 @@ const Navbar = () => {
   return (
     <>
       <nav className="navbar z-50">
-        <Link to="/" className="flex-none h-8">
+        <Link to="/" className="flex-none h-8 max-md:hidden">
           <img
             src={theme == 'light' ? darkLogo : lightLogo}
+            className="w-full h-full mt-1"
+          />
+        </Link>
+        <Link to="/" className="flex-none h-8 md:hidden">
+          <img
+            src={theme == 'light' ? darkLogoMobile : lightLogoMobile}
             className="w-full h-full mt-1"
           />
         </Link>

@@ -3,10 +3,18 @@ import { getDay } from '../../common/date';
 import { useState } from 'react';
 import { UserContext } from '../../App';
 import { useContext } from 'react';
-import axios from 'axios';
 import { apiDeleteBlog } from '../../apis';
 
+
+
+
 const BlogStats = ({ stats }) => {
+  
+
+
+
+
+
   return (
     <div className="flex gap-2 max-lg:mb-6 max-lg:pb-6 border-grey max-lg:border-b">
       {Object.keys(stats).map((key, i) => {

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { createContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import AnimationWrapper from '../common/page-animation';
@@ -39,6 +38,7 @@ const BlogPage = () => {
   useEffect(() => {
     hljs.highlightAll();
   });
+
   let {
     title,
     content,

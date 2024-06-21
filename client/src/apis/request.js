@@ -1,31 +1,31 @@
 import axios from 'axios';
 
-const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_DOMAIN,
-});
+const client = (() => {
+  return axios.create({
+    baseURL: import.meta.env.VITE_SERVER_DOMAIN,
+    headers: {
+      Accept: 'application/json, text/plain, */*',
+    },
+  });
+})();
 
-// Add a request interceptor
-axiosInstance.interceptors.request.use(
+client.interceptors.request.use(
   (config) => {
     const user = JSON.parse(sessionStorage.getItem('user'));
     config.headers.authorization = `Bearer ${user?.access_token}`;
     return config;
   },
   (error) => {
-    const user = sessionStorage.getItem('user');
-    console.log(user?.access_token);
-    console.log('Axios instance: Error: ' + error);
-    // Do something with request error
     return Promise.reject(error);
   }
 );
 
 // Add a response interceptor
-axiosInstance.interceptors.response.use(
+client.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    return response?.data;
+    return response;
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
@@ -35,4 +35,21 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export default axiosInstance;
+const request = async (options) => {
+  const onSuccess = (response) => {
+    const { data } = response;
+    return data;
+  };
+
+  const onError = function (error) {
+    return Promise.reject({
+      message: error.message,
+      code: error.code,
+      response: error.response,
+    });
+  };
+
+  return client(options).then(onSuccess).catch(onError);
+};
+
+export default request;

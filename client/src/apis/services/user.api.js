@@ -1,40 +1,39 @@
-import axiosInstance from './axios.config';
+import request from '../request';
 
 export const apiChangePasswordUser = (data) =>
-  axiosInstance({
+  request({
     url: '/change-password',
     method: 'POST',
     data,
   });
 export const apiGetProfile = (data) =>
-  axiosInstance({
+  request({
     url: '/get-profile',
     method: 'POST',
     data,
   });
 
 export const apiUpdateProfileImage = (data) =>
-  axiosInstance({
+  request({
     url: '/update-profile-img',
     method: 'POST',
     data,
   });
 export const apiUpdateProfile = (data) =>
-  axiosInstance({
+  request({
     url: '/update-profile',
     method: 'POST',
     data,
   });
 
-
 export const apiIsLikedByUser = (data) =>
-  axiosInstance({
+  request({
     url: '/isliked-by-user',
     method: 'POST',
     data,
   });
 export const apiSearchUsers = (data) =>
-  axiosInstance({
+  request({
     url: '/search-users',
     method: 'POST',
     data,

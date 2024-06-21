@@ -6,12 +6,13 @@ import lightBanner from '../../assets/images/blog-banner-light.png';
 import darkBanner from '../../assets/images/blog-banner-dark.png';
 
 import AnimationWrapper from '../../common/page-animation';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import { EditorContext } from '../../pages/EditorPage';
 import { ThemeContext } from '../../App';
 import { apiCreateBlog, apiUploadImageBanner } from '../../apis';
 import TextEditor from './TextEditor';
+import { useMutation } from '@tanstack/react-query';
 
 const BlogEditor = () => {
   const {
@@ -29,6 +30,10 @@ const BlogEditor = () => {
   const [editorContent, setEditorContent] = useState('');
 
   //useEffect
+
+  const createBlogMutation = useMutation({
+    mutationFn: apiCreateBlog,
+  });
 
   const handleBannerUpload = async (e) => {
     const img = e.target.files[0];
@@ -97,8 +102,6 @@ const BlogEditor = () => {
       return toast.error('Write blog title before saving it as a Draft');
     }
 
-    let loadingToast = toast.loading('Saving Draft...');
-
     e.target.classList.add('disable');
 
     let blogObj = {
@@ -110,22 +113,25 @@ const BlogEditor = () => {
       draft: true,
     };
 
-    const response = await apiCreateBlog({ ...blogObj, id: blog_id });
+    await createBlogMutation.mutateAsync({ ...blogObj, id: blog_id });
+    console.log(createBlogMutation);
+    const { isSuccess, isError, isPending } = createBlogMutation;
 
-    if (response?.error) {
-      e.target.classList.remove('disable');
-      toast.dismiss(loadingToast);
+    if (isPending) {
+      let loadingToast = toast.loading('Saving Draft...');
+      return loadingToast;
+    }
 
-      return toast.error(response.error);
-    } else {
-      e.target.classList.remove('disable');
-
+    if (isSuccess) {
       toast.dismiss(loadingToast);
       toast.success('Saved');
-
-      setTimeout(() => {
+      return setTimeout(() => {
         navigate('/dashboard/blogs?tab=draft');
       }, 500);
+    }
+    if (isError) {
+      toast.dismiss(loadingToast);
+      return toast.error(createBlogMutation.error);
     }
   };
 

@@ -1,9 +1,9 @@
 .blog-content {
-  @apply leading-8 text-[18px];
+  @apply leading-8 text-[18px] font-gelasio;
 }
 
 .blog-content code {
-  @apply bg-zinc-400/40 px-[3px]  rounded;
+  @apply bg-slate-200 px-1  text-[85%]   rounded;
 }
 
 pre .hljs {

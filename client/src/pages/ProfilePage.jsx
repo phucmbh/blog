@@ -11,7 +11,6 @@ import BlogPostCard from '../components/blog/BlogPostCard';
 import NoDataMessage from '../components/NoDataMessage';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
 import PageNotFound from './PageNotFound';
-import { apiGetBlog } from '../apis';
 export const profileDataStructure = {
   personal_info: {
     fullname: '',

@@ -1,28 +1,28 @@
-import axiosInstance from './axios.config';
+import request from '../request';
 
 export const apiGetReply = (data) =>
-  axiosInstance({
+  request({
     url: '/get-replies',
     method: 'POST',
     data,
   });
 
 export const apiBlogComment = (data) =>
-  axiosInstance({
+  request({
     url: '/get-blog-comments',
     method: 'POST',
     data,
   });
 
 export const apiAddComment = (data) =>
-  axiosInstance({
+  request({
     url: '/add-comment',
     method: 'POST',
     data,
   });
 
 export const apiDeleteComment = (data) =>
-  axiosInstance({
+  request({
     url: '/delete-comment',
     method: 'POST',
     data,

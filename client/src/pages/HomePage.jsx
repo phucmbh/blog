@@ -30,6 +30,8 @@ const HomePage = () => {
   ];
 
   const fetchLatestBlogs = async ({ page = 1 }) => {
+ 
+
     const response = await apiLatestBlogs({ page });
     let formatedData = await filterPaginationData({
       state: blogs,
