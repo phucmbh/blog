@@ -352,6 +352,11 @@ var that = (module.exports = {
       if (deletedDocCount) {
         skipDocs -= deletedDocCount;
       }
+      const totalDocs = await Blog.countDocuments({
+        author: user_id,
+        draft,
+        title: new RegExp(query, 'i'),
+      });
 
       const blogs = await Blog.find({
         author: user_id,
@@ -362,7 +367,74 @@ var that = (module.exports = {
         .limit(maxLimit)
         .sort({ publishedAt: -1 })
         .select('title banner publishedAt blog_id activity des draft -_id');
-      return res.status(200).json({ blogs });
+      return res.status(200).json({ blogs, totalDocs });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+
+  getBlogsByUser: async (req, res) => {
+    try {
+      const user_id = req.user;
+
+      const { page, search, deletedDocCount } = req.query;
+
+      const maxLimit = page * 5;
+      // let skipDocs = (page - 1) * maxLimit;
+
+      if (deletedDocCount) {
+        skipDocs -= deletedDocCount;
+      }
+      const totalDocs = await Blog.countDocuments({
+        author: user_id,
+        draft: false,
+        title: new RegExp(search, 'i'),
+      });
+
+      const blogs = await Blog.find({
+        author: user_id,
+        draft: false,
+        title: new RegExp(search, 'i'),
+      })
+        // .skip(skipDocs)
+        .limit(maxLimit)
+        .sort({ publishedAt: -1 })
+        .select('title banner publishedAt blog_id activity des draft -_id');
+      return res.status(200).json({ blogs, totalDocs });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+
+  getDraftsByUser: async (req, res) => {
+    try {
+      const user_id = req.user;
+
+      const { page, search, deletedDocCount } = req.query;
+
+      const maxLimit = page * 5;
+      console.log(maxLimit);
+      // let skipDocs = (page - 1) * maxLimit;
+
+      if (deletedDocCount) {
+        skipDocs -= deletedDocCount;
+      }
+      const totalDocs = await Blog.countDocuments({
+        author: user_id,
+        draft: true,
+        title: new RegExp(search, 'i'),
+      });
+
+      const blogs = await Blog.find({
+        author: user_id,
+        draft: true,
+        title: new RegExp(search, 'i'),
+      })
+        // .skip(skipDocs)
+        .limit(maxLimit)
+        .sort({ publishedAt: -1 })
+        .select('title banner publishedAt blog_id activity des draft -_id');
+      return res.status(200).json({ blogs, totalDocs });
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }

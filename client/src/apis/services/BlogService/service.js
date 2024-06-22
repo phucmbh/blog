@@ -25,6 +25,28 @@ export default class BlogService {
     });
   };
 
+  static getBlogsByUser = ({page, search}) => {
+    return request({
+      url: '/get-blogs-by-user',
+      method: 'GET',
+      params:{
+        page,
+        search
+      }
+    });
+  };
+
+  static getDraftsByUser = ({ page, search }) => {
+    return request({
+      url: '/get-drafts-by-user',
+      method: 'GET',
+      params: {
+        page,
+        search,
+      },
+    });
+  };
+
   static uploadImageBanner = (file) => {
     const formData = new FormData();
     formData.append('image', file);

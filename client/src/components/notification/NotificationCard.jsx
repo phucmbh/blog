@@ -3,8 +3,7 @@ import { getDay } from '../../common/date';
 import { useContext, useState } from 'react';
 import NotificationCommentField from './NotificationCommentField';
 import { UserContext } from '../../App';
-import axios from 'axios';
-import { apiDeleteBlog, apiDeleteComment } from '../../apis';
+import { apiDeleteComment } from '../../apis';
 
 const NotificationCard = ({ data, index, notificationState }) => {
   let [isReplying, setReplying] = useState(false);

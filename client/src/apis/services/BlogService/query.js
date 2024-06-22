@@ -15,4 +15,14 @@ export default class BlogQueryMethods {
     const response = await BlogService.getTrendingBlogs(query);
     return response;
   };
+
+  static getBlogsByUser = async (query) => {
+    const response = await BlogService.getBlogsByUser(query);
+    return response;
+  };
+
+  static getDraftsByUser = async (query) => {
+    const response = await BlogService.getDraftsByUser(query);
+    return response;
+  };
 }

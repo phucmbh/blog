@@ -31,8 +31,9 @@ export const filterPaginationData = async ({
     const { totalDocs } = response.data;
 
     obj = { results: data, page: 1, totalDocs };
-
   }
+
+  console.log(obj);
 
   return obj;
 };

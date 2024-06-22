@@ -1,96 +1,48 @@
-import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
-import { UserContext } from '../App';
-import { filterPaginationData } from '../common/filter-pagination-data';
+import { useState } from 'react';
+
 import { Toaster } from 'react-hot-toast';
 
-import {
-  ManageDraftBlogPost,
-  ManagePublishedBlogCard,
-} from '../components/blog/ManageBlogCard';
 import { useSearchParams } from 'react-router-dom';
 import InPageNavigation from '../components/InPageNavigation';
-import Loader from '../components/Loader';
-import AnimationWrapper from '../common/page-animation';
-import NoDataMessage from '../components/NoDataMessage';
-import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
+
 import { CiSearch } from 'react-icons/ci';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import BlogQueryMethods from 'apis/services/BlogService/query';
+import ManageBlogList from 'components/blog/ManageBlogList';
 
 const ManageBlogs = () => {
-  const [blogs, setBlogs] = useState(null);
-  const [drafts, setDrafts] = useState(null);
-  const [query, setQuery] = useState('');
+  const [search, setSearch] = useState('');
+  const [pageBlog, setPageBlog] = useState(1);
+  const [pageDraft, setPageDraft] = useState(1);
 
   let activeTab = useSearchParams()[0].get('tab');
 
-  let {
-    userAuth: { access_token },
-  } = useContext(UserContext);
+  const { data: blogs } = useQuery({
+    queryKey: ['blogs', pageBlog, search],
+    queryFn: () =>
+      BlogQueryMethods.getBlogsByUser({
+        page: pageBlog,
+        search,
+      }),
+    placeholderData: keepPreviousData,
+  });
 
-  const getBlogs = ({ page, draft, deletedDocCount = 0 }) => {
-    axios
-      .post(
-        import.meta.env.VITE_SERVER_DOMAIN + '/user-written-blogs',
-        {
-          page,
-          draft,
-          query,
-          deletedDocCount,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-      )
-      .then(async ({ data }) => {
-        let formatedData = await filterPaginationData({
-          state: draft ? drafts : blogs,
-          data: data.blogs,
-          page,
-          user: access_token,
-          countRoute: '/user-written-blogs-count',
-          data_to_send: { draft, query },
-        });
+  const { data: drafts } = useQuery({
+    queryKey: ['drafts', pageDraft, search],
+    queryFn: () =>
+      BlogQueryMethods.getDraftsByUser({
+        page: pageDraft,
+        search,
+      }),
 
-        if (draft) {
-          setDrafts(formatedData);
-        } else {
-          setBlogs(formatedData);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  useEffect(() => {
-    if (access_token) {
-      if (blogs == null) {
-        getBlogs({ page: 1, draft: false });
-      }
-      if (drafts == null) {
-        getBlogs({ page: 1, draft: true });
-      }
-    }
-  }, [access_token, blogs, drafts, query]);
+    placeholderData: keepPreviousData,
+  });
 
   const handleSearch = (e) => {
     let searchQuery = e.target.value;
 
-    setQuery(searchQuery);
-
     if (e.keyCode == 13 && searchQuery.length) {
-      setBlogs(null);
-      setDrafts(null);
-    }
-  };
-
-  const handleChange = (e) => {
-    if (!e.target.value.length) {
-      setQuery('');
-      setBlogs(null);
-      setDrafts(null);
+      setSearch(e.target.value);
     }
   };
 
@@ -105,7 +57,7 @@ const ManageBlogs = () => {
           type="search"
           className="w-full bg-grey p-4 pl-12 pr-6 rounded-full placeholder:text-dark-grey"
           placeholder="Search Blogs"
-          onChange={handleChange}
+          // onChange={handleChange}
           onKeyDown={handleSearch}
         />
 
@@ -118,62 +70,22 @@ const ManageBlogs = () => {
       >
         {
           //published blogs
-          blogs == null ? (
-            <Loader />
-          ) : blogs.results.length ? (
-            <>
-              {blogs.results.map((blog, i) => {
-                return (
-                  <AnimationWrapper key={i} transition={{ delay: i * 0.04 }}>
-                    <ManagePublishedBlogCard
-                      blog={{ ...blog, index: i, setStateFunc: setBlogs }}
-                    />
-                  </AnimationWrapper>
-                );
-              })}
-
-              <LoadMoreDataBtn
-                state={blogs}
-                fetchDataFun={getBlogs}
-                additionalParam={{
-                  draft: false,
-                  deletedDocCount: blogs.deletedDocCount,
-                }}
-              />
-            </>
-          ) : (
-            <NoDataMessage message="No published blogs" />
-          )
+          <ManageBlogList
+            data={blogs?.blogs}
+            page={pageBlog}
+            setPage={setPageBlog}
+            totalDocs={blogs?.totalDocs}
+          />
         }
 
         {
           //draft blogs
-          drafts == null ? (
-            <Loader />
-          ) : drafts.results.length ? (
-            <>
-              {drafts.results.map((blog, i) => {
-                return (
-                  <AnimationWrapper key={i} transition={{ delay: i * 0.04 }}>
-                    <ManageDraftBlogPost
-                      blog={{ ...blog, index: i, setStateFunc: setDrafts }}
-                    />
-                  </AnimationWrapper>
-                );
-              })}
-
-              <LoadMoreDataBtn
-                state={drafts}
-                fetchDataFun={getBlogs}
-                additionalParam={{
-                  draft: true,
-                  deletedDocCount: drafts.deletedDocCount,
-                }}
-              />
-            </>
-          ) : (
-            <NoDataMessage message="No draft blogs" />
-          )
+          <ManageBlogList
+            data={drafts?.blogs}
+            page={pageDraft}
+            setPage={setPageDraft}
+            totalDocs={drafts?.totalDocs}
+          />
         }
       </InPageNavigation>
     </>
