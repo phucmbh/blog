@@ -115,9 +115,8 @@ const BlogEditor = () => {
     await createBlogMutation.mutateAsync({ ...blogObj, id: blog_id });
     console.log(createBlogMutation);
     const { isSuccess, isError, isPending } = createBlogMutation;
-
+    let loadingToast = toast.loading('Saving Draft...');
     if (isPending) {
-      let loadingToast = toast.loading('Saving Draft...');
       return loadingToast;
     }
 
