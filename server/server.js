@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 // const aws = require('aws-sdk')
 
-const cors = require('cors');
+// const cors = require('cors');
 require('dotenv').config();
 const upload = require('./src/configs/multer.config.js');
 const cloudinary = require('./src/configs/cloudinary.config.js');
@@ -13,7 +13,7 @@ const server = express();
 let PORT = 3000;
 
 server.use(express.json());
-server.use(cors());
+// server.use(cors());
 
 mongoose.connect(process.env.MONGO_URI, {
   autoIndex: true,
