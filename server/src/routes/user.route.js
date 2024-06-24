@@ -3,10 +3,12 @@ const ctrls = require('../controller/user.controller');
 
 const { verifyJWT } = require('../middleware/verifyJWT');
 
+router.get('/search-users', ctrls.searchUser);
+router.get('/get-profile-and-blogs-by-user', ctrls.getProfileAndBlogsByUser);
+
 router.post('/signup', ctrls.signup);
 router.post('/signin', ctrls.signin);
 router.post('/google-auth', ctrls.signinByGoogle);
-router.post('/search-users', ctrls.searchUser);
 router.post('/get-profile', ctrls.getProfile);
 
 router.post('/change-password', verifyJWT, ctrls.changePassword);

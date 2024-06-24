@@ -8,11 +8,11 @@ export default class CommentService {
       data,
     });
 
-  static apiBlogComment = (data) =>
+  static getBlogComment = (params) =>
     request({
       url: '/get-blog-comments',
-      method: 'POST',
-      data,
+      method: 'GET',
+      params,
     });
 
   static apiAddComment = (data) =>

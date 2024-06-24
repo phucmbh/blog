@@ -1,11 +1,11 @@
 import request from 'apis/request';
 
 export default class BlogService {
-  static getBlog = (data) => {
+  static getBlog = (params) => {
     return request({
       url: '/get-blog',
       method: 'GET',
-      data,
+      params,
     });
   };
 
@@ -17,22 +17,24 @@ export default class BlogService {
     });
   };
 
-  static getLatestBlogs = (data) => {
+  static getAllBlogs = ({ page }) => {
     return request({
-      url: '/latest-blogs',
+      url: '/get-all-blogs',
       method: 'GET',
-      data,
+      params: {
+        page,
+      },
     });
   };
 
-  static getBlogsByUser = ({page, search}) => {
+  static getBlogsByUser = ({ page, search }) => {
     return request({
       url: '/get-blogs-by-user',
       method: 'GET',
-      params:{
+      params: {
         page,
-        search
-      }
+        search,
+      },
     });
   };
 
@@ -44,6 +46,14 @@ export default class BlogService {
         page,
         search,
       },
+    });
+  };
+
+  static searchBlogs = (params) => {
+    return request({
+      url: '/search-blogs',
+      method: 'GET',
+      params,
     });
   };
 
@@ -86,14 +96,6 @@ export default class BlogService {
   static likeBlog = (data) => {
     return request({
       url: '/like-blog',
-      method: 'POST',
-      data,
-    });
-  };
-
-  static searchBlogs = (data) => {
-    return request({
-      url: '/search-blogs',
       method: 'POST',
       data,
     });

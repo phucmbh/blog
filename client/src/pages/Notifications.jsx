@@ -1,61 +1,44 @@
-import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from '../App';
-import { filterPaginationData } from '../common/filter-pagination-data';
 import Loader from '../components/Loader';
 import AnimationWrapper from '../common/page-animation';
 import NoDataMessage from '../components/NoDataMessage';
 import NotificationCard from '../components/notification/NotificationCard';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
 import { apiNotification } from '../apis';
+import { useQuery } from '@tanstack/react-query';
 
 const Notifications = () => {
   let {
     userAuth,
-    userAuth: { access_token, new_notification_available },
+    userAuth: { new_notification_available },
     setUserAuth,
   } = useContext(UserContext);
 
+  const page = 1;
+
   const [filter, setFilter] = useState('all');
-  const [notifications, setNotifications] = useState(null);
 
   let filters = ['all', 'like', 'comment', 'reply'];
 
-  const fetchNotifications = async ({ page, deletedDocCount = 0 }) => {
-    const { notifications: data } = await apiNotification({
-      page,
-      filter,
-      deletedDocCount,
-    });
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['notifications', filter, page],
+    queryFn: () => apiNotification({ filter, page }),
+  });
 
-    if (new_notification_available) {
-      setUserAuth({ ...userAuth, new_notification_available: false });
-    }
+  if (isLoading) return <Loader />;
+  if (error) return 'An error has occurred: ' + error.message;
 
-    let formatedData = await filterPaginationData({
-      state: notifications,
-      data,
-      page,
-      countRoute: '/all-notifications-count',
-      data_to_send: { filter },
-      user: access_token,
-    });
+  const { notifications } = data;
 
-    setNotifications(formatedData);
-  };
-
-  useEffect(() => {
-    if (access_token) {
-      fetchNotifications({ page: 1 });
-    }
-  }, [access_token, filter]);
+  if (new_notification_available) {
+    setUserAuth({ ...userAuth, new_notification_available: false });
+  }
 
   const handleFilter = (e) => {
     let btn = e.target;
 
     setFilter(btn.innerHTML);
-
-    setNotifications(null);
   };
 
   return (
@@ -82,8 +65,8 @@ const Notifications = () => {
         <Loader />
       ) : (
         <>
-          {notifications.results.length ? (
-            notifications.results.map((notification, i) => {
+          {notifications.length ? (
+            notifications.map((notification, i) => {
               return (
                 <AnimationWrapper key={i} transition={{ delay: i * 0.08 }}>
                   <NotificationCard
@@ -98,11 +81,11 @@ const Notifications = () => {
             <NoDataMessage message="Nothing available" />
           )}
 
-          <LoadMoreDataBtn
+          {/* <LoadMoreDataBtn
             state={notifications}
             fetchDataFun={fetchNotifications}
             additionalParam={{ deletedDocCount: notifications.deletedDocCount }}
-          />
+          /> */}
         </>
       )}
     </div>

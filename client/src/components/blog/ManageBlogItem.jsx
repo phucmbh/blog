@@ -3,17 +3,40 @@ import ManageBlogStats from './ManageBlogStats';
 import { Link } from 'react-router-dom';
 import { useDeleteBlogById } from 'apis/services/BlogService/mutation';
 import { getDay } from 'common/date';
+import { useQueryClient } from '@tanstack/react-query';
+import { useManageBlogStore } from './store/manage.blog.store';
 
-const ManageBlogItem = ({ blog }) => {
+const ManageBlogItem = ({ blog, isBlog }) => {
   let { banner, blog_id, title, publishedAt, activity, index } = blog;
-
+  const queryClient = useQueryClient();
+  const pageBLog = useManageBlogStore((state) => state.pageBlog);
+  const pageDraft = useManageBlogStore((state) => state.pageDraft);
+  const search = useManageBlogStore((state) => state.search);
   let [showStat, setShowStat] = useState(false);
   index++;
 
   const { mutate: deleteBlogById } = useDeleteBlogById();
 
   const handleDeleteBlog = (blog_id) => {
-    deleteBlogById({ blog_id });
+    if (isBlog) {
+      return deleteBlogById(
+        { blog_id },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries(['blogs', pageBLog, search]);
+          },
+        }
+      );
+    }
+
+    return deleteBlogById(
+      { blog_id },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(['drafts', pageDraft, search]);
+        },
+      }
+    );
   };
 
   return (

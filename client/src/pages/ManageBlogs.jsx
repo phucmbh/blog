@@ -10,10 +10,18 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BlogQueryMethods from 'apis/services/BlogService/query';
 import ManageBlogList from 'components/blog/ManageBlogList';
 
+import {
+  useManageBlogAction,
+  useManageBlogStore,
+} from 'components/blog/store/manage.blog.store';
+
 const ManageBlogs = () => {
-  const [search, setSearch] = useState('');
-  const [pageBlog, setPageBlog] = useState(1);
-  const [pageDraft, setPageDraft] = useState(1);
+
+  const pageBlog = useManageBlogStore((state) => state.pageBlog);
+  const pageDraft = useManageBlogStore((state) => state.pageDraft);
+  const search = useManageBlogStore((state) => state.search);
+
+  const { setSearch } = useManageBlogAction();
 
   let activeTab = useSearchParams()[0].get('tab');
 
@@ -38,11 +46,12 @@ const ManageBlogs = () => {
     placeholderData: keepPreviousData,
   });
 
+
   const handleSearch = (e) => {
     let searchQuery = e.target.value;
 
     if (e.keyCode == 13 && searchQuery.length) {
-      setSearch(e.target.value);
+      setSearch(searchQuery);
     }
   };
 
@@ -57,7 +66,6 @@ const ManageBlogs = () => {
           type="search"
           className="w-full bg-grey p-4 pl-12 pr-6 rounded-full placeholder:text-dark-grey"
           placeholder="Search Blogs"
-          // onChange={handleChange}
           onKeyDown={handleSearch}
         />
 
@@ -71,21 +79,15 @@ const ManageBlogs = () => {
         {
           //published blogs
           <ManageBlogList
+            isBlog={true}
             data={blogs?.blogs}
-            page={pageBlog}
-            setPage={setPageBlog}
             totalDocs={blogs?.totalDocs}
           />
         }
 
         {
           //draft blogs
-          <ManageBlogList
-            data={drafts?.blogs}
-            page={pageDraft}
-            setPage={setPageDraft}
-            totalDocs={drafts?.totalDocs}
-          />
+          <ManageBlogList data={drafts?.blogs} totalDocs={drafts?.totalDocs} />
         }
       </InPageNavigation>
     </>

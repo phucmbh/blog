@@ -1,13 +1,30 @@
+import CommentService from '../CommentService/service';
 import BlogService from './service';
 
 export default class BlogQueryMethods {
-  static getLatestBlogs = async (query) => {
-    const response = await BlogService.getLatestBlogs(query);
+  static getBlogAndComments = async ({ blog_id, setParentCommentCountFun }) => {
+    const { blog } = await BlogService.getBlog({ blog_id });
+    blog.comments = await CommentService.getBlogComment({
+      blog_id: blog._id,
+      setParentCommentCountFun,
+    });
+    console.log(blog);
+
+    return blog;
+  };
+
+  static getBlog = async (params) => {
+    const response = await BlogService.getBlog(params);
     return response;
   };
 
-  static getBlog = async (query) => {
-    const response = await BlogService.getBlog(query);
+  static searchBlogs = async (params) => {
+    const response = await BlogService.searchBlogs(params);
+    return response;
+  };
+
+  static getAllBlogs = async (params) => {
+    const response = await BlogService.getAllBlogs(params);
     return response;
   };
 

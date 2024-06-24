@@ -1,63 +1,38 @@
 import { useParams } from 'react-router-dom';
 import InPageNavigation from '../components/InPageNavigation';
-import { useEffect, useState } from 'react';
 import Loader from '../components/Loader';
 import AnimationWrapper from '../common/page-animation';
 import BlogPostCard from '../components/blog/BlogPostCard';
 import NoDataMessage from '../components/NoDataMessage';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
-import { filterPaginationData } from '../common/filter-pagination-data';
 import UserCard from '../components/user/UserCard';
-import { apiSearchBlogs, apiSearchUsers } from '../apis';
 import icons from '../utils/icons.util';
+import { useQuery } from '@tanstack/react-query';
+import BlogQueryMethods from 'apis/services/BlogService/query';
+import UserQueryMethods from 'apis/services/UserService/query';
 const { FaRegUser } = icons;
 
 const SearchPage = () => {
-  let { query } = useParams();
+  const { search } = useParams();
+  const page = 1;
 
-  let [blogs, setBlog] = useState(null);
-  let [users, setUsers] = useState(null);
+  const { data } = useQuery({
+    queryKey: ['search', page, search],
+    queryFn: () => BlogQueryMethods.searchBlogs({ search }),
+  });
 
-  const searchBlogs = async ({ page = 1, create_new_arr = false }) => {
-    const { blogs } = await apiSearchBlogs({
-      query,
-      page,
-    });
-    let formatedData = await filterPaginationData({
-      state: blogs,
-      data: blogs,
-      page,
-      countRoute: '/search-blogs-count',
-      data_to_send: { query },
-      create_new_arr,
-    });
-
-    setBlog(formatedData);
-  };
-
-  const fetchUsers = async () => {
-    const { users } = await apiSearchUsers({ query });
-    setUsers(users);
-  };
-
-  useEffect(() => {
-    resetState();
-    searchBlogs({ page: 1, create_new_arr: true });
-    fetchUsers();
-  }, [query]);
-
-  const resetState = () => {
-    setBlog(null);
-    setUsers(null);
-  };
+  const { data: usersData } = useQuery({
+    queryKey: ['users', page, search],
+    queryFn: () => UserQueryMethods.searchUsers({ search }),
+  });
 
   const UserCardWrapper = () => {
     return (
       <>
-        {users == null ? (
+        {usersData?.users == null ? (
           <Loader />
-        ) : users.length ? (
-          users.map((user, i) => {
+        ) : usersData?.users.length ? (
+          usersData?.users.map((user, i) => {
             return (
               <AnimationWrapper
                 key={i}
@@ -78,14 +53,14 @@ const SearchPage = () => {
     <section className="h-cover flex justify-center gap-10">
       <div className="w-full">
         <InPageNavigation
-          routes={[`Search results for "${query}"`, 'Accounts Matched']}
+          routes={[`Search results for "${search}"`, 'Accounts Matched']}
           defaultHidden={['Accounts Matched']}
         >
           <>
-            {blogs == null ? (
+            {data?.blogs == null ? (
               <Loader />
-            ) : blogs.results.length ? (
-              blogs.results.map((blog, i) => {
+            ) : data?.blogs.length ? (
+              data?.blogs.map((blog, i) => {
                 return (
                   <AnimationWrapper
                     transition={{ duration: 1, delay: i * 0.1 }}
@@ -101,7 +76,7 @@ const SearchPage = () => {
             ) : (
               <NoDataMessage message="No blogs published" />
             )}
-            <LoadMoreDataBtn state={blogs} fetchDataFun={searchBlogs} />
+            {/* <LoadMoreDataBtn state={blogs} fetchDataFun={searchBlogs} /> */}
           </>
 
           <UserCardWrapper />
@@ -109,9 +84,10 @@ const SearchPage = () => {
       </div>
 
       <div className="min-w-[40%] lg:min-w-[350px] max-w-min border-l border-grey pl-8 pt-3 max-md:hidden">
-        <h1 className="font-medium text-xl mb-8">
-          User related to search <FaRegUser />
-        </h1>
+        <div className="flex gap-3 items-center">
+          <FaRegUser />
+          <h1 className="font-medium text-xl">User related to search</h1>
+        </div>
 
         <UserCardWrapper />
       </div>

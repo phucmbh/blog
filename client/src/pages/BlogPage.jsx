@@ -13,6 +13,8 @@ import { apiGetBlog, apiSearchBlogs } from '../apis';
 
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
+import { useQuery } from '@tanstack/react-query';
+import BlogQueryMethods from 'apis/services/BlogService/query';
 
 export const blogStructure = {
   title: '',

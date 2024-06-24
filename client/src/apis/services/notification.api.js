@@ -9,5 +9,5 @@ export const apiNewNotification = () =>
 export const apiNotification = () =>
   request({
     url: '/notifications',
-    method: 'POST',
+    method: 'GET',
   });

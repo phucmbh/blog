@@ -7,9 +7,10 @@ export default class UserService {
       method: 'GET',
     });
 
-  static apiNotification = () =>
+  static getNotifications = (params) =>
     request({
       url: '/notifications',
-      method: 'POST',
+      method: 'GET',
+      params
     });
 }

@@ -1,42 +1,52 @@
 import request from 'apis/request';
 
 export default class UserService {
-  static apiChangePasswordUser = (data) =>
-    request({
+  static searchUsers = (params) => {
+    return request({
+      url: '/search-users',
+      method: 'GET',
+      params,
+    });
+  };
+
+  static getProfileAndBlogsByUser = (params) => {
+    return request({
+      url: '/get-profile-and-blogs-by-user',
+      method: 'GET',
+      params,
+    });
+  };
+
+  static apiChangePasswordUser = (data) => {
+    return request({
       url: '/change-password',
       method: 'POST',
       data,
     });
-  static apiGetProfile = (data) =>
-    request({
-      url: '/get-profile',
-      method: 'POST',
-      data,
-    });
+  };
 
-  static apiUpdateProfileImage = (data) =>
-    request({
+
+
+  static apiUpdateProfileImage = (data) => {
+    return request({
       url: '/update-profile-img',
       method: 'POST',
       data,
     });
-  static apiUpdateProfile = (data) =>
-    request({
+  };
+  static apiUpdateProfile = (data) => {
+    return request({
       url: '/update-profile',
       method: 'POST',
       data,
     });
+  };
 
-  static apiIsLikedByUser = (data) =>
-    request({
+  static apiIsLikedByUser = (data) => {
+    return request({
       url: '/isliked-by-user',
       method: 'POST',
       data,
     });
-  static apiSearchUsers = (data) =>
-    request({
-      url: '/search-users',
-      method: 'POST',
-      data,
-    });
+  };
 }

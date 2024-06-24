@@ -7,11 +7,11 @@ export const apiGetReply = (data) =>
     data,
   });
 
-export const apiBlogComment = (data) =>
+export const apiBlogComment = (params) =>
   request({
     url: '/get-blog-comments',
-    method: 'POST',
-    data,
+    method: 'GET',
+    params,
   });
 
 export const apiAddComment = (data) =>

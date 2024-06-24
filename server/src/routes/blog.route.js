@@ -9,15 +9,11 @@ router.post('/create-blog', verifyJWT, ctrls.createBlog);
 router.post('/autosave', verifyJWT, ctrls.autoSaveContent);
 router.post('/delete-blog', verifyJWT, ctrls.deleteBlog);
 router.post('/like-blog', verifyJWT, ctrls.likeBlog);
-router.post('/user-written-blogs', verifyJWT, ctrls.userWrittenBlogs);
-router.post(
-  '/user-written-blogs-count',
-  verifyJWT,
-  ctrls.userWrittenBlogsCount
-);
 
-router.post('/get-blog', ctrls.getBlog);
 router.get('/trending-blogs', ctrls.trendingBlogs);
+router.get('/search-blogs', ctrls.searchBlogs);
+router.get('/get-all-blogs', ctrls.getAllBlogs);
+router.get('/get-blog', ctrls.getBlog);
 router.post('/search-blogs', ctrls.searchBlogs);
 router.post('/search-blogs-count', ctrls.searchBlogsCount);
 router.post('/latest-blogs', ctrls.latestBlogs);

@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const Notification = require('../model/Notification');
+const Blog = require('../model/Blog');
 
 const generateUsername = async (email) => {
   let username = email.split('@')[0];
@@ -210,10 +211,10 @@ var that = (module.exports = {
 
   searchUser: async (req, res) => {
     try {
-      let { query } = req.body;
+      let { search } = req.query;
 
       const users = await User.find({
-        'personal_info.username': new RegExp(query, 'i'),
+        'personal_info.username': new RegExp(search, 'i'),
       })
         .limit(50)
         .select(
@@ -235,6 +236,28 @@ var that = (module.exports = {
       }).select('-personal_info.password -google_auth -updatedAt -blogs');
 
       return res.status(200).json(user);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+  },
+
+  getProfileAndBlogsByUser: async (req, res) => {
+    try {
+      let { username } = req.query;
+
+      const profile = await User.findOne({
+        'personal_info.username': username,
+      }).select('-personal_info.password -google_auth -updatedAt -blogs');
+      if (!profile) {
+        return res.status(500).json({ error: 'User not found' });
+      }
+      const userId = profile._id;
+      const blogs = await Blog.find({ author: userId })
+        .populate('author')
+        .sort({ createdAt: -1, draft: false });
+
+      return res.status(200).json({ profile, blogs });
     } catch (error) {
       console.log(error);
       return res.status(500).json({ error: error.message });

@@ -1,14 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import BlogService from './service';
 
-// export const useUpdateProductById = () => {
-//   return useMutation({
-//     mutationFn: (data) => {
-//       const { id, ...rest } = data;
-//       return ProductService.updateProductById(id, rest);
-//     },
-//   });
-// };
+
+
+
+
 
 export const useUploadImageBanner = () => {
   return useMutation({

@@ -12,17 +12,11 @@ export const apiUploadImageBanner = (file) => {
   });
 };
 
-export const apiDeleteBlog = (data) =>
-  request({
-    url: '/delete-blog',
-    method: 'POST',
-    data,
-  });
-export const apiGetBlog = (data) =>
+export const apiGetBlog = (params) =>
   request({
     url: '/get-blog',
-    method: 'POST',
-    data,
+    method: 'GET',
+    params,
   });
 
 export const apiCreateBlog = async (data) => {
@@ -55,12 +49,6 @@ export const apiSearchBlogs = (data) =>
 export const apiLatestBlogs = (data) =>
   request({
     url: '/latest-blogs',
-    method: 'POST',
-    data,
-  });
-export const apiUserWrittenBlogs = (data) =>
-  request({
-    url: '/user-written-blogs',
     method: 'POST',
     data,
   });

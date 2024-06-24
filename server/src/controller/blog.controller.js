@@ -131,7 +131,8 @@ var that = (module.exports = {
 
   getBlog: async (req, res) => {
     try {
-      let { blog_id, draft, mode } = req.body;
+      let { blog_id, draft, mode } = req.query;
+      console.log({ blog_id, draft, mode });
 
       let incrementVal = mode != 'edit' ? 1 : 0;
       const blog = await Blog.findOneAndUpdate(
@@ -184,6 +185,27 @@ var that = (module.exports = {
       ).then((user) => console.log('Blog deleted'));
 
       return res.status(200).json({ status: 'done' });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+
+  getAllBlogs: async (req, res) => {
+    try {
+      const { page = 1 } = req.query;
+      const maxLimit = page * 5;
+      const totalDocs = await Blog.countDocuments({ draft: false });
+
+      const blogs = await Blog.find({ draft: false })
+        .populate(
+          'author',
+          'personal_info.profile_img personal_info.username personal_info.fullname -_id'
+        )
+        .sort({ publishedAt: -1 })
+        .select('blog_id title des banner activity tags publishedAt -_id')
+        .limit(maxLimit);
+
+      return res.status(200).json({ blogs, totalDocs });
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
@@ -243,7 +265,7 @@ var that = (module.exports = {
 
   searchBlogs: async (req, res) => {
     try {
-      let { tag, query, author, page, limit, eliminate_blog } = req.body;
+      let { tag, search, author, page, limit, eliminate_blog } = req.query;
 
       let findQuery;
 
@@ -253,8 +275,8 @@ var that = (module.exports = {
           draft: false,
           blog_id: { $ne: eliminate_blog },
         };
-      } else if (query) {
-        findQuery = { draft: false, title: new RegExp(query, 'i') };
+      } else if (search) {
+        findQuery = { draft: false, title: new RegExp(search, 'i') };
       } else if (author) {
         findQuery = { author, draft: false };
       }
@@ -340,39 +362,6 @@ var that = (module.exports = {
     }
   },
 
-  userWrittenBlogs: async (req, res) => {
-    try {
-      const user_id = req.user;
-
-      const { page, draft, query, deletedDocCount } = req.body;
-
-      const maxLimit = 5;
-      let skipDocs = (page - 1) * maxLimit;
-
-      if (deletedDocCount) {
-        skipDocs -= deletedDocCount;
-      }
-      const totalDocs = await Blog.countDocuments({
-        author: user_id,
-        draft,
-        title: new RegExp(query, 'i'),
-      });
-
-      const blogs = await Blog.find({
-        author: user_id,
-        draft,
-        title: new RegExp(query, 'i'),
-      })
-        .skip(skipDocs)
-        .limit(maxLimit)
-        .sort({ publishedAt: -1 })
-        .select('title banner publishedAt blog_id activity des draft -_id');
-      return res.status(200).json({ blogs, totalDocs });
-    } catch (error) {
-      return res.status(500).json({ error: error.message });
-    }
-  },
-
   getBlogsByUser: async (req, res) => {
     try {
       const user_id = req.user;
@@ -413,7 +402,6 @@ var that = (module.exports = {
       const { page, search, deletedDocCount } = req.query;
 
       const maxLimit = page * 5;
-      console.log(maxLimit);
       // let skipDocs = (page - 1) * maxLimit;
 
       if (deletedDocCount) {
@@ -437,25 +425,6 @@ var that = (module.exports = {
       return res.status(200).json({ blogs, totalDocs });
     } catch (error) {
       return res.status(500).json({ error: error.message });
-    }
-  },
-
-  userWrittenBlogsCount: async (req, res) => {
-    try {
-      const user_id = req.user;
-
-      const { draft, query } = req.body;
-
-      const count = await Blog.countDocuments({
-        author: user_id,
-        draft,
-        title: new RegExp(query, 'i'),
-      });
-
-      return res.status(200).json({ totalDocs: count });
-    } catch (error) {
-      console.log(error.message);
-      return res.status(500).json({ erroror: err.message });
     }
   },
 });
