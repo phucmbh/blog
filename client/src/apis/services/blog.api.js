@@ -7,7 +7,7 @@ export const apiUploadImageBanner = (file) => {
   return request({
     url: '/upload',
     method: 'POST',
-    header: { 'Content-Type': 'multipart/form-data' },
+    headers: { 'Content-Type': 'multipart/form-data' },
     data: formData,
   });
 };
