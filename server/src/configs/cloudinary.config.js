@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { Readable } = require('stream');
 const cloudinary = require('cloudinary').v2;
 
 const { CLOUDINARY_NAME, CLOUDINARY_KEY, CLOUDINARY_SECRET } = process.env;
@@ -11,15 +12,14 @@ cloudinary.config({
 
 var self = (module.exports = {
   uploadSingle: (file) => {
-
-    return new Promise((resolve) => {
-      cloudinary.uploader
-        .upload(file.path, {
+    return new Promise((resolve, reject) => {
+      const theTransformStream = cloudinary.uploader.upload_stream(
+        {
           folder: 'blog',
           use_filename: true,
-        })
-        .then((result) => {
-          fs.unlinkSync(file.path);
+        },
+        (err, result) => {
+          if (err) return rej(err);
           resolve({
             url: result.secure_url,
             public_id: result.public_id,
@@ -27,7 +27,11 @@ var self = (module.exports = {
             // main: self.reSizeImage(result.public_id, 500, 500),
             // thumb2: self.reSizeImage(result.public_id, 300, 300),
           });
-        });
+        }
+      );
+
+      let str = Readable.from(file.buffer);
+      str.pipe(theTransformStream);
     });
   },
 
