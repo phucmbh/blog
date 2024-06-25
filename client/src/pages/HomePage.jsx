@@ -1,17 +1,17 @@
 import AnimationWrapper from '../common/page-animation';
 import InPageNavigation from '../components/InPageNavigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Loader from '../components/Loader';
 import BlogPostCard from '../components/blog/BlogPostCard';
 import MinimalBlogPost from '../components/blog/MinimalBlogPost';
 import NoDataMessage from '../components/NoDataMessage';
-import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
 import { IoTrendingUpOutline } from 'react-icons/io5';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BlogQueryMethods from 'apis/services/BlogService/query';
 
 const HomePage = () => {
   const [pageState, setPageState] = useState('home');
+  const [page, setPage] = useState({ pageHome: 1, pageTag: 1 });
 
   let categories = [
     'interview',
@@ -30,25 +30,31 @@ const HomePage = () => {
     queryFn: () => BlogQueryMethods.getTrendingBlogs(),
   });
 
-  let blogs = [];
+  let data;
 
   if (pageState === 'home') {
-    const { data, isLoading } = useQuery({
-      queryKey: ['latest-blogs'],
-      queryFn: () => BlogQueryMethods.getAllBlogs({ page: 1 }),
+    const { data: homeBlogs, isLoading } = useQuery({
+      queryKey: ['latest-blogs', page.pageHome],
+      queryFn: () => BlogQueryMethods.getAllBlogs({ page: page.pageHome }),
+      placeholderData: keepPreviousData,
     });
 
     if (isLoading) return <Loader />;
-    blogs = data.blogs;
+    data = homeBlogs;
   } else {
-    const { data, isLoading } = useQuery({
-      queryKey: ['search', pageState],
-      queryFn: () => BlogQueryMethods.searchBlogs({ tag: pageState }),
+    const { data: tagBlogs, isLoading } = useQuery({
+      queryKey: ['search', pageState, page.pageTag],
+      queryFn: () =>
+        BlogQueryMethods.searchBlogs({ tag: pageState, page: page.pageTag }),
+      placeholderData: keepPreviousData,
     });
 
     if (isLoading) return <Loader />;
-    blogs = data.blogs;
+    data = tagBlogs;
   }
+
+  const { blogs, totalDocs } = data;
+
 
   const loadBlogByCategory = (e) => {
     let tag = e.target.innerText.toLowerCase().substring(1);
@@ -72,28 +78,37 @@ const HomePage = () => {
           >
             <>
               {blogs.length ? (
-                blogs.map((blog, i) => {
-                  return (
-                    <AnimationWrapper
-                      transition={{ duration: 1, delay: i * 0.1 }}
-                      key={i}
+                <>
+                  {blogs.map((blog, i) => {
+                    return (
+                      <AnimationWrapper
+                        transition={{ duration: 1, delay: i * 0.1 }}
+                        key={i}
+                      >
+                        <BlogPostCard
+                          content={blog}
+                          author={blog.author.personal_info}
+                        />
+                      </AnimationWrapper>
+                    );
+                  })}
+
+                  {blogs.length < totalDocs && (
+                    <button
+                      onClick={() => {
+                        pageState === 'home'
+                          ? setPage({ ...page, pageHome: page.pageHome + 1 })
+                          : setPage({ ...page, pageTag: page.pageTag + 1 });
+                      }}
+                      className="text-dark-grey p-2 px-3 hover:bg-grey/30 rounded-md flex items-center gap-2"
                     >
-                      <BlogPostCard
-                        content={blog}
-                        author={blog.author.personal_info}
-                      />
-                    </AnimationWrapper>
-                  );
-                })
+                      Load More
+                    </button>
+                  )}
+                </>
               ) : (
                 <NoDataMessage message="No blogs published" />
               )}
-              {/* <LoadMoreDataBtn
-                state={blogs}
-                fetchDataFun={
-                  pageState == 'home' ? fetchLatestBlogs : fetchBlogsByCategory
-                }
-              /> */}
             </>
 
             {trendingBlogs == null ? (

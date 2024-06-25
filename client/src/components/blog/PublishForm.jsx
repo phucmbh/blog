@@ -7,6 +7,8 @@ import { UserContext } from '../../App';
 import { useNavigate, useParams } from 'react-router-dom';
 import { apiCreateBlog } from '../../apis';
 import { RxCross1 } from 'react-icons/rx';
+import { useCreateBlog } from 'apis/services/BlogService/mutation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const PublishForm = () => {
   let characterLimit = 200;
@@ -14,6 +16,16 @@ const PublishForm = () => {
   //let val= -1;
 
   let { blog_id } = useParams();
+  const queryClient = useQueryClient();
+
+  const createBlogMutation = useMutation({
+    mutationFn: apiCreateBlog,
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['latest-blogs'] }),
+        queryClient.invalidateQueries({ queryKey: ['blogs', 1, ''] }),
+      ]),
+  });
 
   let {
     blog,
@@ -87,8 +99,6 @@ const PublishForm = () => {
       return toast.error('Enter at least 1 tag to help us rank your blog');
     }
 
-    let loadingToast = toast.loading('Publishing...');
-
     e.target.classList.add('disable');
 
     let blogObj = {
@@ -100,24 +110,23 @@ const PublishForm = () => {
       draft: false,
     };
 
-    const response = await apiCreateBlog({ ...blogObj, id: blog_id });
+    await createBlogMutation.mutateAsync(
+      { ...blogObj, id: blog_id },
+      {
+        onSuccess: () => {
+          toast.success('Saved');
+          setTimeout(() => {
+            navigate('/dashboard/blogs');
+          }, 500);
+        },
+        onError: () => {
+          toast.error(createBlogMutation.error);
+        },
+      }
+    );
+    const { isPending } = createBlogMutation;
 
-    if (response.success) {
-      e.target.classList.remove('disable');
-
-      toast.dismiss(loadingToast);
-      toast.success('Published');
-      //val=val+1;
-
-      setTimeout(() => {
-        navigate('/dashboard/blogs');
-      }, 500);
-    } else {
-      e.target.classList.remove('disable');
-      toast.dismiss(loadingToast);
-
-      return toast.error(response.error);
-    }
+    if (isPending) return toast.loading('Publishing...');
   };
 
   return (

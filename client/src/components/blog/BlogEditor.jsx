@@ -12,7 +12,7 @@ import { EditorContext } from '../../pages/EditorPage';
 import { ThemeContext } from '../../App';
 import { apiCreateBlog, apiUploadImageBanner } from '../../apis';
 import TextEditor from './TextEditor';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const BlogEditor = () => {
   const {
@@ -28,11 +28,17 @@ const BlogEditor = () => {
   const navigate = useNavigate();
 
   const [editorContent, setEditorContent] = useState('');
+  const queryClient = useQueryClient();
 
   //useEffect
 
   const createBlogMutation = useMutation({
     mutationFn: apiCreateBlog,
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['latest-blogs'] }),
+        queryClient.invalidateQueries({ queryKey: ['blogs', 1, ''] }),
+      ]),
   });
 
   const handleBannerUpload = async (e) => {

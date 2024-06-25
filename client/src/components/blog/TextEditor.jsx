@@ -21,7 +21,6 @@ const TextEditor = ({ blog, setEditorContent }) => {
   if (blog_id) {
     useInterval(() => {
       if (currentContent !== newContent) return fectAutosave();
-      console.log(currentContent);
     }, TWO_MINUTES);
   }
 
