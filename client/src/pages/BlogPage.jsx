@@ -84,6 +84,7 @@ const BlogPage = () => {
     setTotalParentCommentsLoaded(0);
   };
 
+  console.log(content);
   return (
     <AnimationWrapper>
       {loading ? (
@@ -132,7 +133,7 @@ const BlogPage = () => {
             <div className="blog-content">
               <div
                 dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(content),
+                  __html: content,
                 }}
               />
             </div>

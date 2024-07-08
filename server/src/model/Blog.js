@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const blogSchema = mongoose.Schema(
+const blogSchema = new mongoose.Schema(
   {
     blog_id: {
       type: String,
@@ -33,11 +33,12 @@ const blogSchema = mongoose.Schema(
       type: [String],
       // required: true
     },
-    images: [{
+    images: [
+      {
         id: String,
         url: String,
-    }]
-    ,
+      },
+    ],
     author: {
       type: mongoose.Types.ObjectId,
       required: true,

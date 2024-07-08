@@ -58,6 +58,9 @@ var that = (module.exports = {
         });
       }
 
+      //Prevent create account 
+      return res.status(500).json({ error: 'Error' });
+
       const hashPassword = bcrypt.hashSync(password, 10);
       const username = await generateUsername(email);
 

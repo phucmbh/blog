@@ -7,7 +7,7 @@ import {
   tinyPlugins,
   tinyToolbar,
 } from '../../utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { apiAutoSaveContent } from '../../apis';
@@ -18,11 +18,13 @@ const TextEditor = ({ blog, setEditorContent }) => {
   const [newContent, setNewContent] = useState(blog?.content);
   const [currentContent, setCurrentContent] = useState(blog?.content);
   const TWO_MINUTES = 2 * 60 * 1000;
+
   if (blog_id) {
     useInterval(() => {
       if (currentContent !== newContent) return fectAutosave();
     }, TWO_MINUTES);
   }
+  console.log(newContent);
 
   const fectAutosave = async () => {
     const response = await apiAutoSaveContent({
@@ -57,8 +59,39 @@ const TextEditor = ({ blog, setEditorContent }) => {
           file_picker_types: 'image',
           automatic_uploads: true,
           images_upload_handler: handleImagesUpload,
+          extended_valid_elements: 'script[src|async|defer|type|charset]',
+          sandbox_iframes: true,
+          valid_children: '+*[*]',
+          valid_elements: '*[*]',
+          convert_unsafe_embeds: false,
+          xss_sanitization: false,
+          allow_html_data_urls: true,
+          allow_html_in_named_anchor: 'true',
+          allow_script_urls: 'true',
+          setup: function (editor) {
+            editor.on('PreInit', function () {
+              editor.parser.addNodeFilter('iframe', function (nodes) {
+                nodes.forEach(function (node) {
+                  node.attr('sandbox', 'allow-scripts allow-same-origin');
+                });
+              });
+            });
+          },
         }}
         onEditorChange={(content, editor) => {
+          editor.on('PreInit', function () {
+            editor.parser.addNodeFilter('iframe', function (nodes) {
+              nodes.forEach(function (node) {
+                node.attr('sandbox', 'allow-scripts allow-same-origin');
+              });
+            });
+          });
+          editor.iframeElement.setAttribute(
+            'sandbox',
+            'allow-scripts allow-same-origin allow-popups allow-forms'
+          );
+          // console.log(editor.iframeElement.getAttribute('sandbox'));
+
           setNewContent(content);
           setEditorContent(content);
         }}

@@ -55,7 +55,6 @@ const HomePage = () => {
 
   const { blogs, totalDocs } = data;
 
-
   const loadBlogByCategory = (e) => {
     let tag = e.target.innerText.toLowerCase().substring(1);
 
@@ -77,7 +76,7 @@ const HomePage = () => {
             defaultHidden={['trending blogs']}
           >
             <>
-              {blogs.length ? (
+              {blogs?.length ? (
                 <>
                   {blogs.map((blog, i) => {
                     return (
