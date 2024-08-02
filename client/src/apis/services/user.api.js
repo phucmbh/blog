@@ -1,11 +1,6 @@
 import request from '../request';
 
-export const apiChangePasswordUser = (data) =>
-  request({
-    url: '/change-password',
-    method: 'POST',
-    data,
-  });
+
 export const apiGetProfile = (data) =>
   request({
     url: '/get-profile',

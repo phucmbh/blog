@@ -9,7 +9,7 @@ import icons from '../../utils/icons.util';
 const { LuTrash2, FaRegCommentDots } = icons;
 
 const CommentCard = ({ index, leftVal, commentData }) => {
-  let {
+  const {
     commented_by: {
       personal_info: { profile_img, fullname, username: commented_by_username },
     },
@@ -19,7 +19,7 @@ const CommentCard = ({ index, leftVal, commentData }) => {
     children,
   } = commentData;
 
-  let {
+  const {
     blog,
     blog: {
       comments,
@@ -34,7 +34,7 @@ const CommentCard = ({ index, leftVal, commentData }) => {
     setTotalParentCommentsLoaded,
   } = useContext(BlogContext);
 
-  let {
+  const {
     userAuth: { access_token, username },
   } = useContext(UserContext);
 

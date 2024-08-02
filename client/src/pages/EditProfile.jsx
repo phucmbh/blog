@@ -9,21 +9,23 @@ import InputBox from '../components/InputBox';
 import { uploadImage } from '../common/aws';
 import { storeInSession } from '../common/session';
 import { apiGetProfile, apiUpdateProfile } from '../apis';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { ApiUser } from 'apis/user.api';
+import Button from 'components/Button';
 
 const EditProfile = () => {
-  let {
+  const {
     userAuth,
     userAuth: { access_token },
     setUserAuth,
   } = useContext(UserContext);
 
-  let bioLimit = 150;
+  const bioLimit = 150;
 
-  let profileImgEle = useRef();
-  let editProfileForm = useRef();
+  const profileImgEle = useRef();
+  const editProfileForm = useRef();
 
   const [profile, setProfile] = useState(profileDataStructure);
-  const [loading, setLoading] = useState(true);
   const [charactersLeft, setCharactersLeft] = useState(bioLimit);
   const [updatedProfileImg, setUpdatedProfileImg] = useState(null);
 
@@ -38,6 +40,14 @@ const EditProfile = () => {
     social_links,
   } = profile;
 
+  const { data: profileData, isLoading } = useQuery({
+    queryKey: ['profile', userAuth.username],
+    queryFn: ApiUser.getProfile({ username: userAuth.username }),
+  });
+
+  const updateProfileMutation = useMutation({mutationFn: ApiUser.updateProfile})
+  console.log(profileData);
+
   useEffect(() => {
     if (access_token) {
       const fetchGetProfile = async () => {
@@ -46,7 +56,6 @@ const EditProfile = () => {
         });
 
         setProfile(profile);
-        setLoading(false);
       };
       fetchGetProfile();
     }
@@ -165,7 +174,7 @@ const EditProfile = () => {
 
   return (
     <AnimationWrapper>
-      {loading ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <form ref={editProfileForm}>
@@ -194,12 +203,12 @@ const EditProfile = () => {
                 onChange={handleImagePreview}
               />
 
-              <button
+              <Button
                 className="btn-light mt-5 max-lg:center lg:w-full px-10"
                 onClick={handleImageUpload}
               >
                 Upload
-              </button>
+              </Button>
             </div>
 
             <div className="w-full">
@@ -211,7 +220,6 @@ const EditProfile = () => {
                     value={fullname}
                     placeholder="Full Name"
                     disable={true}
-                    icon="fi-rr-user"
                   />
                 </div>
                 <div>
@@ -221,7 +229,6 @@ const EditProfile = () => {
                     value={email}
                     placeholder="Email"
                     disable={true}
-                    icon="fi-rr-envelope"
                   />
                 </div>
               </div>
@@ -231,7 +238,6 @@ const EditProfile = () => {
                 name="username"
                 value={profile_username}
                 placeholder="Username"
-                icon="fi-rr-at"
               />
 
               <p className="text-dark-grey -mt-3">
@@ -267,22 +273,19 @@ const EditProfile = () => {
                       type="text"
                       value={link}
                       placeholder="https://"
-                      icon={
-                        'fi ' +
-                        (key != 'website' ? 'fi-brands-' + key : 'fi-rr-globe')
-                      }
+                      
                     />
                   );
                 })}
               </div>
 
-              <button
-                className="btn-dark w-auto px-10"
+              <Button
                 type="submit"
+                isLoading={updateProfileMutation.isPending}
                 onClick={handleSubmit}
               >
                 Update
-              </button>
+              </Button>
             </div>
           </div>
         </form>

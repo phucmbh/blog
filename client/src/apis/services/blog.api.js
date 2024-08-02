@@ -1,18 +1,6 @@
 import request from '../request';
 
-export const apiUploadImageBanner = (file) => {
-  const formData = new FormData();
-  formData.append('image', file);
 
-  return request({
-    url: '/upload',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: formData,
-  });
-};
 
 export const apiGetBlog = (params) =>
   request({

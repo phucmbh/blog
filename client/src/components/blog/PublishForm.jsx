@@ -11,11 +11,11 @@ import { useCreateBlog } from 'apis/services/BlogService/mutation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const PublishForm = () => {
-  let characterLimit = 200;
-  let tagLimit = 10;
+  const characterLimit = 200;
+  const tagLimit = 10;
   //let val= -1;
 
-  let { blog_id } = useParams();
+  const { blog_id } = useParams();
   const queryClient = useQueryClient();
 
   const createBlogMutation = useMutation({
@@ -27,18 +27,18 @@ const PublishForm = () => {
       ]),
   });
 
-  let {
+  const {
     blog,
     blog: { banner, title, tags, des, content },
     setEditorState,
     setBlog,
   } = useContext(EditorContext);
 
-  let {
+  const {
     userAuth: { access_token },
   } = useContext(UserContext);
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleCloseEvent = () => {
     setEditorState('editor');

@@ -7,7 +7,7 @@ import { ThemeContext } from '../App';
 import { useContext } from 'react';
 
 const PageNotFound = () => {
-  let { theme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
   return (
     <section className="h-cover relative p-10 flex flex-col items-center gap-20 text-center">

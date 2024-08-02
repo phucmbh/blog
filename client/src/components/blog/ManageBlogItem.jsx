@@ -12,7 +12,7 @@ const ManageBlogItem = ({ blog, isBlog }) => {
   const pageBLog = useManageBlogStore((state) => state.pageBlog);
   const pageDraft = useManageBlogStore((state) => state.pageDraft);
   const search = useManageBlogStore((state) => state.search);
-  let [showStat, setShowStat] = useState(false);
+  const [showStat, setShowStat] = useState(false);
   index++;
 
   const { mutate: deleteBlogById } = useDeleteBlogById();

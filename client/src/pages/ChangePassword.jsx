@@ -1,86 +1,81 @@
-import { useContext, useRef } from 'react';
 import AnimationWrapper from '../common/page-animation';
-import InputBox from '../components/InputBox';
 import { Toaster, toast } from 'react-hot-toast';
-import { UserContext } from '../App';
-import { apiChangePasswordUser } from '../apis';
+import { useMutation } from '@tanstack/react-query';
+import { ApiUser } from 'apis/user.api';
+import { useForm } from 'react-hook-form';
+import { userSchema } from 'utils/validate/user.validate';
+import { MdKey } from 'react-icons/md';
+import Input from 'components/Input';
+import { yupResolver } from '@hookform/resolvers/yup';
+import Button from 'components/Button';
+import { isAxiosError } from 'axios';
+const changePasswordSchema = userSchema.pick([
+  'password',
+  'newPassword',
+]);
 
 const ChangePassword = () => {
+  const {
+    register,
+    setError,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    defaultValues: {
+      currentPassword: '',
+      newPassword: '',
+    },
+    resolver: yupResolver(changePasswordSchema),
+  });
 
-  let changePasswordForm = useRef();
+  const changePasswordMutation = useMutation({
+    mutationFn: ApiUser.changePasswordUser,
+    onSuccess: () => {
+      toast.success('Change password success');
+    },
 
-  let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
+    onError: (error) => {
+      if (isAxiosError(error))
+        setError('currentPassword', {
+          message: error.response.data.error,
+          type: 'server',
+        });
+    },
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    let form = new FormData(changePasswordForm.current);
-    let formData = {};
-
-    for (let [key, value] of form.entries()) {
-      formData[key] = value;
-    }
-
-    let { currentPassword, newPassword } = formData;
-
-    if (!currentPassword.length || !newPassword.length) {
-      return toast.error('Fill all the inputs');
-    }
-
-    if (
-      !passwordRegex.test(currentPassword) ||
-      !passwordRegex.test(newPassword)
-    ) {
-      return toast.error(
-        'Password should be 6 to 20 characters long with 1 numeric, 1 lowercase and 1 uppercase letters'
-      );
-    }
-
-    e.target.setAttribute('disabled', true);
-
-    const loadingToast = toast.loading('Updating...');
-    const response = await apiChangePasswordUser(formData);
-
-    if (!response.success) {
-      toast.dismiss(loadingToast);
-      e.target.removeAttribute('disabled');
-      return toast.error(response.error);
-    }
-
-    toast.dismiss(loadingToast);
-    e.target.removeAttribute('disabled');
-    return toast.success('Password Updated');
-  };
+  const onSubmit = handleSubmit((data) => {
+    changePasswordMutation.mutate(data);
+  });
 
   return (
     <AnimationWrapper>
       <Toaster />
-      <form ref={changePasswordForm}>
+      <form onSubmit={onSubmit}>
         <h1 className="max-md:hidden">Change Password</h1>
 
         <div className="py-10 w-full md:max-w-[400px]">
-          <InputBox
-            name="currentPassword"
+          <Input
+            name="password"
             type="password"
             className="profile-edit-input"
             placeholder="Current Password"
-            icon="fi-rr-unlock"
+            icon={<MdKey size={20} />}
+            register={register}
+            errorMessage={errors.password?.message}
           />
-          <InputBox
+          <Input
             name="newPassword"
             type="password"
             className="profile-edit-input"
             placeholder="New Password"
-            icon="fi-rr-unlock"
+            icon={<MdKey size={20} />}
+            register={register}
+            errorMessage={errors.newPassword?.message}
           />
 
-          <button
-            onClick={handleSubmit}
-            className="btn-dark px-10"
-            type="submit"
-          >
+          <Button isLoading={changePasswordMutation.isPending}>
             Change Password
-          </button>
+          </Button>
         </div>
       </form>
     </AnimationWrapper>

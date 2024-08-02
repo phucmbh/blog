@@ -10,7 +10,7 @@ const CommentField = ({
   replyingTo = undefined,
   setReplying,
 }) => {
-  let {
+  const {
     blog,
     blog: {
       _id,
@@ -24,7 +24,7 @@ const CommentField = ({
     setTotalParentCommentsLoaded,
   } = useContext(BlogContext);
 
-  let {
+  const {
     userAuth: { access_token, username, fullname, profile_img },
   } = useContext(UserContext);
 
@@ -74,7 +74,7 @@ const CommentField = ({
         newCommentArr = [response, ...commentsArr];
       }
 
-      let parentCommentIncrementval = replyingTo ? 0 : 1;
+      const parentCommentIncrementval = replyingTo ? 0 : 1;
 
       setBlog({
         ...blog,

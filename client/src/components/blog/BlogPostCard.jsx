@@ -3,7 +3,7 @@ import { getDay } from '../../common/date';
 import { FaRegHeart } from 'react-icons/fa';
 
 const BlogPostCard = ({ content, author }) => {
-  let {
+  const {
     publishedAt,
     tags,
     title,
@@ -12,7 +12,7 @@ const BlogPostCard = ({ content, author }) => {
     activity: { total_likes },
     blog_id: id,
   } = content;
-  let { fullname, profile_img, username } = author;
+  const { fullname, profile_img, username } = author;
 
   return (
     <Link

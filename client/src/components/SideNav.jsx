@@ -12,21 +12,21 @@ const {
 } = icons;
 
 const SideNav = () => {
-  let {
+  const {
     userAuth: { access_token, new_notification_available },
   } = useContext(UserContext);
 
-  let page = location.pathname.split('/')[2];
+  const page = location.pathname.split('/')[2];
 
-  let [pageState, setPageState] = useState(page.replace('-', ' '));
-  let [showSideNav, setShowSideNav] = useState(false);
+  const [pageState, setPageState] = useState(page.replace('-', ' '));
+  const [showSideNav, setShowSideNav] = useState(false);
 
-  let activeTabLine = useRef();
-  let sideBarIconTab = useRef();
-  let pageStateTab = useRef();
+  const activeTabLine = useRef();
+  const sideBarIconTab = useRef();
+  const pageStateTab = useRef();
 
   const changePageState = (e) => {
-    let { offsetWidth, offsetLeft } = e.target;
+    const { offsetWidth, offsetLeft } = e.target;
 
     activeTabLine.current.style.width = offsetWidth + 'px';
     activeTabLine.current.style.left = offsetLeft + 'px';

@@ -14,7 +14,8 @@ import { apiGetBlog, apiSearchBlogs } from '../apis';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
 import { useQuery } from '@tanstack/react-query';
-import BlogQueryMethods from 'apis/services/BlogService/query';
+import { ApiBlog } from 'apis/blog.api';
+import { ApiComment } from 'apis/comment.api';
 
 export const blogStructure = {
   title: '',
@@ -51,8 +52,17 @@ const BlogPage = () => {
     publishedAt,
   } = blog;
 
+  const { data: blogData, isLoading } = useQuery({
+    queryKey: ['blogs', blog_id],
+    queryFn: ApiBlog.getBlog(blog_id),
+  });
+
+
+
+
   const fetchBlog = async () => {
     const { blog } = await apiGetBlog({ blog_id });
+    console.log(blog);
     if (!blog) return setLoading(false);
     blog.comments = await fetchComments({
       blog_id: blog._id,

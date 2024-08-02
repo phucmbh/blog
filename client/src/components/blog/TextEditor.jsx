@@ -7,7 +7,7 @@ import {
   tinyPlugins,
   tinyToolbar,
 } from '../../utils';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { apiAutoSaveContent } from '../../apis';
@@ -54,20 +54,15 @@ const TextEditor = ({ blog, setEditorContent }) => {
           branding: false,
           promotion: false,
           link_default_target: '_blank',
-          details_serialized_state: 'collapsed',
           images_upload_url: IMAGES_UPLOAD_URL,
-          file_picker_types: 'image',
+          file_picker_types: 'image media',
           automatic_uploads: true,
           images_upload_handler: handleImagesUpload,
-          extended_valid_elements: 'script[src|async|defer|type|charset]',
           sandbox_iframes: true,
-          valid_children: '+*[*]',
-          valid_elements: '*[*]',
-          convert_unsafe_embeds: false,
-          xss_sanitization: false,
-          allow_html_data_urls: true,
-          allow_html_in_named_anchor: 'true',
-          allow_script_urls: 'true',
+          media_live_embeds: true,
+
+          
+          
           setup: function (editor) {
             editor.on('PreInit', function () {
               editor.parser.addNodeFilter('iframe', function (nodes) {

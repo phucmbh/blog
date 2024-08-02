@@ -10,7 +10,7 @@ import { UserContext } from '../App';
 import { authWithGoogle } from '../common/firebase';
 
 const UserAuthPage = ({ type }) => {
-  let {
+  const {
     userAuth: { access_token },
     setUserAuth,
   } = useContext(UserContext);
@@ -31,20 +31,20 @@ const UserAuthPage = ({ type }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    let serverRoute = type == 'sign-in' ? '/signin' : '/signup';
+    const serverRoute = type == 'sign-in' ? '/signin' : '/signup';
 
-    let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
-    let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
 
     //formData
-    let form = new FormData(formElement);
-    let formData = {};
+    const form = new FormData(formElement);
+    const formData = {};
 
     for (let [key, value] of form.entries()) {
       formData[key] = value;
     }
 
-    let { fullname, email, password } = formData;
+    const { fullname, email, password } = formData;
 
     //form validation
     if (fullname) {

@@ -11,7 +11,7 @@ const InputBox = ({
   icon,
   disable = false,
 }) => {
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [openEye, setOpenEye] = useState(false);
 
   return (
     <div className="flex items-center relative  w-[100%] mb-4 ">
@@ -19,9 +19,7 @@ const InputBox = ({
 
       <input
         name={name}
-        type={
-          type == 'password' ? (passwordVisible ? 'text' : 'password') : type
-        }
+        type={type == 'password' && !openEye ? 'password' : 'text'}
         placeholder={placeholder}
         defaultValue={value}
         id={id}
@@ -30,17 +28,17 @@ const InputBox = ({
       />
 
       {type == 'password' &&
-        (!passwordVisible ? (
+        (!openEye ? (
           <FaRegEyeSlash
             size={20}
             className="cursor-pointer absolute right-[5%]"
-            onClick={() => setPasswordVisible((currentVal) => !currentVal)}
+            onClick={() => setOpenEye((currentVal) => !currentVal)}
           />
         ) : (
           <FaRegEye
             size={20}
             className="cursor-pointer absolute right-[5%]"
-            onClick={() => setPasswordVisible((currentVal) => !currentVal)}
+            onClick={() => setOpenEye((currentVal) => !currentVal)}
           />
         ))}
     </div>

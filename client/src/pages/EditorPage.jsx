@@ -19,14 +19,14 @@ const blogStructure = {
 export const EditorContext = createContext({});
 
 const EditorPage = () => {
-  let { blog_id } = useParams();
+  const { blog_id } = useParams();
 
   const [blog, setBlog] = useState(blogStructure);
   const [editorState, setEditorState] = useState('editor');
   const [textEditor, setTextEditor] = useState({ isReady: false });
   const [loading, setLoading] = useState(true);
 
-  let {
+  const {
     userAuth: { access_token },
   } = useContext(UserContext);
 

@@ -9,7 +9,7 @@ import { apiNotification } from '../apis';
 import { useQuery } from '@tanstack/react-query';
 
 const Notifications = () => {
-  let {
+  const {
     userAuth,
     userAuth: { new_notification_available },
     setUserAuth,
@@ -19,7 +19,7 @@ const Notifications = () => {
 
   const [filter, setFilter] = useState('all');
 
-  let filters = ['all', 'like', 'comment', 'reply'];
+  const filters = ['all', 'like', 'comment', 'reply'];
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['notifications', filter, page],

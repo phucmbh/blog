@@ -23,7 +23,7 @@ const ManageBlogs = () => {
 
   const { setSearch } = useManageBlogAction();
 
-  let activeTab = useSearchParams()[0].get('tab');
+  const activeTab = useSearchParams()[0].get('tab');
 
   const { data: blogs } = useQuery({
     queryKey: ['blogs', pageBlog, search],

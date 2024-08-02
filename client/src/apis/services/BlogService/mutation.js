@@ -2,10 +2,6 @@ import { useMutation } from '@tanstack/react-query';
 import BlogService from './service';
 
 
-
-
-
-
 export const useUploadImageBanner = () => {
   return useMutation({
     mutationFn: (file) => {

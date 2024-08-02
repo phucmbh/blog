@@ -8,7 +8,7 @@ import { apiDeleteComment } from '../../apis';
 const NotificationCard = ({ data, index, notificationState }) => {
   let [isReplying, setReplying] = useState(false);
 
-  let {
+  const {
     seen,
     type,
     reply,
@@ -23,7 +23,7 @@ const NotificationCard = ({ data, index, notificationState }) => {
     _id: notification_id,
   } = data;
 
-  let {
+  const {
     userAuth: {
       username: author_username,
       profile_img: author_profile_img,
@@ -31,7 +31,7 @@ const NotificationCard = ({ data, index, notificationState }) => {
     },
   } = useContext(UserContext);
 
-  let {
+  const {
     notifications,
     notifications: { results, totalDocs },
     setNotifications,

@@ -25,7 +25,7 @@ export const profileDataStructure = {
 };
 
 const ProfilePage = () => {
-  let { id: profileId } = useParams();
+  const { id: profileId } = useParams();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['profile', profileId],
@@ -36,7 +36,7 @@ const ProfilePage = () => {
   if (isLoading) return <Loader />;
   if (error) return 'An error has occurred: ' + error.message;
 
-  let {
+  const {
     personal_info: { fullname, username, profile_img, bio },
     account_info: { total_posts, total_reads },
     social_links,
