@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
-import { UserContext } from '../../App';
 import axios from 'axios';
 import { apiAddComment } from '../../apis';
+import { UserContext } from 'context/user.context';
 
 const NotificationCommentField = ({
   _id,

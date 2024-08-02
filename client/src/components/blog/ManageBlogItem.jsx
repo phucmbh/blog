@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ManageBlogStats from './ManageBlogStats';
 import { Link } from 'react-router-dom';
 import { useDeleteBlogById } from 'apis/services/BlogService/mutation';
-import { getDay } from 'common/date';
+import { getDay } from 'utils/common/date';
 import { useQueryClient } from '@tanstack/react-query';
 import { useManageBlogStore } from './store/manage.blog.store';
 

@@ -1,8 +1,8 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { NavLink, Navigate, Outlet } from 'react-router-dom';
-import { UserContext } from '../App';
 import { MdLockOutline } from 'react-icons/md';
 import icons from '../utils/icons.util';
+import { UserContext } from 'context/user.context';
 const {
   IoDocumentTextOutline,
   MdNotificationsNone,

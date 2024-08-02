@@ -1,8 +1,8 @@
 import { createContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import AnimationWrapper from '../common/page-animation';
+import AnimationWrapper from '../utils/common/page-animation';
 import Loader from '../components/Loader';
-import { getDay } from '../common/date';
+import { getDay } from '../utils/common/date';
 import BlogInteraction from '../components/blog/BlogInteraction';
 import BlogPostCard from '../components/blog/BlogPostCard';
 import DOMPurify from 'dompurify';
@@ -56,9 +56,6 @@ const BlogPage = () => {
     queryKey: ['blogs', blog_id],
     queryFn: ApiBlog.getBlog(blog_id),
   });
-
-
-
 
   const fetchBlog = async () => {
     const { blog } = await apiGetBlog({ blog_id });

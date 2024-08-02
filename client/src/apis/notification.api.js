@@ -1,12 +1,12 @@
-import request from "./request"
+import http from "utils/common/http";
 
 
 
 export const ApiNotification  = {
   newNotification(){
-    return request.get('new-notification');
+    return http.get('new-notification');
   },
   notification() {
-    return request.get('notifications');
+    return http.get('notifications');
   }
 }

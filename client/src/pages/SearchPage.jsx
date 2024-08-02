@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import InPageNavigation from '../components/InPageNavigation';
 import Loader from '../components/Loader';
-import AnimationWrapper from '../common/page-animation';
+import AnimationWrapper from '../utils/common/page-animation';
 import BlogPostCard from '../components/blog/BlogPostCard';
 import NoDataMessage from '../components/NoDataMessage';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';

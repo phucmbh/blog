@@ -3,6 +3,7 @@ import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 
 const Input = ({ name, type, icon, errorMessage, register, ...rest }) => {
   const [openEye, setOpenEye] = useState(false);
+  const registerResult = register ? register(name) : null;
 
   const handleOnclick = () => {
     setOpenEye(!openEye);
@@ -14,7 +15,7 @@ const Input = ({ name, type, icon, errorMessage, register, ...rest }) => {
         <span className="absolute left-[15px]">{icon}</span>
 
         <input
-          {...register(name)}
+          {...registerResult}
           {...rest}
           type={type == 'password' && !openEye ? 'password' : 'text'}
           className="w-[100%] rounded-md p-4 bg-grey pl-12 border border-grey focus:bg-transparent placeholder:text-black"
@@ -35,7 +36,7 @@ const Input = ({ name, type, icon, errorMessage, register, ...rest }) => {
             />
           ))}
       </div>
-      <div className="text-rose-700">{errorMessage}</div>
+      <div className="text-rose-700 text-xs">{errorMessage}</div>
     </div>
   );
 };

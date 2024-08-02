@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { BlogContext } from '../../pages/BlogPage';
 import CommentField from './CommentField';
-import AnimationWrapper from '../../common/page-animation';
+import AnimationWrapper from '../../utils/common/page-animation';
 import CommentCard from './CommentCard';
 import NoDataMessage from '../NoDataMessage';
 import { apiBlogComment } from '../../apis';

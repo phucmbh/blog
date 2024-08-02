@@ -3,8 +3,8 @@ import lightPageNotFoundImage from '../assets/images/404-light.png';
 import darkPageNotFoundImage from '../assets/images/404-dark.png';
 import lightFullLogo from '../assets/images/full-logo-light.png';
 import darkFullLogo from '../assets/images/full-logo-dark.png';
-import { ThemeContext } from '../App';
 import { useContext } from 'react';
+import { ThemeContext } from 'context/theme.context';
 
 const PageNotFound = () => {
   const { theme } = useContext(ThemeContext);

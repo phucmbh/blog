@@ -1,4 +1,4 @@
-import AnimationWrapper from 'common/page-animation';
+import AnimationWrapper from 'utils/common/page-animation';
 import React from 'react';
 import Loader from 'components/Loader';
 import NoDataMessage from 'components/NoDataMessage';

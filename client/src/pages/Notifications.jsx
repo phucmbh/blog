@@ -1,12 +1,12 @@
 import { useContext, useState } from 'react';
-import { UserContext } from '../App';
 import Loader from '../components/Loader';
-import AnimationWrapper from '../common/page-animation';
+import AnimationWrapper from '../utils/common/page-animation';
 import NoDataMessage from '../components/NoDataMessage';
 import NotificationCard from '../components/notification/NotificationCard';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
 import { apiNotification } from '../apis';
 import { useQuery } from '@tanstack/react-query';
+import { UserContext } from 'context/user.context';
 
 const Notifications = () => {
   const {

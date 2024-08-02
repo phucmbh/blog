@@ -1,11 +1,11 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { UserContext } from '../App';
 import { Navigate, useParams } from 'react-router-dom';
 import BlogEditor from '../components/blog/BlogEditor';
 import PublishForm from '../components/blog/PublishForm';
 import Loader from '../components/Loader';
 import { apiGetBlog } from '../apis';
 import axios from 'axios';
+import { UserContext } from 'context/user.context';
 
 const blogStructure = {
   title: '',

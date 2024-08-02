@@ -1,71 +1,59 @@
-import { useContext, useRef } from 'react';
-import AnimationWrapper from '../common/page-animation';
-import InputBox from '../components/InputBox';
+import { useContext } from 'react';
+import AnimationWrapper from '../utils/common/page-animation';
 import googleIcon from '../assets/images/google.png';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
-import axios from 'axios';
-import { storeInSession } from '../common/session';
-import { UserContext } from '../App';
-import { authWithGoogle } from '../common/firebase';
+import { authWithGoogle } from '../utils/common/firebase';
+import { useMutation } from '@tanstack/react-query';
+import { ApiUser } from 'apis/user.api';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { userSchema } from 'utils/validate/user.validate';
+import Input from 'components/Input';
+import { MdEmail, MdKey } from 'react-icons/md';
+import { FaUser } from 'react-icons/fa';
+import { UserContext } from 'context/user.context';
+import { PATH } from 'utils/constants/path.constant';
 
 const UserAuthPage = ({ type }) => {
+  const navigate = useNavigate();
+  const { setUserAuth, setIsAuthenticated, isAuthenticated } =
+    useContext(UserContext);
+  const userAuthSchema =
+    type == 'sign-in'
+      ? userSchema.pick(['email', 'password'])
+      : userSchema.pick(['email', 'password', 'fullname']);
+
+  const signInMutation = useMutation({
+    mutationFn: ApiUser.signIn,
+    onSuccess: (data) => {
+      setIsAuthenticated(true);
+      setUserAuth(data.data);
+      return navigate(PATH.HOME);
+    },
+  });
+  const signUpMutation = useMutation({
+    mutationFn: ApiUser.signUpMutation,
+    onSuccess: (data) => {
+      setIsAuthenticated(true);
+      setUserAuth(data.data);
+      return navigate(PATH.HOME);
+    },
+  });
+
   const {
-    userAuth: { access_token },
-    setUserAuth,
-  } = useContext(UserContext);
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({ resolver: yupResolver(userAuthSchema) });
 
-  const userAuthThroughServer = (serverRoute, formData) => {
-    axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + serverRoute, formData)
-      .then(({ data }) => {
-        storeInSession('user', JSON.stringify(data));
-
-        setUserAuth(data);
-      })
-      .catch(({ response }) => {
-        toast.error(response.data.error);
-      });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const serverRoute = type == 'sign-in' ? '/signin' : '/signup';
-
-    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
-
-    //formData
-    const form = new FormData(formElement);
-    const formData = {};
-
-    for (let [key, value] of form.entries()) {
-      formData[key] = value;
+  const onsubmit = handleSubmit((data) => {
+    console.log(data);
+    if (type === 'sign-in') {
+      signInMutation.mutate(data);
     }
-
-    const { fullname, email, password } = formData;
-
-    //form validation
-    if (fullname) {
-      if (fullname.length < 3) {
-        return toast.error('Fullname must be at least 3 letters long');
-      }
-    }
-    if (!email.length) {
-      return toast.error('Enter Email');
-    }
-    if (!emailRegex.test(email)) {
-      return toast.error('Email is Invalid');
-    }
-    if (!passwordRegex.test(password)) {
-      return toast.error(
-        'password should be 6 to 20 characters long with a numeric, 1 lowercase and 1 uppercase letters'
-      );
-    }
-
-    userAuthThroughServer(serverRoute, formData);
-  };
+    signUpMutation.mutate(data);
+  });
 
   const handleGoogleAuth = (e) => {
     e.preventDefault();
@@ -76,7 +64,7 @@ const UserAuthPage = ({ type }) => {
           access_token: user.accessToken,
         };
 
-        userAuthThroughServer(serverRoute, formData);
+        // userAuthThroughServer(serverRoute, formData);
       })
       .catch((err) => {
         toast.error('trouble login through google');
@@ -84,48 +72,48 @@ const UserAuthPage = ({ type }) => {
       });
   };
 
-  return access_token ? (
+  return isAuthenticated ? (
     <Navigate to="/" />
   ) : (
     <AnimationWrapper keyValue={type}>
       <section className="h-cover flex items-center justify-center">
         <Toaster />
-        <form id="formElement" className="w-[80%] max-w-[400px]">
+        <form onSubmit={onsubmit} className="w-[80%] max-w-[400px]">
           <h1 className="text-4xl font-gelasio capitalize text-center mb-24">
             {type == 'sign-in' ? 'Welcome Back' : 'Join us today'}
           </h1>
 
           {type != 'sign-in' ? (
-            <InputBox
+            <Input
               name="fullname"
-              type="text"
               placeholder="Full Name"
-              icon="fi-rr-user"
+              icon={<FaUser size={20} />}
+              register={register}
+              errorMessage={errors.fullname?.message}
             />
           ) : (
             ''
           )}
 
-          <InputBox
+          <Input
             name="email"
-            type="email"
             placeholder="Email"
-            icon="fi-rr-envelope"
+            icon={<MdEmail size={20} />}
+            register={register}
+            errorMessage={errors.email?.message}
           />
 
-          <InputBox
+          <Input
             name="password"
             type="password"
             placeholder="Password"
-            icon="fi-rr-key"
+            icon={<MdKey size={20} />}
+            register={register}
+            errorMessage={errors.password?.message}
           />
 
-          <button
-            className="btn-dark center mt-14"
-            type="submit"
-            onClick={handleSubmit}
-          >
-            {type.replace('-', ' ')}
+          <button className="btn-dark center mt-14" type="submit">
+            {type === 'sign-in' ? 'Sign In' : 'Sign Up'}
           </button>
 
           <div className="relative w-full flex items-center gap-2 my-10 opacity-10 uppercase text-black font-bold">
@@ -144,7 +132,7 @@ const UserAuthPage = ({ type }) => {
 
           {type == 'sign-in' ? (
             <p className="mt-6 text-dark-grey text-xl text-center">
-              Don't have an account?
+              {"Don't have an account?"}
               <Link to="/signup" className="underline text-black text-xl ml-1">
                 Join us today
               </Link>

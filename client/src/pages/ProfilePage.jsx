@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import AnimationWrapper from '../common/page-animation';
+import AnimationWrapper from '../utils/common/page-animation';
 import Loader from '../components/Loader';
 import AboutUser from '../components/user/AboutUser';
 import InPageNavigation from '../components/InPageNavigation';

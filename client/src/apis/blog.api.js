@@ -1,32 +1,32 @@
-import request from './request';
+import http from "utils/common/http";
 
 export const ApiBlog = {
   uploadImageBanner(body) {
-    return request.post('/upload', body, {
+    return http.post('/upload', body, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
   },
   getBlog(params) {
-    return request.get('get-blog', { params });
+    return http.get('get-blog', { params });
   },
   createBlog(body) {
-    return request.post('create-blog', body);
+    return http.post('create-blog', body);
   },
   autoSaveContent(body) {
-    return request.post('autosave', body);
+    return http.post('autosave', body);
   },
   likeBlog(body) {
-    return request.post('like-blog', body);
+    return http.post('like-blog', body);
   },
   searchBlog(body) {
-    return request.post('search-blogs', body);
+    return http.post('search-blogs', body);
   },
   latestBlogs(body) {
-    return request.post('latest-blogs', body);
+    return http.post('latest-blogs', body);
   },
   trendingBlogs(body) {
-    return request.get('trending-blogs', body);
+    return http.get('trending-blogs', body);
   },
 };

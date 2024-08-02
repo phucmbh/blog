@@ -2,9 +2,15 @@ import * as yup from 'yup';
 const passwordRegExp = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).{6,20}$/;
 export const userSchema = yup.object({
   username: yup.string().min(3, 'Username should be at least 3 letters long'),
-  email: yup.string(),
-  fullname: yup.string(),
-  password: yup.string().required('Please enter current password.'),
+  email: yup.string().email('Email is invalid'),
+  fullname: yup.string().min(3, 'Fullname should be at least 3 letters long'),
+  password: yup
+    .string()
+    .required('Please enter password.')
+    .matches(
+      passwordRegExp,
+      'Password should be 6 to 20 characters long with 1 numeric, 1 lowercase and 1 uppercase letters.'
+    ),
   newPassword: yup
     .string()
     .required('Please enter new password.')

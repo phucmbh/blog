@@ -3,12 +3,14 @@ import darkLogo from '../assets/images/logo-dark.png';
 import lightLogo from '../assets/images/logo-light.png';
 import darkLogoMobile from '../assets/images/logo-dark-mobile.png';
 import lightLogoMobile from '../assets/images/logo-light-mobile.png';
-import { useContext, useEffect, useState } from 'react';
-import { ThemeContext, UserContext } from '../App';
+import { useContext, useState } from 'react';
 import UserNavigationPanel from './user/UserNavigationPanel';
-import { storeInSession } from '../common/session';
-import { apiNewNotification } from '../apis';
 import icons from '../utils/icons.util';
+import { LocalStorage } from 'utils/common/localStorage';
+import { ThemeContext } from 'context/theme.context';
+import { UserContext } from 'context/user.context';
+import { useQuery } from '@tanstack/react-query';
+import { ApiNotification } from 'apis/notification.api';
 const {
   CiSearch,
   MdNotificationsNone,
@@ -20,31 +22,28 @@ const Navbar = () => {
   const [searchBoxVisibility, setSearchBoxVisibility] = useState(false);
   const [userNavPanel, setUserNavPanel] = useState(false);
 
-  let { theme, setTheme } = useContext(ThemeContext);
+  const { theme, setTheme } = useContext(ThemeContext);
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
-  //new solution
-  // const { userAuth } = useContext(UserContext);
-  // const access_token = userAuth?.access_token;
-  // const profile_img = userAuth?.profile_img;
 
-  const {
-    userAuth,
-    userAuth: { access_token, profile_img, new_notification_available },
-    setUserAuth,
-  } = useContext(UserContext);
+  const { userAuth, setUserAuth, isAuthenticated } = useContext(UserContext);
 
-  useEffect(() => {
-    if (access_token) {
-      const fetchNewNotification = async () => {
-        const response = await apiNewNotification();
-        setUserAuth({ ...userAuth, ...response });
-      };
+  const { data: notificationData } = useQuery({
+    queryKey: ['notifications', 'new'],
+    queryFn: ApiNotification.newNotification,
+  });
 
-      fetchNewNotification();
-    }
-  }, [access_token]);
+  // useEffect(() => {
+  //   if (access_token) {
+  //     const fetchNewNotification = async () => {
+  //       const response = await apiNewNotification();
+  //       setUserAuth({ ...userAuth, ...response });
+  //     };
+
+  //     fetchNewNotification();
+  //   }
+  // }, [access_token]);
 
   const handleUserNavPanel = () => {
     setUserNavPanel((currentVal) => !currentVal);
@@ -71,7 +70,7 @@ const Navbar = () => {
 
     document.body.setAttribute('data-theme', newTheme);
 
-    storeInSession('theme', newTheme);
+    LocalStorage.setTheme(newTheme);
   };
 
   return (
@@ -136,13 +135,13 @@ const Navbar = () => {
             )}
           </button>
 
-          {access_token ? (
+          {isAuthenticated && userAuth ? (
             <>
               <Link to="/dashboard/notifications">
                 <button className="flex justify-center items-center w-12 h-12 rounded-full bg-grey  hover:bg-black/10">
                   <MdNotificationsNone size={20} />
 
-                  {new_notification_available ? (
+                  {userAuth.new_notification_available ? (
                     <span className="bg-red w-3 h-3 rounded-full absolute z-10 top-2 right-2"></span>
                   ) : (
                     ''
@@ -157,7 +156,7 @@ const Navbar = () => {
               >
                 <button className="w-12 h-12 mt-1">
                   <img
-                    src={profile_img}
+                    src={userAuth.profile_img}
                     className="w-full h-full object-cover rounded-full"
                   />
                 </button>
@@ -177,7 +176,6 @@ const Navbar = () => {
           )}
         </div>
       </nav>
-
       <Outlet />
     </>
   );

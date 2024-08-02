@@ -1,10 +1,10 @@
 import { useContext, useEffect } from 'react';
 import { BlogContext } from '../../pages/BlogPage';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../../App';
 import { Toaster, toast } from 'react-hot-toast';
 import { apiIsLikedByUser, apiLikeBlog } from '../../apis';
 import icons from '../../utils/icons.util';
+import { UserContext } from 'context/user.context';
 const { FaHeart, FaRegCommentDots, FaRegHeart, FaTwitter } = icons;
 
 const BlogInteraction = () => {

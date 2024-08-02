@@ -2,8 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 
 import UserAuthForm from './pages/UserAuthPage';
-import { createContext, useEffect, useState } from 'react';
-import { lookInSession } from './common/session';
+import { createContext, useContext, useEffect, useState } from 'react';
 import Editor from './pages/EditorPage';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
@@ -15,42 +14,14 @@ import ChangePassword from './pages/ChangePassword';
 import EditProfile from './pages/EditProfile';
 import Notifications from './pages/Notifications';
 import ManageBlogs from './pages/ManageBlogs';
-
-export const UserContext = createContext({});
-
-export const ThemeContext = createContext({});
-
-const darkthemePreference = () =>
-  window.matchMedia('(prefers-color-scheme: dark)').matches;
+import { LocalStorage } from 'utils/common/localStorage';
+import { ThemeContext, ThemeProvider } from 'context/theme.context';
+import { UserContext, UserProvider } from 'context/user.context';
 
 const App = () => {
-  const [userAuth, setUserAuth] = useState({});
-
-  const [theme, setTheme] = useState(() =>
-    darkthemePreference() ? 'dark' : 'light'
-  );
-
-  useEffect(() => {
-    let userInSession = lookInSession('user');
-    let themeInSession = lookInSession('theme');
-
-    userInSession
-      ? setUserAuth(JSON.parse(userInSession))
-      : setUserAuth({ access_token: null });
-
-    if (themeInSession) {
-      setTheme(() => {
-        document.body.setAttribute('data-theme', themeInSession);
-        return themeInSession;
-      });
-    } else {
-      document.body.setAttribute('data-theme', theme);
-    }
-  }, []);
-
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
-      <UserContext.Provider value={{ userAuth, setUserAuth }}>
+    <ThemeProvider>
+      <UserProvider>
         <Routes>
           <Route path="/editor" element={<Editor />} />
           <Route path="/editor/:blog_id" element={<Editor />} />
@@ -72,8 +43,8 @@ const App = () => {
             <Route path="*" element={<PageNotFound />} />
           </Route>
         </Routes>
-      </UserContext.Provider>
-    </ThemeContext.Provider>
+      </UserProvider>
+    </ThemeProvider>
   );
 };
 

@@ -1,9 +1,9 @@
 import { useContext } from 'react';
-import AnimationWrapper from '../../common/page-animation';
+import AnimationWrapper from '../../utils/common/page-animation';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../../App';
-import { removeFromSession } from '../../common/session';
 import { MdMode } from 'react-icons/md';
+import { LocalStorage } from 'utils/common/localStorage';
+import { UserContext } from 'context/user.context';
 
 const UserNavigationPanel = () => {
   const {
@@ -12,7 +12,7 @@ const UserNavigationPanel = () => {
   } = useContext(UserContext);
 
   const signOutUser = () => {
-    removeFromSession('user');
+    LocalStorage.clear();
     setUserAuth({ access_token: null });
   };
 
@@ -23,7 +23,7 @@ const UserNavigationPanel = () => {
     >
       <div className="bg-white absolute right-0 border-grey w-60 duration-200">
         <Link to="/editor" className="flex gap-2 link md:hidden pl-8 py-4">
-          <MdMode/>
+          <MdMode />
           <p>Write</p>
         </Link>
 

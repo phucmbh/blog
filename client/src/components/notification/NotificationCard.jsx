@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import { getDay } from '../../common/date';
+import { getDay } from '../../utils/common/date';
 import { useContext, useState } from 'react';
 import NotificationCommentField from './NotificationCommentField';
-import { UserContext } from '../../App';
 import { apiDeleteComment } from '../../apis';
+import { UserContext } from 'context/user.context';
 
 const NotificationCard = ({ data, index, notificationState }) => {
   let [isReplying, setReplying] = useState(false);

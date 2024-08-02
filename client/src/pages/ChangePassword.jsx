@@ -1,4 +1,4 @@
-import AnimationWrapper from '../common/page-animation';
+import AnimationWrapper from '../utils/common/page-animation';
 import { Toaster, toast } from 'react-hot-toast';
 import { useMutation } from '@tanstack/react-query';
 import { ApiUser } from 'apis/user.api';
@@ -9,10 +9,7 @@ import Input from 'components/Input';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Button from 'components/Button';
 import { isAxiosError } from 'axios';
-const changePasswordSchema = userSchema.pick([
-  'password',
-  'newPassword',
-]);
+const changePasswordSchema = userSchema.pick(['password', 'newPassword']);
 
 const ChangePassword = () => {
   const {

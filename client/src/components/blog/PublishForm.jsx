@@ -1,14 +1,14 @@
 import { Toaster, toast } from 'react-hot-toast';
-import AnimationWrapper from '../../common/page-animation';
+import AnimationWrapper from '../../utils/common/page-animation';
 import { useContext } from 'react';
 import { EditorContext } from '../../pages/EditorPage';
 import Tag from './Tag';
-import { UserContext } from '../../App';
 import { useNavigate, useParams } from 'react-router-dom';
 import { apiCreateBlog } from '../../apis';
 import { RxCross1 } from 'react-icons/rx';
 import { useCreateBlog } from 'apis/services/BlogService/mutation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { UserContext } from 'context/user.context';
 
 const PublishForm = () => {
   const characterLimit = 200;

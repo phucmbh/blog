@@ -1,22 +1,28 @@
-import request from './request';
+import http from 'utils/common/http';
 
 export const ApiUser = {
+  signIn(body) {
+    return http.post('signin', body);
+  },
+  signUp(body) {
+    return http.post('signup', body);
+  },
   changePasswordUser(body) {
-    return request.post('change-password', body);
+    return http.post('change-password', body);
   },
   getProfile(body) {
-    return request.post('get-profile', body);
+    return http.post('get-profile', body);
   },
   updateProfile(body) {
-    return request.post('update-profile', body);
+    return http.post('update-profile', body);
   },
   updateProfileImage(body) {
-    return request.post('update-profile-img', body);
+    return http.post('update-profile-img', body);
   },
   searchUsers(body) {
-    return request.post('search-users', body);
+    return http.post('search-users', body);
   },
   isLikedByUser(body) {
-    return request.post('isliked-by-user', body);
+    return http.post('isliked-by-user', body);
   },
 };

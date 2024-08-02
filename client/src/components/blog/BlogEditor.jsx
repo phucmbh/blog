@@ -5,15 +5,15 @@ import darkLogo from '../../assets/images/logo-dark.png';
 import lightBanner from '../../assets/images/blog-banner-light.png';
 import darkBanner from '../../assets/images/blog-banner-dark.png';
 
-import AnimationWrapper from '../../common/page-animation';
+import AnimationWrapper from '../../utils/common/page-animation';
 import { useContext, useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import { EditorContext } from '../../pages/EditorPage';
-import { ThemeContext } from '../../App';
 
 import TextEditor from './TextEditor';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApiBlog } from 'apis/blog.api';
+import { ThemeContext } from 'context/theme.context';
 
 const BlogEditor = () => {
   const {

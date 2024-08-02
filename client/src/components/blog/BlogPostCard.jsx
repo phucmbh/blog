@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { getDay } from '../../common/date';
 import { FaRegHeart } from 'react-icons/fa';
+import { getDay } from 'utils/common/date';
 
 const BlogPostCard = ({ content, author }) => {
   const {

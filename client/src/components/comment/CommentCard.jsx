@@ -1,11 +1,11 @@
 import { useContext, useState } from 'react';
-import { getDay } from '../../common/date';
-import { UserContext } from '../../App';
+import { getDay } from '../../utils/common/date';
 import toast from 'react-hot-toast';
 import CommentField from './CommentField';
 import { BlogContext } from '../../pages/BlogPage';
 import { apiDeleteComment, apiGetReply } from '../../apis';
 import icons from '../../utils/icons.util';
+import { UserContext } from 'context/user.context';
 const { LuTrash2, FaRegCommentDots } = icons;
 
 const CommentCard = ({ index, leftVal, commentData }) => {

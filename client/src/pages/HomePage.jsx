@@ -1,4 +1,4 @@
-import AnimationWrapper from '../common/page-animation';
+import AnimationWrapper from '../utils/common/page-animation';
 import InPageNavigation from '../components/InPageNavigation';
 import { useState } from 'react';
 import Loader from '../components/Loader';
