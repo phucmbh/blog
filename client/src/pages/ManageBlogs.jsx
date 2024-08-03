@@ -14,9 +14,9 @@ import {
   useManageBlogAction,
   useManageBlogStore,
 } from 'components/blog/store/manage.blog.store';
+import { ApiBlog } from 'apis/blog.api';
 
 const ManageBlogs = () => {
-
   const pageBlog = useManageBlogStore((state) => state.pageBlog);
   const pageDraft = useManageBlogStore((state) => state.pageDraft);
   const search = useManageBlogStore((state) => state.search);
@@ -25,20 +25,20 @@ const ManageBlogs = () => {
 
   const activeTab = useSearchParams()[0].get('tab');
 
-  const { data: blogs } = useQuery({
+  const { data: blogsData } = useQuery({
     queryKey: ['blogs', pageBlog, search],
     queryFn: () =>
-      BlogQueryMethods.getBlogsByUser({
+      ApiBlog.getBlogsByUser({
         page: pageBlog,
         search,
       }),
     placeholderData: keepPreviousData,
   });
 
-  const { data: drafts } = useQuery({
+  const { data: draftsData } = useQuery({
     queryKey: ['drafts', pageDraft, search],
     queryFn: () =>
-      BlogQueryMethods.getDraftsByUser({
+      ApiBlog.getDraftsByUser({
         page: pageDraft,
         search,
       }),
@@ -46,6 +46,8 @@ const ManageBlogs = () => {
     placeholderData: keepPreviousData,
   });
 
+  const blogs = blogsData?.data;
+  const drafts = draftsData?.data;
 
   const handleSearch = (e) => {
     let searchQuery = e.target.value;

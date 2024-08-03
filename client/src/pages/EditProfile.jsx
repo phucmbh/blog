@@ -1,12 +1,8 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import axios from 'axios';
-import { profileDataStructure } from './ProfilePage';
 import AnimationWrapper from '../utils/common/page-animation';
 import Loader from '../components/Loader';
 import { Toaster, toast } from 'react-hot-toast';
-import InputBox from '../components/InputBox';
 import { uploadImage } from '../utils/common/aws';
-import { apiGetProfile, apiUpdateProfile } from '../apis';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ApiUser } from 'apis/user.api';
 import Button from 'components/Button';
@@ -14,24 +10,21 @@ import { useForm } from 'react-hook-form';
 import { userSchema } from 'utils/validate/user.validate';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Input from 'components/Input';
-import { LocalStorage } from 'utils/common/localStorage';
 import { UserContext } from 'context/user.context';
+import icons from 'utils/icons.util';
 const profileSchema = userSchema.omit(['password', 'newPassword']);
 
+const { FaYoutube, FaInstagram, FaFacebook, FaTwitter, FaGithub, FaGlobe } =
+  icons;
+
 const EditProfile = () => {
-  const {
-    userAuth,
-    userAuth: { access_token },
-    setUserAuth,
-  } = useContext(UserContext);
+  const { userAuth, setUserAuth, isAuthenticated } = useContext(UserContext);
 
   const { data: profileData, isLoading } = useQuery({
     queryKey: ['profile', userAuth.username],
     queryFn: () => ApiUser.getProfile({ username: userAuth.username }),
-    enabled: Boolean(userAuth.username),
+    enabled: isAuthenticated,
   });
-
-  console.log({ token: userAuth.username });
 
   const updateProfileMutation = useMutation({
     mutationFn: ApiUser.updateProfile,
@@ -43,6 +36,18 @@ const EditProfile = () => {
     setError,
     formState: { errors },
   } = useForm({
+    defaultValues: {
+      bio: '',
+      email: '',
+      facebook: '',
+      fullname: '',
+      github: '',
+      instagram: '',
+      twitter: '',
+      username: '',
+      website: '',
+      youtube: '',
+    },
     resolver: yupResolver(profileSchema),
   });
 
@@ -51,30 +56,30 @@ const EditProfile = () => {
   const profileImgEle = useRef();
   const editProfileForm = useRef();
 
-  // const [profile, setProfile] = useState(profileDataStructure);
   const [charactersLeft, setCharactersLeft] = useState(bioLimit);
   const [updatedProfileImg, setUpdatedProfileImg] = useState(null);
 
-  // const {
-  //   personal_info: {
-  //     fullname,
-  //     username: profile_username,
-  //     profile_img,
-  //     email,
-  //     bio,
-  //   },
-  //   social_links,
-  // } = profileData;
+  const profile = profileData?.data;
 
-  console.log(profileData);
-  // useEffect(() => {
-  //   if (profileData) {
-  //     setValue('fullname', fullname);
-  //     setValue('email', email);
-  //     setValue('usename', profile_username);
-  //     setValue('bio', bio);
-  //   }
-  // }, [profileData, setValue]);
+  useEffect(() => {
+    if (profile) {
+      console.log(profile);
+      const { fullname, username, email, bio } = profile.personal_info;
+      const { facebook, github, website, instagram, twitter, youtube } =
+        profile.social_links;
+
+      setValue('fullname', fullname);
+      setValue('email', email);
+      setValue('bio', bio);
+      setValue('username', username);
+      setValue('facebook', facebook);
+      setValue('github', github);
+      setValue('website', website);
+      setValue('instagram', instagram);
+      setValue('twitter', twitter);
+      setValue('youtube', youtube);
+    }
+  }, [profile]);
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
@@ -141,65 +146,13 @@ const EditProfile = () => {
   //   }
   // };
 
-  // const handleOnSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   let form = new FormData(editProfileForm.current);
-  //   let formData = {};
-
-  //   for (let [key, value] of form.entries()) {
-  //     formData[key] = value;
-  //   }
-
-  //   let {
-  //     username,
-  //     bio,
-  //     youtube,
-  //     facebook,
-  //     twitter,
-  //     github,
-  //     instagram,
-  //     website,
-  //   } = formData;
-
-  //   if (username.length < 3) {
-  //     return toast.error('Username should be at least 3 letters long');
-  //   }
-  //   if (bio.length > bioLimit) {
-  //     return toast.error(`Bio  should not be more than ${bioLimit} characters`);
-  //   }
-
-  //   let loadingToast = toast.loading('Updating...');
-  //   e.target.setAttribute('disabled', true);
-
-  //   const response = await apiUpdateProfile(formData);
-
-  //   if (!response.success) {
-  //     toast.dismiss(loadingToast);
-  //     e.target.removeAttribute('disabled');
-  //     return toast.error(response.error);
-  //   }
-
-  //   if (userAuth.username != response.username) {
-  //     let newUserAuth = { ...userAuth, username: response.username };
-        // LocalStorage.setUser(JSON.stringify(newUserAuth));
-
-
-  //     setUserAuth(newUserAuth);
-  //   }
-
-  //   toast.dismiss(loadingToast);
-  //   e.target.removeAttribute('disabled');
-  //   toast.success('Profile Updated');
-  // };
-
   return (
     <AnimationWrapper>
       {isLoading ? (
         <Loader />
       ) : (
         <>
-          {profileData && (
+          {profile && (
             <form onSubmit={onSubmit}>
               <Toaster />
 
@@ -215,7 +168,10 @@ const EditProfile = () => {
                     <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center text-white bg-black/30 opacity-0 hover:opacity-100 cursor-pointer">
                       Upload Image
                     </div>
-                    <img ref={profileImgEle} src={''} />
+                    <img
+                      ref={profileImgEle}
+                      src={profile.personal_info.profile_img}
+                    />
                   </label>
 
                   <input
@@ -241,10 +197,16 @@ const EditProfile = () => {
                         name="fullname"
                         placeholder="Full Name"
                         disabled={true}
+                        register={register}
                       />
                     </div>
                     <div>
-                      <Input name="email" placeholder="Email" disabled={true} />
+                      <Input
+                        name="email"
+                        placeholder="Email"
+                        disabled={true}
+                        register={register}
+                      />
                     </div>
                   </div>
 
@@ -262,10 +224,9 @@ const EditProfile = () => {
 
                   <textarea
                     name="bio"
-                    maxLength={bioLimit}
                     className="input-box h-64 lg:h-40 resize-none leading-7 mt-5 pl-5"
                     placeholder="Bio"
-                    {...register}
+                    {...register('bio')}
                   ></textarea>
 
                   <p className="mt-1 text-dark-grey">
@@ -277,18 +238,19 @@ const EditProfile = () => {
                   </p>
 
                   <div className="md:grid md:grid-cols-2 gap-x-6">
-                    {/* {Object.keys(social_links).map((key, i) => {
-                  // let link = social_links[key];
+                    {Object.keys(profile.social_links).map((key, i) => {
+                      // let link = social_links[key];
 
-                  return (
-                    <Input
-                      key={i}
-                      name={key}
-                      type="text"
-                      placeholder="https://"
-                    />
-                  );
-                })} */}
+                      return (
+                        <Input
+                          key={i}
+                          name={key}
+                          icon={social_icons[key]}
+                          placeholder="https://"
+                          register={register}
+                        />
+                      );
+                    })}
                   </div>
 
                   <Button
@@ -305,6 +267,15 @@ const EditProfile = () => {
       )}
     </AnimationWrapper>
   );
+};
+
+const social_icons = {
+  youtube: <FaYoutube size={20} />,
+  instagram: <FaInstagram size={20} />,
+  facebook: <FaFacebook size={20} />,
+  twitter: <FaTwitter size={20} />,
+  github: <FaGithub size={20} />,
+  website: <FaGlobe size={20} />,
 };
 
 export default EditProfile;

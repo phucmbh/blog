@@ -29,7 +29,7 @@ export const blogStructure = {
 export const BlogContext = createContext({});
 
 const BlogPage = () => {
-  let { blog_id } = useParams();
+  const { blog_id } = useParams();
 
   const [blog, setBlog] = useState(blogStructure);
   const [similarBlogs, setSimilarBlogs] = useState(null);
@@ -54,12 +54,11 @@ const BlogPage = () => {
 
   const { data: blogData, isLoading } = useQuery({
     queryKey: ['blogs', blog_id],
-    queryFn: ApiBlog.getBlog(blog_id),
+    queryFn: () => ApiBlog.getBlog({ blog_id }),
   });
 
   const fetchBlog = async () => {
     const { blog } = await apiGetBlog({ blog_id });
-    console.log(blog);
     if (!blog) return setLoading(false);
     blog.comments = await fetchComments({
       blog_id: blog._id,
@@ -91,7 +90,6 @@ const BlogPage = () => {
     setTotalParentCommentsLoaded(0);
   };
 
-  console.log(content);
   return (
     <AnimationWrapper>
       {loading ? (

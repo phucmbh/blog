@@ -8,63 +8,51 @@ import NoDataMessage from '../components/NoDataMessage';
 import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
 import PageNotFound from './PageNotFound';
 import { useQuery } from '@tanstack/react-query';
-import UserQueryMethods from 'apis/services/UserService/query';
-export const profileDataStructure = {
-  personal_info: {
-    fullname: '',
-    username: '',
-    profile_img: '',
-    bio: '',
-  },
-  account_info: {
-    total_posts: 0,
-    total_reads: 0,
-  },
-  social_links: {},
-  joinedAt: ' ',
-};
+import { ApiUser } from 'apis/user.api';
 
 const ProfilePage = () => {
   const { id: profileId } = useParams();
 
-  const { data, isLoading, error } = useQuery({
+  const { data: profileData, isLoading } = useQuery({
     queryKey: ['profile', profileId],
-    queryFn: () =>
-      UserQueryMethods.getProfileAndBlogsByUser({ username: profileId }),
+    queryFn: () => ApiUser.getProfileAndBlogByUser({ username: profileId }),
   });
 
-  if (isLoading) return <Loader />;
-  if (error) return 'An error has occurred: ' + error.message;
+  const profile = profileData?.data.profile;
+  const account_info = profileData?.data.profile.account_info;
+  const personal_info = profileData?.data.profile.personal_info;
 
-  const {
-    personal_info: { fullname, username, profile_img, bio },
-    account_info: { total_posts, total_reads },
-    social_links,
-    joinedAt,
-  } = data?.profile;
+  // {
+  //   personal_info: { fullname, username, profile_img, bio },
+  //   account_info: { total_posts, total_reads },
+  //   social_links,
+  //   joinedAt,
+  // }
 
-  const blogs = data?.blogs;
+  const blogs = profileData?.data.blogs;
 
   return (
     <AnimationWrapper>
-      {username.length ? (
+      {isLoading ? (
+        <Loader />
+      ) : personal_info.username.length && profileData ? (
         <section className="h-cover md:flex flex-row-reverse items-start gap-5 min-[1100px]:gap-12">
           <div className="flex flex-col max-md:items-center gap-5 min-w-[250px] md:w-[50%] md:pl-8 md:border-l border-grey md:sticky md:top-[100px] md:py-10">
             <img
-              src={profile_img}
+              src={personal_info.profile_img}
               className="w-48 h-48 bg-grey rounded-full md:w-32 md:h-32"
             />
 
-            <h1 className="text-2xl font-medium">@{username}</h1>
-            <p className="text-xl capitalize h-6">{fullname}</p>
+            <h1 className="text-2xl font-medium">@{personal_info.username}</h1>
+            <p className="text-xl capitalize h-6">{personal_info.fullname}</p>
 
             <p>
-              {total_posts.toLocaleString()} Blogs -{' '}
-              {total_reads.toLocaleString()} Reads
+              {account_info.total_posts.toLocaleString()} Blogs -{' '}
+              {account_info.total_reads.toLocaleString()} Reads
             </p>
 
             <div className="flex gap-4 mt-2">
-              {profileId == username ? (
+              {profileId == personal_info.username ? (
                 <Link
                   to="/settings/edit-profile"
                   className="btn-light rounded-md"
@@ -78,9 +66,9 @@ const ProfilePage = () => {
 
             <AboutUser
               className="max-md:hidden"
-              bio={bio}
-              social_links={social_links}
-              joinedAt={joinedAt}
+              bio={personal_info.bio}
+              social_links={profile.social_links}
+              joinedAt={profile.joinedAt}
             />
           </div>
 
@@ -111,9 +99,9 @@ const ProfilePage = () => {
               </>
 
               <AboutUser
-                bio={bio}
-                social_links={social_links}
-                joinedAt={joinedAt}
+                bio={personal_info.bio}
+                social_links={profile.social_links}
+                joinedAt={profile.joinedAt}
               />
             </InPageNavigation>
           </div>

@@ -1,4 +1,4 @@
-import http from "utils/common/http";
+import http from 'utils/common/http';
 
 export const ApiBlog = {
   uploadImageBanner(body) {
@@ -20,13 +20,19 @@ export const ApiBlog = {
   likeBlog(body) {
     return http.post('like-blog', body);
   },
-  searchBlog(body) {
-    return http.post('search-blogs', body);
+  searchBlogs(params) {
+    return http.get('search-blogs', { params });
   },
   latestBlogs(body) {
     return http.post('latest-blogs', body);
   },
   trendingBlogs(body) {
     return http.get('trending-blogs', body);
+  },
+  getBlogsByUser(body) {
+    return http.get('get-blogs-by-user', body);
+  },
+  getDraftsByUser(body) {
+    return http.get('/get-drafts-by-user', body);
   },
 };

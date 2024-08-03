@@ -10,29 +10,31 @@ import icons from '../utils/icons.util';
 import { useQuery } from '@tanstack/react-query';
 import BlogQueryMethods from 'apis/services/BlogService/query';
 import UserQueryMethods from 'apis/services/UserService/query';
+import { ApiBlog } from 'apis/blog.api';
+import { ApiUser } from 'apis/user.api';
 const { FaRegUser } = icons;
 
 const SearchPage = () => {
   const { search } = useParams();
   const page = 1;
 
-  const { data } = useQuery({
+  const { data: blogsData, isLoading: blogsLoading } = useQuery({
     queryKey: ['search', page, search],
-    queryFn: () => BlogQueryMethods.searchBlogs({ search }),
+    queryFn: () => ApiBlog.searchBlogs({ search }),
   });
 
-  const { data: usersData } = useQuery({
+  const { data: usersData, isLoading: usersLoading } = useQuery({
     queryKey: ['users', page, search],
-    queryFn: () => UserQueryMethods.searchUsers({ search }),
+    queryFn: () => ApiUser.searchUsers({ search }),
   });
 
   const UserCardWrapper = () => {
     return (
       <>
-        {usersData?.users == null ? (
+        {usersLoading ? (
           <Loader />
-        ) : usersData?.users.length ? (
-          usersData?.users.map((user, i) => {
+        ) : usersData?.data.users.length ? (
+          usersData?.data.users.map((user, i) => {
             return (
               <AnimationWrapper
                 key={i}
@@ -57,10 +59,10 @@ const SearchPage = () => {
           defaultHidden={['Accounts Matched']}
         >
           <>
-            {data?.blogs == null ? (
+            {blogsLoading ? (
               <Loader />
-            ) : data?.blogs.length ? (
-              data?.blogs.map((blog, i) => {
+            ) : blogsData?.data.blogs.length ? (
+              blogsData?.data.blogs.map((blog, i) => {
                 return (
                   <AnimationWrapper
                     transition={{ duration: 1, delay: i * 0.1 }}

@@ -11,6 +11,7 @@ instance.interceptors.request.use(
   (config) => {
     const user = JSON.parse(sessionStorage.getItem('user'));
     config.headers.authorization = `Bearer ${user?.access_token}`;
+    console.log('api request');
     return config;
   },
   (error) => {

@@ -13,14 +13,17 @@ export const ApiUser = {
   getProfile(body) {
     return http.post('get-profile', body);
   },
+  getProfileAndBlogByUser(params) {
+    return http.get('get-profile-and-blogs-by-user', { params });
+  },
   updateProfile(body) {
     return http.post('update-profile', body);
   },
   updateProfileImage(body) {
     return http.post('update-profile-img', body);
   },
-  searchUsers(body) {
-    return http.post('search-users', body);
+  searchUsers(params) {
+    return http.get('search-users', { params });
   },
   isLikedByUser(body) {
     return http.post('isliked-by-user', body);

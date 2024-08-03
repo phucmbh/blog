@@ -3,7 +3,7 @@ import darkLogo from '../assets/images/logo-dark.png';
 import lightLogo from '../assets/images/logo-light.png';
 import darkLogoMobile from '../assets/images/logo-dark-mobile.png';
 import lightLogoMobile from '../assets/images/logo-light-mobile.png';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import UserNavigationPanel from './user/UserNavigationPanel';
 import icons from '../utils/icons.util';
 import { LocalStorage } from 'utils/common/localStorage';
@@ -26,24 +26,19 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-
   const { userAuth, setUserAuth, isAuthenticated } = useContext(UserContext);
 
-  const { data: notificationData } = useQuery({
+  const { data: notificationData, isSuccess } = useQuery({
     queryKey: ['notifications', 'new'],
     queryFn: ApiNotification.newNotification,
+    enabled: isAuthenticated,
   });
 
-  // useEffect(() => {
-  //   if (access_token) {
-  //     const fetchNewNotification = async () => {
-  //       const response = await apiNewNotification();
-  //       setUserAuth({ ...userAuth, ...response });
-  //     };
 
-  //     fetchNewNotification();
-  //   }
-  // }, [access_token]);
+  // Add new notification to UserAuth
+  useEffect(() => {
+    if (isSuccess) setUserAuth((prev) => ({ ...prev, ...notificationData }));
+  }, [isSuccess, notificationData, setUserAuth]);
 
   const handleUserNavPanel = () => {
     setUserNavPanel((currentVal) => !currentVal);

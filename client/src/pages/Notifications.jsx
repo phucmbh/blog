@@ -3,10 +3,9 @@ import Loader from '../components/Loader';
 import AnimationWrapper from '../utils/common/page-animation';
 import NoDataMessage from '../components/NoDataMessage';
 import NotificationCard from '../components/notification/NotificationCard';
-import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
-import { apiNotification } from '../apis';
 import { useQuery } from '@tanstack/react-query';
 import { UserContext } from 'context/user.context';
+import { ApiNotification } from 'apis/notification.api';
 
 const Notifications = () => {
   const {
@@ -21,15 +20,18 @@ const Notifications = () => {
 
   const filters = ['all', 'like', 'comment', 'reply'];
 
-  const { data, isLoading, error } = useQuery({
+  const {
+    data: notificationData,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['notifications', filter, page],
-    queryFn: () => apiNotification({ filter, page }),
+    queryFn: () => ApiNotification.notification({ filter, page }),
   });
 
-  if (isLoading) return <Loader />;
-  if (error) return 'An error has occurred: ' + error.message;
+  const notifications = notificationData?.data;
 
-  const { notifications } = data;
+  if (error) return 'An error has occurred: ' + error.message;
 
   if (new_notification_available) {
     setUserAuth({ ...userAuth, new_notification_available: false });
@@ -61,7 +63,7 @@ const Notifications = () => {
         })}
       </div>
 
-      {notifications == null ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <>
@@ -72,7 +74,7 @@ const Notifications = () => {
                   <NotificationCard
                     data={notification}
                     index={i}
-                    notificationState={{ notifications, setNotifications }}
+                    notificationState={notifications}
                   />
                 </AnimationWrapper>
               );

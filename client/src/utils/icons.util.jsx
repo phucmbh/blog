@@ -26,23 +26,6 @@ import { RxCross1 } from 'react-icons/rx';
 import { IoDocumentTextOutline } from 'react-icons/io5';
 import { LuTrash2 } from 'react-icons/lu';
 
-export const Icon = (name) => {
-  const list = {
-    username: <FaRegUser size={20} />,
-    fullname: <FaUser size={20} />,
-    email: <MdEmail size={20} />,
-    password: <MdKey size={20} />,
-    youtube: <FaYoutube size={20} />,
-    instagram: <FaInstagram size={20} />,
-    facebook: <FaFacebook size={20} />,
-    twitter: <FaTwitter size={20} />,
-    github: <FaGithub size={20} />,
-    website: <FaGlobe size={20} />,
-  };
-
-  return list[name];
-};
-
 const icons = {
   CiSearch,
   CiHeart,
@@ -55,13 +38,18 @@ const icons = {
   MdEmail,
   FaHeart,
   FaRegHeart,
-  FaTwitter,
   FaRegCommentDots,
   FaBars,
   LuTrash2,
   FaRegTrashAlt,
   RxCross1,
   IoDocumentTextOutline,
+  FaYoutube,
+  FaInstagram,
+  FaFacebook,
+  FaTwitter,
+  FaGithub,
+  FaGlobe,
 };
 
 export default icons;

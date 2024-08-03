@@ -6,6 +6,8 @@ import Loader from '../components/Loader';
 import { apiGetBlog } from '../apis';
 import axios from 'axios';
 import { UserContext } from 'context/user.context';
+import { useQueries, useQuery } from '@tanstack/react-query';
+import { ApiBlog } from 'apis/blog.api';
 
 const blogStructure = {
   title: '',
@@ -24,35 +26,27 @@ const EditorPage = () => {
   const [blog, setBlog] = useState(blogStructure);
   const [editorState, setEditorState] = useState('editor');
   const [textEditor, setTextEditor] = useState({ isReady: false });
-  const [loading, setLoading] = useState(true);
+
+  const { isAuthenticated } = useContext(UserContext);
 
   const {
-    userAuth: { access_token },
-  } = useContext(UserContext);
-
-  useEffect(() => {
-    if (!blog_id) {
-      return setLoading(false);
-    }
-
-    const fetchBlog = async () => {
-      const response = await apiGetBlog({
+    data: blogData,
+    isLoading,
+  } = useQuery({
+    queryKey: ['blog', blog_id],
+    queryFn: () =>
+      ApiBlog.getBlog({
         blog_id,
         draft: true,
         mode: 'edit',
-      });
+      }),
+  });
 
-      if (!response.success) {
-        setBlog(null);
-        return setLoading(false);
-      }
-
-      setBlog(response.blog);
-      setLoading(false);
-    };
-
-    fetchBlog();
-  }, []);
+  useEffect(() => {
+    if (blogData) {
+      setBlog(blogData.data.blog);
+    }
+  }, [blogData]);
 
   return (
     <EditorContext.Provider
@@ -65,9 +59,9 @@ const EditorPage = () => {
         setTextEditor,
       }}
     >
-      {access_token === null ? (
+      {!isAuthenticated ? (
         <Navigate to="/signin" />
-      ) : loading ? (
+      ) : isLoading ? (
         <Loader />
       ) : editorState == 'editor' ? (
         <BlogEditor />

@@ -48,7 +48,6 @@ const UserAuthPage = ({ type }) => {
   } = useForm({ resolver: yupResolver(userAuthSchema) });
 
   const onsubmit = handleSubmit((data) => {
-    console.log(data);
     if (type === 'sign-in') {
       signInMutation.mutate(data);
     }

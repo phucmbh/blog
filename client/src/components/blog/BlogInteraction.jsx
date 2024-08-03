@@ -1,10 +1,12 @@
+import icons from '../../utils/icons.util';
 import { useContext, useEffect } from 'react';
 import { BlogContext } from '../../pages/BlogPage';
 import { Link } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
-import { apiIsLikedByUser, apiLikeBlog } from '../../apis';
-import icons from '../../utils/icons.util';
 import { UserContext } from 'context/user.context';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { ApiUser } from 'apis/user.api';
+import { ApiBlog } from 'apis/blog.api';
 const { FaHeart, FaRegCommentDots, FaRegHeart, FaTwitter } = icons;
 
 const BlogInteraction = () => {
@@ -26,32 +28,36 @@ const BlogInteraction = () => {
     setCommentsWrapper,
   } = useContext(BlogContext);
 
-  let {
-    userAuth: { username, access_token },
+  const {
+    userAuth: { username },
+    isAuthenticated,
   } = useContext(UserContext);
 
-  useEffect(() => {
-    if (access_token) {
-      //make req to server to get like info
-      const fetchIsLikedByUser = async () => {
-        const { result } = await apiIsLikedByUser({ _id });
-        return setLikedByUser(Boolean(result));
-      };
+  const { data: likeData } = useQuery({
+    queryKey: ['liked', _id],
+    queryFn: () => ApiUser.isLikedByUser({ _id }),
+    enabled: isAuthenticated,
+  });
 
-      fetchIsLikedByUser();
-    }
-  }, []);
+  const likeBlogMutation = useMutation({
+    mutationFn: () => ApiBlog.likeBlog,
+  });
+
+  useEffect(() => {
+    if (likeData) setLikedByUser(Boolean(likeData?.data.result));
+  }, [likeData, setLikedByUser]);
 
   const handleLike = async () => {
-    if (access_token) {
+    console.log(isAuthenticated);
+    if (isAuthenticated) {
       //like the blog
-      setLikedByUser((preVal) => !preVal);
+      setLikedByUser((pre) => !pre);
 
       !islikedByUser ? total_likes++ : total_likes--;
 
       setBlog({ ...blog, activity: { ...activity, total_likes } });
 
-      await apiLikeBlog({ _id, islikedByUser });
+      likeBlogMutation.mutate({ _id, islikedByUser });
     } else {
       // not logged in
       toast.error('Please signin to like this blog');

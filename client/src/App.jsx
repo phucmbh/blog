@@ -1,8 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
-
 import UserAuthForm from './pages/UserAuthPage';
-import { createContext, useContext, useEffect, useState } from 'react';
 import Editor from './pages/EditorPage';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
@@ -14,9 +12,8 @@ import ChangePassword from './pages/ChangePassword';
 import EditProfile from './pages/EditProfile';
 import Notifications from './pages/Notifications';
 import ManageBlogs from './pages/ManageBlogs';
-import { LocalStorage } from 'utils/common/localStorage';
-import { ThemeContext, ThemeProvider } from 'context/theme.context';
-import { UserContext, UserProvider } from 'context/user.context';
+import { ThemeProvider } from 'context/theme.context';
+import { UserProvider } from 'context/user.context';
 
 const App = () => {
   return (

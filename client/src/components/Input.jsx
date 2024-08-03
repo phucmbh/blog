@@ -15,8 +15,8 @@ const Input = ({ name, type, icon, errorMessage, register, ...rest }) => {
         <span className="absolute left-[15px]">{icon}</span>
 
         <input
-          {...registerResult}
           {...rest}
+          {...registerResult}
           type={type == 'password' && !openEye ? 'password' : 'text'}
           className="w-[100%] rounded-md p-4 bg-grey pl-12 border border-grey focus:bg-transparent placeholder:text-black"
         />
