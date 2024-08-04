@@ -3,10 +3,8 @@ import { Navigate, useParams } from 'react-router-dom';
 import BlogEditor from '../components/blog/BlogEditor';
 import PublishForm from '../components/blog/PublishForm';
 import Loader from '../components/Loader';
-import { apiGetBlog } from '../apis';
-import axios from 'axios';
 import { UserContext } from 'context/user.context';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import {  useQuery } from '@tanstack/react-query';
 import { ApiBlog } from 'apis/blog.api';
 
 const blogStructure = {

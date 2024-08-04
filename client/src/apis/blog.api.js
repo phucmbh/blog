@@ -11,6 +11,12 @@ export const ApiBlog = {
   getBlog(params) {
     return http.get('get-blog', { params });
   },
+  getAllBlogs(params) {
+    return http.get('get-all-blogs', { params });
+  },
+  getTredingBlogs() {
+    return http.get('trending-blogs');
+  },
   createBlog(body) {
     return http.post('create-blog', body);
   },
@@ -33,6 +39,9 @@ export const ApiBlog = {
     return http.get('get-blogs-by-user', body);
   },
   getDraftsByUser(body) {
-    return http.get('/get-drafts-by-user', body);
+    return http.get('get-drafts-by-user', body);
+  },
+  deleteBlog(body) {
+    return http.get('delete-blog', body);
   },
 };

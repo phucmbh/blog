@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import { getDay } from '../../utils/common/date';
 import { useContext, useState } from 'react';
 import NotificationCommentField from './NotificationCommentField';
-import { apiDeleteComment } from '../../apis';
 import { UserContext } from 'context/user.context';
+import { ApiComment } from 'apis/comment.api';
 
 const NotificationCard = ({ data, index, notificationState }) => {
   let [isReplying, setReplying] = useState(false);
@@ -44,7 +44,7 @@ const NotificationCard = ({ data, index, notificationState }) => {
   const handleDelete = async (comment_id, type, target) => {
     target.setAttribute('disabled', true);
 
-    await apiDeleteComment({ _id: comment_id });
+    await ApiComment.deleteComment({ _id: comment_id });
 
     if (type == 'comment') {
       results.splice(index, 1);

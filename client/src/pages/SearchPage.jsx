@@ -8,8 +8,7 @@ import LoadMoreDataBtn from '../components/LoadMoreDataBtn';
 import UserCard from '../components/user/UserCard';
 import icons from '../utils/icons.util';
 import { useQuery } from '@tanstack/react-query';
-import BlogQueryMethods from 'apis/services/BlogService/query';
-import UserQueryMethods from 'apis/services/UserService/query';
+
 import { ApiBlog } from 'apis/blog.api';
 import { ApiUser } from 'apis/user.api';
 const { FaRegUser } = icons;

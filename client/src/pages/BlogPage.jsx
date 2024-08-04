@@ -9,13 +9,10 @@ import DOMPurify from 'dompurify';
 import CommentsContainer, {
   fetchComments,
 } from '../components/comment/CommentsContainer';
-import { apiGetBlog, apiSearchBlogs } from '../apis';
 
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
-import { useQuery } from '@tanstack/react-query';
 import { ApiBlog } from 'apis/blog.api';
-import { ApiComment } from 'apis/comment.api';
 
 export const blogStructure = {
   title: '',
@@ -52,13 +49,9 @@ const BlogPage = () => {
     publishedAt,
   } = blog;
 
-  const { data: blogData, isLoading } = useQuery({
-    queryKey: ['blogs', blog_id],
-    queryFn: () => ApiBlog.getBlog({ blog_id }),
-  });
-
   const fetchBlog = async () => {
-    const { blog } = await apiGetBlog({ blog_id });
+    const blogData = await ApiBlog.getBlog({ blog_id });
+    const blog = blogData.data.blog;
     if (!blog) return setLoading(false);
     blog.comments = await fetchComments({
       blog_id: blog._id,
@@ -66,11 +59,13 @@ const BlogPage = () => {
     });
     setBlog(blog);
 
-    const { blogs } = await apiSearchBlogs({
+    const blogsData = await ApiBlog.searchBlogs({
       tag: blog.tags[0],
       limit: 6,
       eliminate_blog: blog_id,
     });
+
+    const blogs = blogsData.data.blogs;
 
     setSimilarBlogs(blogs);
     setLoading(false);

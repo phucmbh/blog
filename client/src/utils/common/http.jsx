@@ -30,7 +30,7 @@ class Http {
 
     this.instance.interceptors.response.use(
       (response) => {
-        console.log(response);
+      // console.log(response);
         const { url } = response.config;
         if (url === URL.SIGN_IN || url === URL.SIGN_UP) {
           this.accessToken = response.data.access_token;

@@ -7,17 +7,19 @@ import {
   tinyPlugins,
   tinyToolbar,
 } from '../../utils';
-import {  useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { apiAutoSaveContent } from '../../apis';
 import useInterval from '../../utils/hook/useInterval';
+import { useMutation } from '@tanstack/react-query';
+import { ApiBlog } from 'apis/blog.api';
 
 const TextEditor = ({ blog, setEditorContent }) => {
   const { blog_id } = useParams();
   const [newContent, setNewContent] = useState(blog?.content);
   const [currentContent, setCurrentContent] = useState(blog?.content);
   const TWO_MINUTES = 2 * 60 * 1000;
+  const autoSaveMutation = useMutation({ mutationFn: ApiBlog.autoSaveContent });
 
   if (blog_id) {
     useInterval(() => {
@@ -27,12 +29,13 @@ const TextEditor = ({ blog, setEditorContent }) => {
   console.log(newContent);
 
   const fectAutosave = async () => {
-    const response = await apiAutoSaveContent({
+    const response = await autoSaveMutation.mutateAsync({
       id: blog_id,
       content: newContent,
     });
-    if (response.success) {
-      return setCurrentContent(response.content);
+
+    if (response.data.success) {
+      return setCurrentContent(response.data.content);
     }
     return toast.error('Autosave failed');
   };
@@ -61,8 +64,6 @@ const TextEditor = ({ blog, setEditorContent }) => {
           sandbox_iframes: true,
           media_live_embeds: true,
 
-          
-          
           setup: function (editor) {
             editor.on('PreInit', function () {
               editor.parser.addNodeFilter('iframe', function (nodes) {

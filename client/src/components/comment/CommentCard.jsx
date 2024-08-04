@@ -3,9 +3,9 @@ import { getDay } from '../../utils/common/date';
 import toast from 'react-hot-toast';
 import CommentField from './CommentField';
 import { BlogContext } from '../../pages/BlogPage';
-import { apiDeleteComment, apiGetReply } from '../../apis';
 import icons from '../../utils/icons.util';
 import { UserContext } from 'context/user.context';
+import { ApiComment } from 'apis/comment.api';
 const { LuTrash2, FaRegCommentDots } = icons;
 
 const CommentCard = ({ index, leftVal, commentData }) => {
@@ -35,7 +35,8 @@ const CommentCard = ({ index, leftVal, commentData }) => {
   } = useContext(BlogContext);
 
   const {
-    userAuth: { access_token, username },
+    userAuth: { username },
+    isAuthenticated,
   } = useContext(UserContext);
 
   const [isReplying, setReplying] = useState(false);
@@ -103,12 +104,12 @@ const CommentCard = ({ index, leftVal, commentData }) => {
     if (commentsArr[currentIndex].children.length) {
       hideReplies();
 
-      const response = await apiGetReply({
+      const response = await ApiComment.getReply({
         _id: commentsArr[currentIndex]._id,
         skip,
       });
 
-      const { replies } = response;
+      const { replies } = response.data;
 
       if (replies) {
         commentsArr[currentIndex].isReplyLoaded = true;
@@ -128,7 +129,7 @@ const CommentCard = ({ index, leftVal, commentData }) => {
   const deleteComment = async (e) => {
     e.target.setAttribute('disabled', true);
 
-    await apiDeleteComment({ _id });
+    await ApiComment.deleteComment({ _id });
 
     e.target.removeAttribute('disabled');
     removeCommentsCards(index + 1, true);
@@ -141,7 +142,7 @@ const CommentCard = ({ index, leftVal, commentData }) => {
   };
 
   const handleReplyClick = () => {
-    if (!access_token) {
+    if (!isAuthenticated) {
       return toast.error('Sign-in to leave a reply');
     }
 

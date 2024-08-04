@@ -7,9 +7,10 @@ import MinimalBlogPost from '../components/blog/MinimalBlogPost';
 import NoDataMessage from '../components/NoDataMessage';
 import { IoTrendingUpOutline } from 'react-icons/io5';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import BlogQueryMethods from 'apis/services/BlogService/query';
+import { ApiBlog } from 'apis/blog.api';
 
 const HomePage = () => {
+  const THREE_MINUTES = 1000 * 60 * 3;
   const [pageState, setPageState] = useState('home');
   const [page, setPage] = useState({ pageHome: 1, pageTag: 1 });
 
@@ -25,35 +26,54 @@ const HomePage = () => {
     'travel',
   ];
 
-  const { data: trendingBlogs } = useQuery({
-    queryKey: ['trending-blogs'],
-    queryFn: () => BlogQueryMethods.getTrendingBlogs(),
+  const { data: trendingBlogsData, isLoading: trendingBLogsLoading } = useQuery(
+    {
+      queryKey: ['trending-blogs'],
+      queryFn: ApiBlog.getTredingBlogs,
+      staleTime: THREE_MINUTES,
+    }
+  );
+
+  const fetchHomeBlogs = async () => {
+    const homeBlogs = await ApiBlog.getAllBlogs({ page: page.pageHome });
+    return homeBlogs.data;
+  };
+
+  const fetchTagBlogs = async () => {
+    const tagBlogs = await ApiBlog.searchBlogs({
+      tag: pageState,
+      page: page.pageTag,
+    });
+    return tagBlogs.data;
+  };
+
+  const { data: homeBlogs, isLoading: pageHomeLoading } = useQuery({
+    queryKey: ['latest-blogs', page.pageHome],
+    queryFn: fetchHomeBlogs,
+    placeholderData: keepPreviousData,
+    enabled: pageState === 'home',
   });
 
-  let data;
+  const { data: tagBlogs, isLoading: pageTagLoading } = useQuery({
+    queryKey: ['search', pageState, page.pageTag],
+    queryFn: fetchTagBlogs,
+    placeholderData: keepPreviousData,
+    enabled: pageState !== 'home',
+  });
+
+  console.log(homeBlogs);
+  console.log(tagBlogs);
+
+  let blogs;
+  let totalDocs;
 
   if (pageState === 'home') {
-    const { data: homeBlogs, isLoading } = useQuery({
-      queryKey: ['latest-blogs', page.pageHome],
-      queryFn: () => BlogQueryMethods.getAllBlogs({ page: page.pageHome }),
-      placeholderData: keepPreviousData,
-    });
-
-    if (isLoading) return <Loader />;
-    data = homeBlogs;
+    blogs = homeBlogs?.blogs;
+    totalDocs = homeBlogs?.totalDocs;
   } else {
-    const { data: tagBlogs, isLoading } = useQuery({
-      queryKey: ['search', pageState, page.pageTag],
-      queryFn: () =>
-        BlogQueryMethods.searchBlogs({ tag: pageState, page: page.pageTag }),
-      placeholderData: keepPreviousData,
-    });
-
-    if (isLoading) return <Loader />;
-    data = tagBlogs;
+    blogs = tagBlogs?.blogs;
+    totalDocs = tagBlogs?.totalDocs;
   }
-
-  const { blogs, totalDocs } = data;
 
   const loadBlogByCategory = (e) => {
     let tag = e.target.innerText.toLowerCase().substring(1);
@@ -76,7 +96,9 @@ const HomePage = () => {
             defaultHidden={['trending blogs']}
           >
             <>
-              {blogs?.length ? (
+              {pageHomeLoading || pageTagLoading ? (
+                <Loader />
+              ) : blogs.length ? (
                 <>
                   {blogs.map((blog, i) => {
                     return (
@@ -110,10 +132,10 @@ const HomePage = () => {
               )}
             </>
 
-            {trendingBlogs == null ? (
+            {trendingBLogsLoading ? (
               <Loader />
-            ) : trendingBlogs.blogs.length ? (
-              trendingBlogs.blogs.map((blog, i) => {
+            ) : trendingBlogsData.data.blogs.length ? (
+              trendingBlogsData.data.blogs.map((blog, i) => {
                 return (
                   <AnimationWrapper
                     transition={{ duration: 1, delay: i * 0.1 }}
@@ -161,10 +183,10 @@ const HomePage = () => {
                 <IoTrendingUpOutline />
               </div>
 
-              {trendingBlogs == null ? (
+              {trendingBLogsLoading ? (
                 <Loader />
-              ) : trendingBlogs.blogs.length ? (
-                trendingBlogs.blogs.map((blog, i) => {
+              ) : trendingBlogsData.data.blogs.length ? (
+                trendingBlogsData.data.blogs.map((blog, i) => {
                   return (
                     <AnimationWrapper
                       transition={{ duration: 1, delay: i * 0.1 }}

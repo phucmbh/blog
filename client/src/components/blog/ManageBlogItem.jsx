@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import ManageBlogStats from './ManageBlogStats';
 import { Link } from 'react-router-dom';
-import { useDeleteBlogById } from 'apis/services/BlogService/mutation';
 import { getDay } from 'utils/common/date';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useManageBlogStore } from './store/manage.blog.store';
+import { ApiBlog } from 'apis/blog.api';
 
 const ManageBlogItem = ({ blog, isBlog }) => {
   let { banner, blog_id, title, publishedAt, activity, index } = blog;
@@ -15,11 +15,12 @@ const ManageBlogItem = ({ blog, isBlog }) => {
   const [showStat, setShowStat] = useState(false);
   index++;
 
-  const { mutate: deleteBlogById } = useDeleteBlogById();
+  const deleteBlogMutation = useMutation({ mutationFn: ApiBlog.deleteBlog });
+
 
   const handleDeleteBlog = (blog_id) => {
     if (isBlog) {
-      return deleteBlogById(
+      return deleteBlogMutation.mutate(
         { blog_id },
         {
           onSuccess: () => {
@@ -29,7 +30,7 @@ const ManageBlogItem = ({ blog, isBlog }) => {
       );
     }
 
-    return deleteBlogById(
+    return deleteBlogMutation.mutate(
       { blog_id },
       {
         onSuccess: () => {

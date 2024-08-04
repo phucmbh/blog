@@ -4,11 +4,10 @@ import { useContext } from 'react';
 import { EditorContext } from '../../pages/EditorPage';
 import Tag from './Tag';
 import { useNavigate, useParams } from 'react-router-dom';
-import { apiCreateBlog } from '../../apis';
 import { RxCross1 } from 'react-icons/rx';
-import { useCreateBlog } from 'apis/services/BlogService/mutation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserContext } from 'context/user.context';
+import { ApiBlog } from 'apis/blog.api';
 
 const PublishForm = () => {
   const characterLimit = 200;
@@ -19,7 +18,7 @@ const PublishForm = () => {
   const queryClient = useQueryClient();
 
   const createBlogMutation = useMutation({
-    mutationFn: apiCreateBlog,
+    mutationFn: ApiBlog.createBlog,
     onSuccess: () =>
       Promise.all([
         queryClient.invalidateQueries({ queryKey: ['latest-blogs'] }),

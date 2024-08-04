@@ -125,7 +125,7 @@ var that = (module.exports = {
 
   getBlogComments: async (req, res) => {
     try {
-      const { blog_id, skip } = req.body;
+      const { blog_id, skip } = req.query;
 
       const maxLimit = 5;
       const comment = await Comment.find({ blog_id, isReply: false })

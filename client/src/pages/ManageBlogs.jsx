@@ -7,7 +7,6 @@ import InPageNavigation from '../components/InPageNavigation';
 
 import { CiSearch } from 'react-icons/ci';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import BlogQueryMethods from 'apis/services/BlogService/query';
 import ManageBlogList from 'components/blog/ManageBlogList';
 
 import {

@@ -1,8 +1,9 @@
 import { useContext, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { BlogContext } from '../../pages/BlogPage';
-import { apiAddComment } from '../../apis';
 import { UserContext } from 'context/user.context';
+import { useMutation } from '@tanstack/react-query';
+import { ApiComment } from 'apis/comment.api';
 
 const CommentField = ({
   action,
@@ -25,13 +26,16 @@ const CommentField = ({
   } = useContext(BlogContext);
 
   const {
-    userAuth: { access_token, username, fullname, profile_img },
+    userAuth: { username, fullname, profile_img },
+    isAuthenticated,
   } = useContext(UserContext);
 
   const [comment, setComment] = useState('');
 
+  const addCommentMutation = useMutation({ mutationFn: ApiComment.addComment });
+
   const handleComment = async () => {
-    if (!access_token) {
+    if (!isAuthenticated) {
       return toast.error('Sign-in first to leave a comment');
     }
 
@@ -39,39 +43,43 @@ const CommentField = ({
       return toast.error('Write something to leave a comment');
     }
 
-    const response = await apiAddComment({
+    const response = await addCommentMutation.mutateAsync({
       _id,
       blog_author,
       comment,
       replying_to: replyingTo,
     });
 
-    if (response) {
+    const newComment = response.data;
+
+    console.log(response);
+
+    if (newComment) {
       setComment('');
 
-      response.commented_by = {
+      newComment.commented_by = {
         personal_info: { username, profile_img, fullname },
       };
 
       let newCommentArr;
 
       if (replyingTo) {
-        commentsArr[index].children.push(response._id);
+        commentsArr[index].children.push(newComment._id);
 
-        response.childrenLevel = commentsArr[index].childrenLevel + 1;
-        response.parentIndex = index;
+        newComment.childrenLevel = commentsArr[index].childrenLevel + 1;
+        newComment.parentIndex = index;
 
         commentsArr[index].isReplyLoaded = true;
 
-        commentsArr.splice(index + 1, 0, response);
+        commentsArr.splice(index + 1, 0, newComment);
 
         newCommentArr = commentsArr;
 
         setReplying(false);
       } else {
-        response.childrenLevel = 0;
+        newComment.childrenLevel = 0;
 
-        newCommentArr = [response, ...commentsArr];
+        newCommentArr = [newComment, ...commentsArr];
       }
 
       const parentCommentIncrementval = replyingTo ? 0 : 1;

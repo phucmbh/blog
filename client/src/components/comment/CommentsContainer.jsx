@@ -4,8 +4,8 @@ import CommentField from './CommentField';
 import AnimationWrapper from '../../utils/common/page-animation';
 import CommentCard from './CommentCard';
 import NoDataMessage from '../NoDataMessage';
-import { apiBlogComment } from '../../apis';
 import icons from '../../utils/icons.util';
+import { ApiComment } from 'apis/comment.api';
 
 const { RxCross1 } = icons;
 
@@ -17,28 +17,34 @@ export const fetchComments = async ({
 }) => {
   let res;
 
-  const data = await apiBlogComment({
-    blog_id,
-    skip,
+  console.log({blog_id, skip})
+
+  const response = await ApiComment.getBlogComments({
+    blog_id: blog_id,
+    skip: skip,
   });
 
-  data.map((comment) => {
+  console.log(response);
+
+  const comments = response.data;
+
+  comments.map((comment) => {
     comment.childrenLevel = 0;
   });
 
-  setParentCommentCountFun((preVal) => preVal + data.length);
+  setParentCommentCountFun((preVal) => preVal + comments.length);
 
   if (comment_array == null) {
-    res = { results: data };
+    res = { results: comments };
   } else {
-    res = { results: [...comment_array, ...data] };
+    res = { results: [...comment_array, ...comments] };
   }
 
   return res;
 };
 
 const CommentsContainer = () => {
-  let {
+  const {
     blog,
     blog: {
       _id,
@@ -52,6 +58,8 @@ const CommentsContainer = () => {
     setTotalParentCommentsLoaded,
     setBlog,
   } = useContext(BlogContext);
+
+  console.log(blog);
 
   const loadMoreComments = async () => {
     let newCommentsArr = await fetchComments({

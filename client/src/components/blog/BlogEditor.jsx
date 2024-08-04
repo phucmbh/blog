@@ -31,7 +31,6 @@ const BlogEditor = () => {
   const [editorContent, setEditorContent] = useState('');
   const queryClient = useQueryClient();
 
-  //useEffect
 
   const createBlogMutation = useMutation({
     mutationFn: ApiBlog.createBlog,
@@ -53,7 +52,6 @@ const BlogEditor = () => {
 
     if (file) {
       const loadingToast = toast.loading('Uploading...');
-
       const banner = await uploadBannerMutation.mutateAsync(formData);
       if (banner?.url) {
         toast.dismiss(loadingToast);
