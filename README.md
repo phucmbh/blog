@@ -23,31 +23,16 @@ BlogSync is a modern and feature-rich MERN (MongoDB, Express.js, React.js, Node.
 7. **Notifications** - Stay updated with real-time notifications for every interaction on the site.
 8. **Profile Editing** - Customize your profile by updating social links, bio, username, and change your login password effortlessly.
 
-
-## Screenshots
-
-Here are some screenshots from the BlogSync website:
-
-
- 
-
-
 ## Technologies Used
 
-### Backend
-- Node.js
-- Express.js
+- Javascript
+- Tailwind CSS
+- React
+- React Query
+- React Hook Form
+- Zustand
+- ExpressJS
 - MongoDB
-- Firebase
-
-### Frontend
-- React.js
-- TinyMCE
-
-### Authentication
-- Firebase Authentication
 
 ### Cloud Services
 - Cloudinary
-
-
