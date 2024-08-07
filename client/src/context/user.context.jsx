@@ -1,8 +1,13 @@
 import { createContext, useState } from 'react';
 import { LocalStorage } from 'utils/common/localStorage';
 
+
+
+
+
+
 const initialUserContext = {
-  userAuth: LocalStorage.getUser(),
+  userAuth: LocalStorage.getUser() ,
   setUserAuth: () => null,
   isAuthenticated: Boolean(LocalStorage.getAccessToken()),
   setIsAuthenticated: () => null,

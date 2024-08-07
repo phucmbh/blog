@@ -42,6 +42,6 @@ export const ApiBlog = {
     return http.get('get-drafts-by-user', body);
   },
   deleteBlog(body) {
-    return http.get('delete-blog', body);
+    return http.post('delete-blog', body);
   },
 };

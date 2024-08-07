@@ -15,6 +15,7 @@ import 'highlight.js/styles/atom-one-dark.css';
 import { ApiBlog } from 'apis/blog.api';
 
 export const blogStructure = {
+  _id: '',
   title: '',
   des: '',
   content: '',

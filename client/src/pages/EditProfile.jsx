@@ -54,7 +54,6 @@ const EditProfile = () => {
   const bioLimit = 150;
 
   const profileImgEle = useRef();
-  const editProfileForm = useRef();
 
   const [charactersLeft, setCharactersLeft] = useState(bioLimit);
   const [updatedProfileImg, setUpdatedProfileImg] = useState(null);
@@ -170,7 +169,7 @@ const EditProfile = () => {
                     </div>
                     <img
                       ref={profileImgEle}
-                      src={profile.personal_info.profile_img}
+                      src={profile?.personal_info.profile_img}
                     />
                   </label>
 

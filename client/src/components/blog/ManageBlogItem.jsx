@@ -5,8 +5,11 @@ import { getDay } from 'utils/common/date';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useManageBlogStore } from './store/manage.blog.store';
 import { ApiBlog } from 'apis/blog.api';
+import DialogModal from 'components/DialogModal';
+import toast, { Toaster } from 'react-hot-toast';
 
 const ManageBlogItem = ({ blog, isBlog }) => {
+  const [open, setopen] = useState(false);
   let { banner, blog_id, title, publishedAt, activity, index } = blog;
   const queryClient = useQueryClient();
   const pageBLog = useManageBlogStore((state) => state.pageBlog);
@@ -17,13 +20,21 @@ const ManageBlogItem = ({ blog, isBlog }) => {
 
   const deleteBlogMutation = useMutation({ mutationFn: ApiBlog.deleteBlog });
 
+  const handleDeleteBlog = () => {
+    setopen(true);
+  };
 
-  const handleDeleteBlog = (blog_id) => {
+  const handleOnClose = () => {
+    setopen(false);
+  };
+
+  const hanleConfirm = (blog_id) => {
     if (isBlog) {
       return deleteBlogMutation.mutate(
         { blog_id },
         {
           onSuccess: () => {
+            toast.success('Delete blog successfully!');
             queryClient.invalidateQueries(['blogs', pageBLog, search]);
           },
         }
@@ -34,6 +45,7 @@ const ManageBlogItem = ({ blog, isBlog }) => {
       { blog_id },
       {
         onSuccess: () => {
+          toast.success('Delete blog successfully!');
           queryClient.invalidateQueries(['drafts', pageDraft, search]);
         },
       }
@@ -42,6 +54,15 @@ const ManageBlogItem = ({ blog, isBlog }) => {
 
   return (
     <>
+      <Toaster />
+      <DialogModal
+        title={'Confirm Delete Blog'}
+        open={open}
+        onClose={handleOnClose}
+        onConfirm={() => hanleConfirm(blog_id)}
+      >
+        Are you sure delete blog?
+      </DialogModal>
       <div className="flex gap-10 border-b mb-6 max-md:px-4 border-grey pb-6 items-center">
         <img
           src={banner?.url || 'https://placehold.co/400'}

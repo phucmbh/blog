@@ -10,7 +10,9 @@ export const LocalStorage = {
   },
   getUser() {
     const result = localStorage.getItem('user');
-    return result ? JSON.parse(result) : null;
+    return result
+      ? JSON.parse(result)
+      : { username: '', fullname: '', profile_img: '' };
   },
   setAccessToken(accessToken) {
     return localStorage.setItem('accessToken', accessToken);
